@@ -1,0 +1,13 @@
+parameters:
+    app.mailer.class:  AppBundle\Services\Mailer
+
+services:
+    app.mailer:
+        class:        "%app.mailer.class%"
+        arguments:    ['@doctrine.orm.entity_manager', '@mailer', '@templating']
+
+    app.flash_message:
+        class: AppBundle\EventListener\FlashMessage
+        arguments: ["@session"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response}

@@ -1,0 +1,15 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Homepage"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>StoryTell {{ "Homepage"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <p>{{ "Create your own story and share it ! Or simply read others stories !"|trans }}</p>
+    </div>
+{% endblock %}

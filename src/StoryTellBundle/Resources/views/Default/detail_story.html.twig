@@ -1,0 +1,44 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Detail Story"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Detail Story"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div id="{{ story.id }}" class="col-md-12">
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <h2>{{ "Title"|trans }} : {{ story.title }}</h2>
+        <p>{{ "Genre"|trans }} : {{ story.storyGenre.name }}</p>
+        <div class="block-text">
+            <p>{{ "Description"|trans }} : {{ story.description|nl2br }}</p>
+        </div>
+        <p>{{ "Number of Chapters"|trans }} : {{ nb_chapters }}</p>
+        <p>{{ "Number of Pages"|trans }} : {{ nb_pages }}</p>
+        <a href="#" class="add-readings">{{ "Add to my readings"|trans }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('.add-readings').click(function (e) {
+            var url = '{{ path("add_readings", {'story_id': 'STORY_ID'}) }}';
+            url = url.replace("STORY_ID", $(e.target).closest('div').prop('id'));
+//        console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    var obj = data;
+                    if (obj.success) {
+                        console.log("Success : " + obj.message);
+                    }
+                    else if (obj.error) {
+                        console.log("Error : " + obj.message);
+                    }
+                })
+        });
+    </script>
+{% endblock %}

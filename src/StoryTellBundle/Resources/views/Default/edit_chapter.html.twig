@@ -1,0 +1,44 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Edit Chapter"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Edit Chapter"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
+        <h3>{{ "Chapter"|trans }} : {{ chapter.title }}</h3>
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <div class="col-md-4 block-menu">
+            <h4>{{ "Contents"|trans }}</h4>
+            <ul>
+                {% for content in contents %}
+                    <li><a href="{{ path('edit_content', {'story_id': story.id, 'chapter_id': chapter.id, 'content_id': content.id}) }}">{{ "Page"|trans }} {{ content.page }}</a></li>
+                {% endfor %}
+                <li><a href="{{ path('create_content', {'story_id': story.id, 'chapter_id': chapter.id}) }}" class="btn btn-primary">+</a></li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div class="block-form">
+                <div class="form-heading"><h2>{{ "Edit Chapter"|trans }}</h2></div>
+
+                {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+                <div class="bg-danger">
+                    {{ form_errors(form) }}
+                </div>
+
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <a href="{{ path('edit_story', {'story_id': story.id}) }}" class="btn btn-primary">< {{ "Back"|trans }}</a>
+    </div>
+{% endblock %}

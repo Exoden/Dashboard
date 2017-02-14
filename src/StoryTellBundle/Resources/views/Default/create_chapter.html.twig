@@ -1,0 +1,29 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Create Chapter"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Create Chapter"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
+        <div class="block-form">
+            <div class="form-heading"><h2>{{ "Create Chapter"|trans }}</h2></div>
+
+            {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+            {{ form_end(form) }}
+        </div>
+        <a href="{{ path('edit_story', {'story_id': story.id}) }}" class="btn btn-primary">< {{ "Back"|trans }}</a>
+    </div>
+{% endblock %}

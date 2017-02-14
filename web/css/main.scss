@@ -1,0 +1,511 @@
+$bg-color: #ddd;
+$menu-color: #eee;
+$border-color: #1b6d85;
+$debug_color: red;
+
+$small-space: 10px;
+$big-space: 20px;
+
+$shadow-size: 3px;
+$shadow-color: #ccc;
+
+@font-face {
+    font-family: fontClicker;
+    src: url("../fonts/monof55.ttf");
+}
+
+@font-face {
+    font-family: fontStrategy;
+    src: url("../fonts/nasalization-rg.ttf");
+}
+
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: $bg_color !important;
+}
+
+.starter-template { // Space under the navbar
+    padding: 50px;
+}
+
+.bg-debug {
+    background-color: $debug_color !important;
+}
+
+/*************/
+/* DASHBOARD */
+/*************/
+.dashboard {
+    h1 {
+        text-align: center;
+    }
+}
+
+/****************/
+/* GAME LIBRARY */
+/****************/
+.game-library {
+    h1 {
+        text-align: center;
+    }
+
+    img {
+        border-radius: 10px;
+        width: 250px;
+        height: 350px;
+
+    }
+
+    .locked {
+        position: absolute;
+        top: 120px;
+        left: 120px;
+        color: lightgrey;
+    }
+}
+
+/**************/
+/* FORM STYLE */
+/**************/
+.block-form {
+    background-color: $menu-color;
+    margin: 0 auto;
+    padding: $small-space;
+    border: solid 1px $border-color;
+    border-radius: 10px;
+    box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+
+    .form-heading {
+        text-align: center;
+    }
+
+    .form-style {
+        max-width: 330px;
+        padding: 15px;
+        margin: 0 auto;
+
+        .form-control {
+            height: auto;
+            padding: $small-space;
+            margin-top: $small-space;
+            margin-bottom: $small-space;
+            font-size: 16px;
+        }
+
+        .input-button {
+            margin: $small-space 0 $small-space;
+        }
+    }
+
+    .mail-style {
+        max-width: 600px;
+        padding: 15px;
+        margin: 0 auto;
+        text-align: center;
+
+        p {
+            text-align: left;
+        }
+
+        .form-control {
+            height: auto;
+            padding: $small-space;
+            margin-top: $small-space;
+            margin-bottom: $small-space;
+            font-size: 16px;
+        }
+
+        .input-button {
+            margin: $small-space auto $small-space;
+            width: 300px;
+        }
+    }
+}
+
+/*****************/
+/* PROFILE STYLE */
+/*****************/
+.profile {
+    h1 {
+        text-align: center;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .menu {
+        background-color: $menu-color;
+        margin: 0;
+        padding: $small-space;
+        border: solid 1px $border-color;
+        border-radius: 10px;
+        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style-type: none;
+            text-align: center;
+        }
+    }
+}
+
+/*****************/
+/* CLICKER STYLE */
+/*****************/
+.clicker {
+    background-color: #4a3c2f;
+    font-family: fontClicker;
+    width: 1600px !important;
+    height: 800px !important;
+
+    h1 {
+        text-align: center;
+        color: whitesmoke;
+    }
+
+    .container-top-menu {
+        text-align: center;
+
+        .top-menu {
+            background-color: #94795f;
+            margin: $small-space;
+            padding: $small-space;
+            display: inline-block;
+            border: solid 4px;
+            border-image: url("../images/border.png") 4 fill repeat;
+
+            ul {
+                padding: 0;
+                margin: 0;
+                text-align: center;
+            }
+
+            li {
+                list-style-type: none;
+                display: inline-block;
+            }
+
+            .btn-menu {
+                background-color: #584839;
+                color: yellow;
+                font-size: 24px;
+
+                &:hover {
+                    background-color: #675442;
+                }
+            }
+
+            .active {
+                background-color: #776655;
+            }
+        }
+    }
+
+    .out-hero-menu {
+        text-align: center;
+
+        .hero-menu {
+            background-color: #94795f;
+            max-height: 600px;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            border: solid 4px;
+            border-image: url("../images/border.png") 4 fill repeat;
+
+            .details-hero {
+                padding: $small-space;
+                margin: $small-space;
+                height: 200px;
+
+                .top {
+                    text-align: left;
+                    padding-left: $small-space;
+
+                    .progress-hp {
+                        height: 8px !important;
+                        width: 200px;
+                        border: 1px solid lightgray;
+                        margin: $small-space 0 $small-space 0;
+                        padding: 0;
+                    }
+
+                    .progress-bar-hp {
+                        width: 0;
+                        height: 100%;
+                        background-color: #eb0000;
+                    }
+                }
+
+                .bottom {
+                    text-align: left;
+                    padding-left: $small-space;
+                    line-height: 28px;
+
+                    .progress-exp {
+                        height: 8px !important;
+                        width: 250px;
+                        border: 1px solid lightgray;
+                        margin: $small-space 0 $small-space 0;
+                        padding: 0;
+                    }
+
+                    .progress-bar-exp {
+                        width: 0;
+                        height: 100%;
+                        background-color: #1e82eb;
+                    }
+                }
+
+                .hero {
+                    width: 180px;
+                    height: 180px;
+                    border: solid 4px;
+                    border-image: url("../images/border.png") 4 fill repeat;
+                    cursor: pointer;
+                }
+
+                .one {
+                    padding-bottom: $small-space;
+                }
+
+                .equipement {
+                    width: 60px;
+                    height: 60px;
+                    border: solid 4px;
+                    border-image: url("../images/border.png") 4 fill repeat;
+                }
+            }
+
+            .selected {
+                //border: 2px red solid;
+            }
+        }
+    }
+
+    .out-mob-menu {
+        text-align: center;
+
+        .mob-menu {
+            background-color: #94795f;
+            max-height: 600px;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            border: solid 4px;
+            border-image: url("../images/border.png") 4 fill repeat;
+
+            .details-mob {
+                padding: $small-space;
+                margin: $small-space;
+                height: 200px;
+
+                .monster {
+                    width: 180px;
+                    height: 180px;
+                    border: solid 4px;
+                    border-image: url("../images/border.png") 4 fill repeat;
+                }
+
+                .damage {
+                    position: absolute;
+                    left: 90px;
+                    top: 90px;
+                    font-size: 36px;
+                    opacity: 1;
+                }
+
+                .top {
+                    text-align: left;
+                    padding-left: $small-space;
+
+                    .progress-hp {
+                        height: 8px !important;
+                        width: 250px;
+                        border: 1px solid lightgray;
+                        margin: $small-space auto;
+                        padding: 0;
+                    }
+
+                    .progress-bar-hp {
+                        width: 0;
+                        height: 100%;
+                        background-color: #be0000;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*******************/
+/* STRATEGY STYLE */
+/******************/
+.strategy {
+    background-color: #06b;
+    width: 1600px !important;
+    font-family: fontStrategy;
+
+    h1 {
+        text-align: center;
+    }
+
+    .menu {
+        background-color: #08f;
+        width: 200px;
+        margin: 0 25px;
+        padding: $small-space;
+        border: solid 1px $border-color;
+        border-radius: 10px;
+
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style-type: none;
+            text-align: center;
+            margin: $small-space;
+        }
+    }
+
+    .buildings-area {
+        border: 1px solid lightgrey;
+        width: 1200px;
+        margin: 0 75px;
+
+        .building {
+            border: 1px solid lightgrey;
+            padding: $small-space;
+            margin: $small-space;
+
+            .image {
+                border: 1px solid lightgrey;
+                text-align: center;
+                padding: 0;
+
+                img {
+                    width: 120px;
+                    height: 150px;
+                }
+            }
+
+            .stats {
+                border: 1px solid lightgrey;
+            }
+
+            .buttons {
+                border: 1px solid lightgrey;
+                text-align: center;
+            }
+
+            .details {
+                border: 1px solid lightgrey;
+
+                .description {
+                    border: 1px solid lightgrey;
+                    padding: $small-space;
+                }
+
+                .duration {
+                    border: 1px solid lightgrey;
+                    padding: 0;
+                    text-align: center;
+
+                    .timer {
+                        float: left;
+                        font-size: 14px;
+                    }
+
+                    .progress {
+                        height: 8px !important;
+                        width: 250px;
+                        border: 1px solid lightgray;
+                        margin: $small-space 0 $small-space 0;
+                        padding: 0;
+                    }
+
+                    .progress-bar {
+                        width: 0;
+                        height: 100%;
+                        background-color: lightgreen;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*********************/
+/* STORY-TELL STYLE */
+/********************/
+.story-tell {
+
+    .body {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: $big-space !important;
+    }
+
+    .main-menu {
+        margin: $small-space 0;
+    }
+
+    .block-text {
+        background-color: navajowhite;
+        width: 600px;
+        margin: 0 auto;
+        padding: $small-space;
+        border: solid 1px $border-color;
+        border-radius: 5px;
+        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+    }
+
+    .block-menu {
+        background-color: $menu-color;
+        margin: 0 auto;
+        padding: $small-space;
+        border: solid 1px $border-color;
+        border-radius: 10px;
+        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+    }
+
+    .block-form {
+        background-color: $menu-color;
+        margin: 0 auto;
+        padding: $small-space;
+        border: solid 1px $border-color;
+        border-radius: 10px;
+        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+
+        .form-heading {
+            text-align: center;
+        }
+
+        .form-style {
+            max-width: 800px;
+            padding: 15px;
+            margin: 0 auto;
+
+            .form-control {
+                height: auto;
+                padding: $small-space;
+                margin-top: $small-space;
+                margin-bottom: $small-space;
+                font-size: 16px;
+            }
+
+            .input-button {
+                margin: $small-space 0 $small-space;
+            }
+        }
+    }
+}

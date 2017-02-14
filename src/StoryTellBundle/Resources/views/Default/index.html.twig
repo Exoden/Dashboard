@@ -1,0 +1,17 @@
+{% extends "StoryTellBundle::base.html.twig" %}
+
+{% block content %}
+    <div class="container story-tell">
+        <div class="row">
+            {% include 'StoryTellBundle:Default:menu.html.twig' %}
+        </div>
+        <div class="row body">
+            <div class="row">
+                {% block header %}{% endblock %}
+            </div>
+            <div class="row">
+                {% block page %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

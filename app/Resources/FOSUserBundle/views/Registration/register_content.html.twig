@@ -1,0 +1,36 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="block-form">
+                <h2 class="form-heading">{{ 'registration.submit'|trans }}</h2>
+
+                {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+                {{ form_errors(form.username) }}
+                {{ form_widget(form.username, { 'attr': {'class': 'form-control', 'placeholder': 'form.username'|trans} }) }}
+
+                {{ form_errors(form.email) }}
+                {{ form_widget(form.email, { 'attr': {'class': 'form-control', 'placeholder': 'form.email'|trans} }) }}
+
+                {{ form_errors(form.plainPassword.first) }}
+                {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control', 'placeholder': 'form.password'|trans} }) }}
+
+                {{ form_errors(form.plainPassword.second) }}
+                {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control', 'placeholder': 'form.password_confirmation'|trans} }) }}
+
+                <div>
+                    <input type="submit"
+                    class="btn btn-lg btn-primary btn-block input-button"
+                    id="_submit"
+                    name="_submit" value="{{ 'registration.submit'|trans }}" />
+                </div>
+
+                {{ form_rest(form) }}
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

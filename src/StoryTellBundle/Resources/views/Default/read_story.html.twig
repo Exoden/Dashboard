@@ -1,0 +1,21 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Read Story"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Read Story"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
+        <h3>{{ "Chapter"|trans }} {{ reading.storyChapter.chapter }} : {{ reading.storyChapter.title }}</h3>
+        <div class="block-text">
+            <p>{{ reading.storyContent.content |replace({'\t': '&nbsp;&nbsp;&nbsp;&nbsp;'}) |raw |nl2br }}</p>
+        </div>
+        <p>{{ "Page"|trans }} : {{ reading.storyContent.page }} / {{ nb_pages_chapter }}</p>
+        <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}">{{ "Next page"|trans }} ></a>
+    </div>
+{% endblock %}

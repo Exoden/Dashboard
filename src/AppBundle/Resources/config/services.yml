@@ -1,0 +1,12 @@
+services:
+    app.locale_listener:
+        class: AppBundle\EventListener\LocaleListener
+        arguments: ['%kernel.default_locale%']
+        tags:
+            - { name: kernel.event_subscriber, priority: 17 }
+    app.user.login:
+        class: AppBundle\EventListener\LoginListener
+        arguments: ["@service_container", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: security.authentication.success, method: handle }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

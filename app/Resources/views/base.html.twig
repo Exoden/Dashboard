@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>{% block title %}Dashboard - {% endblock %}</title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}" type="text/css" media="screen"/>
+    {% endblock %}
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('css/languages.min.css') }}" type="text/css" media="screen" />
+    {#<link rel="stylesheet" href="{{ asset('bootstrap-3.3.6-dist/css/bootstrap.min.css') }}" type="text/css" media="screen"/>#}
+
+</head>
+
+<body>
+
+{% include '::topnav.html.twig' %}
+
+<div class="starter-template">
+    {% block content %}{% endblock %}
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{{ asset('js/flash_message.js') }}"></script>
+<script src="{{ asset('js/textarea_tabulation.js') }}"></script>
+<script>
+    $('#flash-messages').flashNotification('init');
+</script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

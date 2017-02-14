@@ -1,0 +1,49 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Stories"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Stories"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <h3>{{ "Genre"|trans }}</h3>
+        <a href="{{ path('stories') }}">{{ "All"|trans }}</a>
+        {% for genre in genres %}
+             - <a href="{{ path('stories_genre', {'genre_name': genre.name}) }}">{{ genre.name|trans }}</a>
+        {% endfor %}
+
+        <h3>{{ "List"|trans }}</h3>
+        {% for story in stories %}
+            <div id="{{ story.id }}">
+                <a href="{{ path('detail_story', {'story_id': story.id}) }}">{{ story.title }}</a> <span class="lang-xs" lang="{{ story.language.code }}" title="{{ story.language.name }}"></span> (<a href="{{ path('stories_genre', {'genre_name': story.storyGenre.name}) }}">{{ story.storyGenre.name|trans }}</a>) - <a href="{{ path('detail_profile', {'user_id': story.author.id}) }}">{{ story.author.username }}</a>
+                <span class="btn fa fa-plus-circle add-readings" title="{{ "Add to my readings"|trans }}"></span>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $('.add-readings').click(function (e) {
+        var url = '{{ path("add_readings", {'story_id': 'STORY_ID'}) }}';
+        url = url.replace("STORY_ID", $(e.target).closest('div').prop('id'));
+//        console.log(url);
+        var jhrx = $.ajax(url)
+            .done(function (data) {
+                var obj = data;
+                if (obj.success) {
+                    console.log("Success : " + obj.message);
+                }
+                else if (obj.error) {
+                    console.log("Error : " + obj.message);
+                }
+            })
+    });
+</script>
+{% endblock %}

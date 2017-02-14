@@ -1,0 +1,22 @@
+story:
+    resource: "@StoryTellBundle/Controller/"
+    type:     annotation
+    prefix:   /storytell
+
+strategy:
+    resource: "@StrategyBundle/Controller/"
+    type:     annotation
+    prefix:   /strategy
+
+clicker:
+    resource: "@ClickerBundle/Controller/"
+    type:     annotation
+    prefix:   /clicker
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

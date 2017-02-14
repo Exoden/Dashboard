@@ -1,0 +1,4 @@
+services:
+#    strategy.example:
+#        class: StrategyBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

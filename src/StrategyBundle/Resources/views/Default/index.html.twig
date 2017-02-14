@@ -1,0 +1,11 @@
+{% extends "StrategyBundle::base.html.twig" %}
+
+{% block content %}
+    <div class="container strategy">
+        {% block header %}{% endblock %}
+        <div class="row">
+            {% include 'StrategyBundle:Default:menu.html.twig' %}
+            {% block page %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

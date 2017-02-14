@@ -1,0 +1,20 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "My Stories"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "My Stories"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        {% for story in stories %}
+            <div>
+                <a href="#">{{ story.title }}</a>
+                <a href="{{ path('edit_story', {'story_id': story.id}) }}"><span class="btn fa fa-edit" title="{{ "Edit Story"|trans }}"></span></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

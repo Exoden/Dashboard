@@ -1,0 +1,76 @@
+{% extends "StrategyBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}Buildings{% endblock %}
+
+{% block header %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Buildings</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-10 buildings-area">
+        {% for i in 0..3 %}
+        <div class="row building">
+            <div class="col-md-12">
+                <div class="col-md-2 image">
+                    <img src="" alt="buidling">
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-4 stats">
+                            <h4>Stats</h4>
+                            <p>+7 Resource1</p>
+                            <p>+18 Resource2</p>
+                            <p>-42 Resource3</p>
+                        </div>
+                        <div class="col-md-8 details">
+                            <div class="row description">
+                                <p>Ergo ego senator inimicus, si ita vultis, homini, amicus esse, sicut semper fui, rei publicae debeo. Quid? si ipsas inimicitias, depono rei publicae causa, quis me tandem iure reprehendet, praesertim cum ego omnium meorum consiliorum atque factorum exempla semper ex summorum hominum consiliis atque factis mihi censuerim petenda.</p>
+                            </div>
+                            <div class="row duration">
+                                <div class="col-md-4 timer">
+                                </div>
+                                <div class="col-md-8 progress">
+                                    <div class="progress-bar" role="progressbar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 buttons">
+                    <button class="btn btn-success">Buy</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        start = new Date(2016,12,16,18,0);
+        chrono();
+
+        $('.progress .progress-bar').animate({ width: '100%' }, 3000);
+
+        function chrono() {
+            end = new Date();
+            diff = start - end;
+            diff = new Date(diff);
+            var sec = diff.getSeconds();
+            var min = diff.getMinutes();
+            var hr = diff.getHours()-1;
+            if (min < 10){
+                min = "0" + min;
+            }
+            if (sec < 10){
+                sec = "0" + sec;
+            }
+            $('.timer').html(hr + ":" + min + ":" + sec);
+            timerID = setTimeout("chrono()", 1000);
+        }
+    </script>
+{% endblock %}

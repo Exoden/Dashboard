@@ -1,0 +1,342 @@
+@font-face {
+  font-family: fontClicker;
+  src: url("../fonts/monof55.ttf"); }
+@font-face {
+  font-family: fontStrategy;
+  src: url("../fonts/nasalization-rg.ttf"); }
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #ddd !important; }
+
+.starter-template {
+  padding: 50px; }
+
+.bg-debug {
+  background-color: red !important; }
+
+/*************/
+/* DASHBOARD */
+/*************/
+.dashboard h1 {
+  text-align: center; }
+
+/****************/
+/* GAME LIBRARY */
+/****************/
+.game-library h1 {
+  text-align: center; }
+.game-library img {
+  border-radius: 10px;
+  width: 250px;
+  height: 350px; }
+.game-library .locked {
+  position: absolute;
+  top: 120px;
+  left: 120px;
+  color: lightgrey; }
+
+/**************/
+/* FORM STYLE */
+/**************/
+.block-form {
+  background-color: #eee;
+  margin: 0 auto;
+  padding: 10px;
+  border: solid 1px #1b6d85;
+  border-radius: 10px;
+  box-shadow: 3px 3px 3px #ccc; }
+  .block-form .form-heading {
+    text-align: center; }
+  .block-form .form-style {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto; }
+    .block-form .form-style .form-control {
+      height: auto;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 16px; }
+    .block-form .form-style .input-button {
+      margin: 10px 0 10px; }
+  .block-form .mail-style {
+    max-width: 600px;
+    padding: 15px;
+    margin: 0 auto;
+    text-align: center; }
+    .block-form .mail-style p {
+      text-align: left; }
+    .block-form .mail-style .form-control {
+      height: auto;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 16px; }
+    .block-form .mail-style .input-button {
+      margin: 10px auto 10px;
+      width: 300px; }
+
+/*****************/
+/* PROFILE STYLE */
+/*****************/
+.profile h1 {
+  text-align: center; }
+.profile .profile-image {
+  width: 120px;
+  height: 120px; }
+.profile .menu {
+  background-color: #eee;
+  margin: 0;
+  padding: 10px;
+  border: solid 1px #1b6d85;
+  border-radius: 10px;
+  box-shadow: 3px 3px 3px #ccc; }
+  .profile .menu ul {
+    padding: 0;
+    margin: 0; }
+  .profile .menu li {
+    list-style-type: none;
+    text-align: center; }
+
+/*****************/
+/* CLICKER STYLE */
+/*****************/
+.clicker {
+  background-color: #4a3c2f;
+  font-family: fontClicker;
+  width: 1600px !important;
+  height: 800px !important; }
+  .clicker h1 {
+    text-align: center;
+    color: whitesmoke; }
+  .clicker .container-top-menu {
+    text-align: center; }
+    .clicker .container-top-menu .top-menu {
+      background-color: #94795f;
+      margin: 10px;
+      padding: 10px;
+      display: inline-block;
+      border: solid 4px;
+      border-image: url("../images/border.png") 4 fill repeat; }
+      .clicker .container-top-menu .top-menu ul {
+        padding: 0;
+        margin: 0;
+        text-align: center; }
+      .clicker .container-top-menu .top-menu li {
+        list-style-type: none;
+        display: inline-block; }
+      .clicker .container-top-menu .top-menu .btn-menu {
+        background-color: #584839;
+        color: yellow;
+        font-size: 24px; }
+        .clicker .container-top-menu .top-menu .btn-menu:hover {
+          background-color: #675442; }
+      .clicker .container-top-menu .top-menu .active {
+        background-color: #776655; }
+  .clicker .out-hero-menu {
+    text-align: center; }
+    .clicker .out-hero-menu .hero-menu {
+      background-color: #94795f;
+      max-height: 600px;
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      border: solid 4px;
+      border-image: url("../images/border.png") 4 fill repeat; }
+      .clicker .out-hero-menu .hero-menu .details-hero {
+        padding: 10px;
+        margin: 10px;
+        height: 200px; }
+        .clicker .out-hero-menu .hero-menu .details-hero .top {
+          text-align: left;
+          padding-left: 10px; }
+          .clicker .out-hero-menu .hero-menu .details-hero .top .progress-hp {
+            height: 8px !important;
+            width: 200px;
+            border: 1px solid lightgray;
+            margin: 10px 0 10px 0;
+            padding: 0; }
+          .clicker .out-hero-menu .hero-menu .details-hero .top .progress-bar-hp {
+            width: 0;
+            height: 100%;
+            background-color: #eb0000; }
+        .clicker .out-hero-menu .hero-menu .details-hero .bottom {
+          text-align: left;
+          padding-left: 10px;
+          line-height: 28px; }
+          .clicker .out-hero-menu .hero-menu .details-hero .bottom .progress-exp {
+            height: 8px !important;
+            width: 250px;
+            border: 1px solid lightgray;
+            margin: 10px 0 10px 0;
+            padding: 0; }
+          .clicker .out-hero-menu .hero-menu .details-hero .bottom .progress-bar-exp {
+            width: 0;
+            height: 100%;
+            background-color: #1e82eb; }
+        .clicker .out-hero-menu .hero-menu .details-hero .hero {
+          width: 180px;
+          height: 180px;
+          border: solid 4px;
+          border-image: url("../images/border.png") 4 fill repeat;
+          cursor: pointer; }
+        .clicker .out-hero-menu .hero-menu .details-hero .one {
+          padding-bottom: 10px; }
+        .clicker .out-hero-menu .hero-menu .details-hero .equipement {
+          width: 60px;
+          height: 60px;
+          border: solid 4px;
+          border-image: url("../images/border.png") 4 fill repeat; }
+  .clicker .out-mob-menu {
+    text-align: center; }
+    .clicker .out-mob-menu .mob-menu {
+      background-color: #94795f;
+      max-height: 600px;
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      border: solid 4px;
+      border-image: url("../images/border.png") 4 fill repeat; }
+      .clicker .out-mob-menu .mob-menu .details-mob {
+        padding: 10px;
+        margin: 10px;
+        height: 200px; }
+        .clicker .out-mob-menu .mob-menu .details-mob .monster {
+          width: 180px;
+          height: 180px;
+          border: solid 4px;
+          border-image: url("../images/border.png") 4 fill repeat; }
+        .clicker .out-mob-menu .mob-menu .details-mob .damage {
+          position: absolute;
+          left: 90px;
+          top: 90px;
+          font-size: 36px;
+          opacity: 1; }
+        .clicker .out-mob-menu .mob-menu .details-mob .top {
+          text-align: left;
+          padding-left: 10px; }
+          .clicker .out-mob-menu .mob-menu .details-mob .top .progress-hp {
+            height: 8px !important;
+            width: 250px;
+            border: 1px solid lightgray;
+            margin: 10px auto;
+            padding: 0; }
+          .clicker .out-mob-menu .mob-menu .details-mob .top .progress-bar-hp {
+            width: 0;
+            height: 100%;
+            background-color: #be0000; }
+
+/*******************/
+/* STRATEGY STYLE */
+/******************/
+.strategy {
+  background-color: #06b;
+  width: 1600px !important;
+  font-family: fontStrategy; }
+  .strategy h1 {
+    text-align: center; }
+  .strategy .menu {
+    background-color: #08f;
+    width: 200px;
+    margin: 0 25px;
+    padding: 10px;
+    border: solid 1px #1b6d85;
+    border-radius: 10px; }
+    .strategy .menu ul {
+      padding: 0;
+      margin: 0; }
+    .strategy .menu li {
+      list-style-type: none;
+      text-align: center;
+      margin: 10px; }
+  .strategy .buildings-area {
+    border: 1px solid lightgrey;
+    width: 1200px;
+    margin: 0 75px; }
+    .strategy .buildings-area .building {
+      border: 1px solid lightgrey;
+      padding: 10px;
+      margin: 10px; }
+      .strategy .buildings-area .building .image {
+        border: 1px solid lightgrey;
+        text-align: center;
+        padding: 0; }
+        .strategy .buildings-area .building .image img {
+          width: 120px;
+          height: 150px; }
+      .strategy .buildings-area .building .stats {
+        border: 1px solid lightgrey; }
+      .strategy .buildings-area .building .buttons {
+        border: 1px solid lightgrey;
+        text-align: center; }
+      .strategy .buildings-area .building .details {
+        border: 1px solid lightgrey; }
+        .strategy .buildings-area .building .details .description {
+          border: 1px solid lightgrey;
+          padding: 10px; }
+        .strategy .buildings-area .building .details .duration {
+          border: 1px solid lightgrey;
+          padding: 0;
+          text-align: center; }
+          .strategy .buildings-area .building .details .duration .timer {
+            float: left;
+            font-size: 14px; }
+          .strategy .buildings-area .building .details .duration .progress {
+            height: 8px !important;
+            width: 250px;
+            border: 1px solid lightgray;
+            margin: 10px 0 10px 0;
+            padding: 0; }
+          .strategy .buildings-area .building .details .duration .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: lightgreen; }
+
+/*********************/
+/* STORY-TELL STYLE */
+/********************/
+.story-tell .body {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px !important; }
+.story-tell .main-menu {
+  margin: 10px 0; }
+.story-tell .block-text {
+  background-color: navajowhite;
+  width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+  border: solid 1px #1b6d85;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px #ccc; }
+.story-tell .block-menu {
+  background-color: #eee;
+  margin: 0 auto;
+  padding: 10px;
+  border: solid 1px #1b6d85;
+  border-radius: 10px;
+  box-shadow: 3px 3px 3px #ccc; }
+.story-tell .block-form {
+  background-color: #eee;
+  margin: 0 auto;
+  padding: 10px;
+  border: solid 1px #1b6d85;
+  border-radius: 10px;
+  box-shadow: 3px 3px 3px #ccc; }
+  .story-tell .block-form .form-heading {
+    text-align: center; }
+  .story-tell .block-form .form-style {
+    max-width: 800px;
+    padding: 15px;
+    margin: 0 auto; }
+    .story-tell .block-form .form-style .form-control {
+      height: auto;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 16px; }
+    .story-tell .block-form .form-style .input-button {
+      margin: 10px 0 10px; }
+
+/*# sourceMappingURL=main.css.map */

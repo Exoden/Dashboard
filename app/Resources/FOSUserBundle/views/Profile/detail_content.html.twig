@@ -1,0 +1,42 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="fos_user_user_show">
+    <div class="container profile">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ "Profile"|trans({}, 'messages') }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <img src="" alt="profile_image" class="profile-image"/>
+                <p>{{ 'profile.show.username'|trans }}: {{ user.username }}</p>
+                <p>{{ 'profile.show.email'|trans }}: {{ user.email }} (<span class="fa fa-mail-forward"></span> <a href="{{ path('send_mail', {'user_id': user.id}) }}">{{ "Send mail"|trans({}, 'messages') }}</a>)</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="menu">
+                    <h3>Friends</h3>
+                    <ul>
+                        <li><a href="#">Friend1</a></li>
+                        <li><a href="#">Friend2</a></li>
+                        <li><a href="#">Friend2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="menu">
+                    <h3>Achivements</h3>
+                    <ul>
+                        <li><a href="#">Achivement1</a></li>
+                        <li><a href="#">Achivement2</a></li>
+                        <li><a href="#">Achivement2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

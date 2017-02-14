@@ -1,0 +1,18 @@
+{% extends "StoryTellBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Finished Story"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Finished Story"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <h2>{{ "Story"|trans }} : {{ reading.story.title }}</h2>
+        <h3>{{ "FINISHED"|trans }} !</h3>
+        <a href="{{ path('read_again', {'reading_id': reading.id}) }}">{{ "Read again"|trans }} !</a><br>
+        <a href="{{ path('my_readings') }}" title="My Readings">{{ "My Readings"|trans }}</a>
+    </div>
+{% endblock %}
