@@ -33,25 +33,6 @@ class StoryType extends AbstractType
                 'multiple' => true,
                 'choice_translation_domain' => 'messages',
             ))
-//            ->add('genres', CollectionType::class, array(
-//                'entry_type' => LinkStoryGenreType::class,
-//                'mapped' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'prototype' => true,
-//                'by_reference' => false,
-//                'required' => true,
-////                'entry_options' => array(),
-//            ))
-            /*->add('storyGenre', EntityType::class, array(
-                    'class' => 'StoryTellBundle:StoryGenre',
-                    'choice_label' => 'name',
-                    'placeholder' => "Choose the story genre",
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('sg')
-                            ->orderBy('sg.name', 'ASC');
-                    })
-            )*/
             ->add('language', EntityType::class, array(
                     'class' => 'AppBundle:Language',
                     'choice_label' => 'name',
