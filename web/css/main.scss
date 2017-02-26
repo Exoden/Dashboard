@@ -161,7 +161,7 @@ body {
 /*****************/
 .clicker {
     background-color: #4a3c2f;
-    font-family: fontClicker;
+    font-family: fontClicker serif;
     width: 1600px !important;
     height: 800px !important;
 
@@ -351,7 +351,7 @@ body {
 .strategy {
     background-color: #06b;
     width: 1600px !important;
-    font-family: fontStrategy;
+    font-family: fontStrategy serif;
 
     h1 {
         text-align: center;
@@ -501,6 +501,13 @@ body {
                 margin-top: $small-space;
                 margin-bottom: $small-space;
                 font-size: 16px;
+            }
+
+            .form-list {
+                list-style-type: none;
+                height: auto;
+                padding-left: $small-space;
+                margin-bottom: $small-space;
             }
 
             .input-button {

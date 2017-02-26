@@ -3,6 +3,7 @@
 namespace StoryTellBundle\Entity;
 
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,10 +38,13 @@ class Story
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StoryTellBundle\Entity\StoryGenre")
-     * @ORM\JoinColumn(name="story_genre_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="StoryTellBundle\Entity\StoryGenre")
+     * @ORM\JoinTable(name="link_story_genre",
+     *      joinColumns={@ORM\JoinColumn(name="story_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="story_genre_id", referencedColumnName="id")}
+     *      )
      */
-    private $storyGenre;
+    private $genres;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -53,6 +57,11 @@ class Story
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
      */
     private $language;
+
+
+    public function __construct() {
+        $this->genres = new ArrayCollection();
+    }
 
 
     /**
@@ -112,29 +121,6 @@ class Story
     }
 
     /**
-     * Set storyGenre
-     *
-     * @param StoryGenre $storyGenre
-     * @return Story
-     */
-    public function setStoryGenre($storyGenre)
-    {
-        $this->storyGenre = $storyGenre;
-
-        return $this;
-    }
-
-    /**
-     * Get storyGenre
-     *
-     * @return StoryGenre
-     */
-    public function getStoryGenre()
-    {
-        return $this->storyGenre;
-    }
-
-    /**
      * Set author
      *
      * @param User $author
@@ -178,5 +164,26 @@ class Story
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    // Notez le singulier, on ajoute une seule catégorie à la fois
+    public function addStoryGenre(StoryGenre $genre)
+    {
+        // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+        $this->genres[] = $genre;
+
+        return $this;
+    }
+
+    public function removeStoryGenre(StoryGenre $genre)
+    {
+        // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+        $this->genres->removeElement($genre);
+    }
+
+    // Notez le pluriel, on récupère une liste de catégories ici !
+    public function getGenres()
+    {
+        return $this->genres;
     }
 }

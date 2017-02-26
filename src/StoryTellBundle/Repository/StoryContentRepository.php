@@ -3,6 +3,7 @@
 namespace StoryTellBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use StoryTellBundle\Entity\StoryChapter;
 
 /**
  * StoryContentRepository
@@ -12,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoryContentRepository extends EntityRepository
 {
-    function getFirstContent($storyChapter)
+    function getFirstContent(StoryChapter $storyChapter)
     {
         return $this->createQueryBuilder('sco')
             ->innerJoin('StoryTellBundle:StoryChapter', 'sch', 'WITH', 'sco.storyChapter = sch.id')

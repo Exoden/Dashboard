@@ -13,7 +13,12 @@
         {{ include('AppBundle::flash_messages.html.twig') }}
 
         <h2>{{ "Title"|trans }} : {{ story.title }}</h2>
-        <p>{{ "Genre"|trans }} : {{ story.storyGenre.name }}</p>
+        <p>
+            {{ "Genre"|trans }} :
+            {% for genre in story_genres %}
+                {{ genre.name }}
+            {% endfor %}
+        </p>
         <div class="block-text">
             <p>{{ "Description"|trans }} : {{ story.description|nl2br }}</p>
         </div>

@@ -3,9 +3,9 @@
 namespace StoryTellBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use StoryTellBundle\Entity\StoryGenre;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -26,14 +26,27 @@ class StoryType extends AbstractType
             ->add('description', TextareaType::class, array(
                 'attr' => array('placeholder' => "Description", 'rows' => '4'))
             )
-            ->add('genres', CollectionType::class, array(
-                
+            ->add('genres', EntityType::class, array(
+                'class' => StoryGenre::class,
+                'choice_label' => 'name',
+                'expanded' => true,
+                'multiple' => true,
+                'choice_translation_domain' => 'messages',
             ))
+//            ->add('genres', CollectionType::class, array(
+//                'entry_type' => LinkStoryGenreType::class,
+//                'mapped' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'prototype' => true,
+//                'by_reference' => false,
+//                'required' => true,
+////                'entry_options' => array(),
+//            ))
             /*->add('storyGenre', EntityType::class, array(
                     'class' => 'StoryTellBundle:StoryGenre',
                     'choice_label' => 'name',
                     'placeholder' => "Choose the story genre",
-                    'choice_translation_domain' => 'messages',
                     'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('sg')
                             ->orderBy('sg.name', 'ASC');

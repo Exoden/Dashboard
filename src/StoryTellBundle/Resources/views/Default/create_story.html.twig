@@ -21,7 +21,16 @@
 
             {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
             {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-            {{ "Genre"|trans }} : {{ form_widget(form.storyGenre, {'attr': {'class': 'form-control'}}) }}
+            {{ "Genres"|trans }} :
+            <ul class="form-list">
+                {% for genre in form.genres %}
+                    <li>
+                        {{ form_errors(genre) }}
+                        {{ form_widget(genre) }}
+                        {{ form_label(genre) }}
+                    </li>
+                {% endfor %}
+            </ul>
             {{ "Language"|trans }} : {{ form_widget(form.language, {'attr': {'class': 'form-control'}}) }}
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}

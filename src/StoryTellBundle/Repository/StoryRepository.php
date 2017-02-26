@@ -2,7 +2,11 @@
 
 namespace StoryTellBundle\Repository;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use StoryTellBundle\Entity\Story;
+use StoryTellBundle\Entity\StoryChapter;
+use StoryTellBundle\Entity\StoryGenre;
 
 /**
  * StoryRepository
@@ -12,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoryRepository extends EntityRepository
 {
-    function getReadingsOfUser($user)
+    function getReadingsOfUser(User $user)
     {
         return $this->createQueryBuilder('s')
             ->innerJoin('StoryTellBundle:Readings', 'r', 'WITH', 'r.story = s.id')
@@ -22,7 +26,7 @@ class StoryRepository extends EntityRepository
             ->getResult();
     }
 
-    function getNbChapters($story)
+    function getNbChapters(Story $story)
     {
         return $this->createQueryBuilder('s')
             ->select('count(sch) as nb_pages')
@@ -33,7 +37,7 @@ class StoryRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    function getNbPages($story)
+    function getNbPages(Story $story)
     {
         return $this->createQueryBuilder('s')
             ->select('count(sco) as nb_pages')
@@ -45,7 +49,7 @@ class StoryRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    function getNextChapter($story, $chapter)
+    function getNextChapter(Story $story, StoryChapter $chapter)
     {
         return $this->createQueryBuilder('s')
             ->select('sc')
@@ -56,5 +60,14 @@ class StoryRepository extends EntityRepository
             ->setParameter('next_chapter', $chapter->getChapter() + 1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    function getStoriesWithGenre(StoryGenre $genre)
+    {
+        return $this->createQueryBuilder('s')
+            ->where(':genre MEMBER OF s.genres')
+            ->setParameter('genre', $genre)
+            ->getQuery()
+            ->getResult();
     }
 }

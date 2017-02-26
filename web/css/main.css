@@ -104,7 +104,7 @@ body {
 /*****************/
 .clicker {
   background-color: #4a3c2f;
-  font-family: fontClicker;
+  font-family: fontClicker serif;
   width: 1600px !important;
   height: 800px !important; }
   .clicker h1 {
@@ -233,7 +233,7 @@ body {
 .strategy {
   background-color: #06b;
   width: 1600px !important;
-  font-family: fontStrategy; }
+  font-family: fontStrategy serif; }
   .strategy h1 {
     text-align: center; }
   .strategy .menu {
@@ -336,6 +336,11 @@ body {
       margin-top: 10px;
       margin-bottom: 10px;
       font-size: 16px; }
+    .story-tell .block-form .form-style .form-list {
+      list-style-type: none;
+      height: auto;
+      padding-left: 10px;
+      margin-bottom: 10px; }
     .story-tell .block-form .form-style .input-button {
       margin: 10px 0 10px; }
 

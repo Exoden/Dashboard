@@ -2,6 +2,7 @@
 
 namespace StoryTellBundle\Controller;
 
+use StoryTellBundle\Entity\Readings;
 use StoryTellBundle\Entity\Story;
 use StoryTellBundle\Entity\StoryChapter;
 use StoryTellBundle\Entity\StoryContent;
@@ -9,7 +10,6 @@ use StoryTellBundle\Form\StoryChapterType;
 use StoryTellBundle\Form\StoryContentType;
 use StoryTellBundle\Form\StoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -53,6 +53,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
@@ -83,6 +84,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
@@ -114,6 +116,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
@@ -149,6 +152,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
@@ -157,6 +161,7 @@ class DefaultController extends Controller
             throw $this->createAccessDeniedException();
         }
 
+        /** @var StoryChapter $chapter */
         $chapter = $em->getRepository('StoryTellBundle:StoryChapter')->find($chapter_id);
         if (!$chapter) {
             throw $this->createNotFoundException();
@@ -185,6 +190,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
@@ -222,11 +228,20 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Story $story */
         $stories = $em->getRepository('StoryTellBundle:Story')->findAll();
+
+        $story_tab = array();
+        $i = 0;
+        foreach ($stories as $story) {
+            $story_tab[$i]['story'] = $story;
+            $story_tab[$i]['genres'] = $story->getGenres();
+            $i++;
+        }
 
         $genres = $em->getRepository('StoryTellBundle:StoryGenre')->findAll();
 
-        return $this->render('StoryTellBundle:Default:stories.html.twig', array('stories' => $stories, 'genres' => $genres));
+        return $this->render('StoryTellBundle:Default:stories.html.twig', array('story_tab' => $story_tab, 'genres' => $genres));
     }
 
     /**
@@ -241,11 +256,20 @@ class DefaultController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $stories = $em->getRepository('StoryTellBundle:Story')->findBy(array('storyGenre' => $genre_selected));
+        /** @var Story $story */
+        $stories = $em->getRepository('StoryTellBundle:Story')->getStoriesWithGenre($genre_selected);
+
+        $story_tab = array();
+        $i = 0;
+        foreach ($stories as $story) {
+            $story_tab[$i]['story'] = $story;
+            $story_tab[$i]['genres'] = $story->getGenres();
+            $i++;
+        }
 
         $genres = $em->getRepository('StoryTellBundle:StoryGenre')->findAll();
 
-        return $this->render('StoryTellBundle:Default:stories.html.twig', array('stories' => $stories, 'genres' => $genres));
+        return $this->render('StoryTellBundle:Default:stories.html.twig', array('story_tab' => $story_tab, 'genres' => $genres));
     }
 
     /**
@@ -283,16 +307,19 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
         }
 
+        $story_genres = $story->getGenres();
+
         $nb_chapters = $em->getRepository('StoryTellBundle:Story')->getNbChapters($story);
 
         $nb_pages = $em->getRepository('StoryTellBundle:Story')->getNbPages($story);
 
-        return $this->render('StoryTellBundle:Default:detail_story.html.twig', array('story' => $story, 'nb_chapters' => $nb_chapters, 'nb_pages' => $nb_pages));
+        return $this->render('StoryTellBundle:Default:detail_story.html.twig', array('story' => $story, 'story_genres' => $story_genres, 'nb_chapters' => $nb_chapters, 'nb_pages' => $nb_pages));
     }
 
     /**
@@ -304,11 +331,13 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Story $story */
         $story = $em->getRepository('StoryTellBundle:Story')->find($story_id);
         if (!$story) {
             throw $this->createNotFoundException();
         }
 
+        /** @var Readings $reading */
         $reading = $em->getRepository('StoryTellBundle:Readings')->findOneBy(array('story' => $story, 'user' => $user));
         if (!$reading) {
             throw $this->createNotFoundException();
@@ -332,6 +361,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Readings $reading */
         $reading = $em->getRepository('StoryTellBundle:Readings')->find($reading_id);
         if (!$reading) {
             throw $this->createNotFoundException();
@@ -368,6 +398,7 @@ class DefaultController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        /** @var Readings $reading */
         $reading = $em->getRepository('StoryTellBundle:Readings')->find($reading_id);
         if (!$reading) {
             throw $this->createNotFoundException();

@@ -3,6 +3,9 @@
 namespace StoryTellBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use StoryTellBundle\Entity\Story;
+use StoryTellBundle\Entity\StoryChapter;
+use StoryTellBundle\Entity\StoryContent;
 
 /**
  * StoryChapterRepository
@@ -12,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoryChapterRepository extends EntityRepository
 {
-    function getNumberLastPage($chapter)
+    function getNumberLastPage(StoryChapter $chapter)
     {
         return $this->createQueryBuilder('sc')
             ->select('max(c.page) as value')
@@ -23,7 +26,7 @@ class StoryChapterRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    function getNextPage($chapter, $content)
+    function getNextPage(StoryChapter $chapter, StoryContent $content)
     {
         return $this->createQueryBuilder('sc')
             ->select('c')
@@ -36,7 +39,7 @@ class StoryChapterRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    function getFirstChapter($story)
+    function getFirstChapter(Story $story)
     {
         return $this->createQueryBuilder('sc')
             ->innerJoin('StoryTellBundle:Story', 's', 'WITH', 'sc.story = s.id')

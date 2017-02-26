@@ -19,9 +19,16 @@
         {% endfor %}
 
         <h3>{{ "List"|trans }}</h3>
-        {% for story in stories %}
-            <div id="{{ story.id }}">
-                <a href="{{ path('detail_story', {'story_id': story.id}) }}">{{ story.title }}</a> <span class="lang-xs" lang="{{ story.language.code }}" title="{{ story.language.name }}"></span> (<a href="{{ path('stories_genre', {'genre_name': story.storyGenre.name}) }}">{{ story.storyGenre.name|trans }}</a>) - <a href="{{ path('detail_profile', {'user_id': story.author.id}) }}">{{ story.author.username }}</a>
+        {% for story in story_tab %}
+            <div id="{{ story['story'].id }}">
+                <a href="{{ path('detail_story', {'story_id': story['story'].id}) }}">{{ story['story'].title }}</a> <span class="lang-xs" lang="{{ story['story'].language.code }}" title="{{ story['story'].language.name }}"></span>
+                (
+                {% for genre in story['genres'] %}
+                    {% if loop.index0 > 0 %}, {% endif %}
+                    <a href="{{ path('stories_genre', {'genre_name': genre.name}) }}">{{ genre.name|trans }}</a>
+                {% endfor %}
+                )
+                - <a href="{{ path('detail_profile', {'user_id': story['story'].author.id}) }}">{{ story['story'].author.username }}</a>
                 <span class="btn fa fa-plus-circle add-readings" title="{{ "Add to my readings"|trans }}"></span>
             </div>
         {% endfor %}
