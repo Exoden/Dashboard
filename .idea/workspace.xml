@@ -761,7 +761,7 @@
       <workItem from="1485975957521" duration="1326000" />
       <workItem from="1485977546268" duration="43176000" />
       <workItem from="1486225072082" duration="74682000" />
-      <workItem from="1486936946867" duration="47441000" />
+      <workItem from="1486936946867" duration="47458000" />
     </task>
     <task id="LOCAL-00001" summary="Clean Repository (type vars)&#10;Genres list">
       <created>1488146888507</created>
@@ -770,11 +770,18 @@
       <option name="project" value="LOCAL" />
       <updated>1488146888507</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Clean Repository (type vars)&#10;Genres list">
+      <created>1488147041954</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1488147041954</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="415583000" />
+    <option name="totallyTimeSpent" value="415600000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
