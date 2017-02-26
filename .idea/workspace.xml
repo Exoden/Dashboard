@@ -3,21 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="70dd1457-7b46-4a9e-be3b-bb7746449418" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Controller/DefaultController.php" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Controller/DefaultController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Entity/Story.php" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Entity/Story.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Form/StoryType.php" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Form/StoryType.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Repository/StoryChapterRepository.php" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Repository/StoryChapterRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Repository/StoryContentRepository.php" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Repository/StoryContentRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Repository/StoryRepository.php" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Repository/StoryRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Resources/translations/messages.en.yml" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Resources/translations/messages.en.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Resources/translations/messages.fr.yml" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Resources/translations/messages.fr.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/create_story.html.twig" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/create_story.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/detail_story.html.twig" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/detail_story.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/edit_story.html.twig" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/edit_story.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/stories.html.twig" afterPath="$PROJECT_DIR$/src/StoryTellBundle/Resources/views/Default/stories.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/css/main.css" afterPath="$PROJECT_DIR$/web/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/css/main.css.map" afterPath="$PROJECT_DIR$/web/css/main.css.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/css/main.scss" afterPath="$PROJECT_DIR$/web/css/main.scss" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -41,8 +26,8 @@
       <file leaf-file-name="DefaultController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/StoryTellBundle/Controller/DefaultController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="477">
-              <caret line="187" column="5" lean-forward="true" selection-start-line="187" selection-start-column="5" selection-end-line="187" selection-end-column="5" />
+            <state relative-caret-position="426">
+              <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
               <folding>
                 <element signature="e#46#82#0#PHP" expanded="true" />
                 <element signature="e#475#532#0#PHP" expanded="false" />
@@ -776,12 +761,20 @@
       <workItem from="1485975957521" duration="1326000" />
       <workItem from="1485977546268" duration="43176000" />
       <workItem from="1486225072082" duration="74682000" />
-      <workItem from="1486936946867" duration="47253000" />
+      <workItem from="1486936946867" duration="47441000" />
     </task>
+    <task id="LOCAL-00001" summary="Clean Repository (type vars)&#10;Genres list">
+      <created>1488146888507</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1488146888507</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="415395000" />
+    <option name="totallyTimeSpent" value="415583000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -814,7 +807,8 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Clean Repository (type vars)&#10;Genres list" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clean Repository (type vars)&#10;Genres list" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1218,8 +1212,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/StoryTellBundle/Controller/DefaultController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="187" column="5" lean-forward="true" selection-start-line="187" selection-start-column="5" selection-end-line="187" selection-end-column="5" />
+        <state relative-caret-position="426">
+          <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
           <folding>
             <element signature="e#46#82#0#PHP" expanded="true" />
             <element signature="e#475#532#0#PHP" expanded="false" />
