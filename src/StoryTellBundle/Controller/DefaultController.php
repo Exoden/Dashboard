@@ -6,9 +6,11 @@ use StoryTellBundle\Entity\Readings;
 use StoryTellBundle\Entity\Story;
 use StoryTellBundle\Entity\StoryChapter;
 use StoryTellBundle\Entity\StoryContent;
-use StoryTellBundle\Form\StoryChapterType;
+use StoryTellBundle\Form\StoryChapterCreateType;
+use StoryTellBundle\Form\StoryChapterEditType;
 use StoryTellBundle\Form\StoryContentType;
-use StoryTellBundle\Form\StoryType;
+use StoryTellBundle\Form\StoryCreateType;
+use StoryTellBundle\Form\StoryEditType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,7 +35,7 @@ class DefaultController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $story = new Story();
-        $form = $this->createForm(StoryType::class, $story);
+        $form = $this->createForm(StoryCreateType::class, $story);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $story->setAuthor($user);
@@ -65,7 +67,7 @@ class DefaultController extends Controller
 
         $chapters = $em->getRepository('StoryTellBundle:StoryChapter')->findBy(array('story' => $story));
 
-        $form = $this->createForm(StoryType::class, $story);
+        $form = $this->createForm(StoryEditType::class, $story);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($story);
@@ -95,7 +97,7 @@ class DefaultController extends Controller
         }
 
         $chapter = new StoryChapter();
-        $form = $this->createForm(StoryChapterType::class, $chapter);
+        $form = $this->createForm(StoryChapterCreateType::class, $chapter);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $chapter->setStory($story);
@@ -133,7 +135,7 @@ class DefaultController extends Controller
 
         $contents = $em->getRepository('StoryTellBundle:StoryContent')->findBy(array('storyChapter' => $chapter));
 
-        $form = $this->createForm(StoryChapterType::class, $chapter);
+        $form = $this->createForm(StoryChapterEditType::class, $chapter);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($chapter);
@@ -230,7 +232,7 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         /** @var Story $story */
-        $stories = $em->getRepository('StoryTellBundle:Story')->findAll();
+        $stories = $em->getRepository('StoryTellBundle:Story')->findBy(array('isPublished' => true));
 
         $story_tab = array();
         $i = 0;

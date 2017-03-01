@@ -46,6 +46,11 @@
                     {% endfor %}
                 </ul>
                 {{ "Language"|trans }} : {{ form_widget(form.language, {'attr': {'class': 'form-control'}}) }}
+
+                {{ form_errors(form.isPublished) }}
+                {{ form_widget(form.isPublished) }}
+                {{ form_label(form.isPublished) }}
+
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
                 {{ form_end(form) }}
             </div>

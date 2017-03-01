@@ -6,13 +6,14 @@ use Doctrine\ORM\EntityRepository;
 use StoryTellBundle\Entity\StoryGenre;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StoryType extends AbstractType
+class StoryEditType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -41,6 +42,9 @@ class StoryType extends AbstractType
                         return $er->createQueryBuilder('lan')
                             ->orderBy('lan.id', 'ASC');
                     })
+            )
+            ->add('isPublished', CheckboxType::class, array(
+                    'label' => "Publish")
             )
             ->add('save', SubmitType::class, array('label' => 'Save Story'));
     }

@@ -41,6 +41,13 @@ class StoryChapter
      */
     private $chapter;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="is_published", type="boolean", options={"default" : 0})
+     */
+    private $isPublished;
+
 
     /**
      * Get id
@@ -119,5 +126,28 @@ class StoryChapter
     public function getChapter()
     {
         return $this->chapter;
+    }
+
+    /**
+     * Set isPublished
+     *
+     * @param integer $isPublished
+     * @return StoryChapter
+     */
+    public function setIsPublished($isPublished)
+    {
+        $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    /**
+     * Get isPublished
+     *
+     * @return integer
+     */
+    public function getIsPublished()
+    {
+        return $this->isPublished;
     }
 }

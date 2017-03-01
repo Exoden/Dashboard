@@ -58,6 +58,13 @@ class Story
      */
     private $language;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="is_published", type="boolean", options={"default" : 0})
+     */
+    private $isPublished;
+
 
     public function __construct() {
         $this->genres = new ArrayCollection();
@@ -164,6 +171,29 @@ class Story
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * Set isPublished
+     *
+     * @param integer $isPublished
+     * @return Story
+     */
+    public function setIsPublished($isPublished)
+    {
+        $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    /**
+     * Get isPublished
+     *
+     * @return integer
+     */
+    public function getIsPublished()
+    {
+        return $this->isPublished;
     }
 
     // Notez le singulier, on ajoute une seule catégorie à la fois

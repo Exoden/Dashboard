@@ -67,6 +67,7 @@ class StoryRepository extends EntityRepository
         return $this->createQueryBuilder('s')
             ->where(':genre MEMBER OF s.genres')
             ->setParameter('genre', $genre)
+            ->andWhere('s.isPublished = 1')
             ->getQuery()
             ->getResult();
     }
