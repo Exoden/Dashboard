@@ -12,6 +12,7 @@ use StoryTellBundle\Form\StoryContentType;
 use StoryTellBundle\Form\StoryCreateType;
 use StoryTellBundle\Form\StoryEditType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -39,6 +40,8 @@ class DefaultController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $story->setAuthor($user);
+            $story->setIsPublished(false);
+            $story->setIsFinished(false);
             $em->persist($story);
             $em->flush();
             $this->addFlash('success', "New Story saved");
@@ -69,10 +72,16 @@ class DefaultController extends Controller
 
         $form = $this->createForm(StoryEditType::class, $story);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($story);
-            $em->flush();
-            $this->addFlash('success', "Changes saved");
+        if ($form->isSubmitted()) {
+            if (!$chapters || ($chapters && !$chapters[0]->getIsPublished())) {
+                $publishError = new FormError("There is no chapter published. You must publish at least one chapter before publishing the Story.");
+                $form->get('isPublished')->addError($publishError);
+            }
+            if ($form->isValid()) {
+                $em->persist($story);
+                $em->flush();
+                $this->addFlash('success', "Changes saved");
+            }
         }
 
         return $this->render('StoryTellBundle:Default:edit_story.html.twig', array('story' => $story, 'chapters' => $chapters, 'form' => $form->createView()));
@@ -102,6 +111,7 @@ class DefaultController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $chapter->setStory($story);
             $chapter->setChapter($em->getRepository('StoryTellBundle:Story')->getNbChapters($story) + 1);
+            $chapter->setIsPublished(false);
             $em->persist($chapter);
             $em->flush();
             $this->addFlash('success', "New Chapter saved");
@@ -138,6 +148,8 @@ class DefaultController extends Controller
         $form = $this->createForm(StoryChapterEditType::class, $chapter);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO : Si le prochain chapitre est publier, on ne doit pas pouvoir dépublier celui ici
+            // TODO : Si on dépublie le premier chapitre, on doit dépublier l'Histoire en même temps
             $em->persist($chapter);
             $em->flush();
             $this->addFlash('success', "Changes saved");
@@ -215,7 +227,7 @@ class DefaultController extends Controller
         $form = $this->createForm(StoryContentType::class, $content);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO : Comprendre pourquoi je ne recois pas la tabulation en début de chaine ($form['content']->getData())
+            // TODO : Comprendre pourquoi je ne recois pas la tabulation en début de chaine ($form['content']->getData()) => because fucking trim
             $em->persist($content);
             $em->flush();
             $this->addFlash('success', "Changes saved");
@@ -259,11 +271,11 @@ class DefaultController extends Controller
             throw $this->createNotFoundException();
         }
 
-        /** @var Story $story */
         $stories = $em->getRepository('StoryTellBundle:Story')->getStoriesWithGenre($genre_selected);
 
         $story_tab = array();
         $i = 0;
+        /** @var Story $story */
         foreach ($stories as $story) {
             $story_tab[$i]['story'] = $story;
             $story_tab[$i]['genres'] = $story->getGenres();
@@ -318,9 +330,9 @@ class DefaultController extends Controller
 
         $story_genres = $story->getGenres();
 
-        $nb_chapters = $em->getRepository('StoryTellBundle:Story')->getNbChapters($story);
+        $nb_chapters = $em->getRepository('StoryTellBundle:Story')->getNbChapters($story, true);
 
-        $nb_pages = $em->getRepository('StoryTellBundle:Story')->getNbPages($story);
+        $nb_pages = $em->getRepository('StoryTellBundle:Story')->getNbPages($story, true);
 
         return $this->render('StoryTellBundle:Default:detail_story.html.twig', array('story' => $story, 'story_genres' => $story_genres, 'nb_chapters' => $nb_chapters, 'nb_pages' => $nb_pages));
     }
@@ -350,9 +362,44 @@ class DefaultController extends Controller
             return $this->render('StoryTellBundle:Default:finished_story.html.twig', array('reading' => $reading));
         }
 
+        $nb_chapter = $em->getRepository('StoryTellBundle:Story')->getNbChapters($story, true);
         $nb_pages_chapter = $em->getRepository('StoryTellBundle:StoryChapter')->getNumberLastPage($reading->getStoryChapter());
 
-        return $this->render('StoryTellBundle:Default:read_story.html.twig', array('story' => $story, 'reading' => $reading, 'nb_pages_chapter' => $nb_pages_chapter));
+        return $this->render('StoryTellBundle:Default:read_story.html.twig', array('story' => $story, 'reading' => $reading, 'nb_chapters' => $nb_chapter, 'nb_pages_chapter' => $nb_pages_chapter));
+    }
+
+    /**
+     * @Route("/reading/{reading_id}/previous_page", name="read_previous_page")
+     */
+    public function readPreviousPageAction(Request $request, $reading_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        /** @var Readings $reading */
+        $reading = $em->getRepository('StoryTellBundle:Readings')->find($reading_id);
+        if (!$reading) {
+            throw $this->createNotFoundException();
+        }
+        if ($reading->getUser() != $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $previous_page = $em->getRepository('StoryTellBundle:StoryChapter')->getPreviousPage($reading->getStoryChapter(), $reading->getStoryContent());
+        if (!$previous_page) { // Change chapter
+            $previous_chapter = $em->getRepository('StoryTellBundle:Story')->getPreviousChapter($reading->getStory(), $reading->getStoryChapter());
+            if (!$previous_chapter) { // Story finished
+                return $this->redirectToRoute('read_story', array('story_id' => $reading->getStory()->getId()));
+            }
+            $previous_page = $em->getRepository('StoryTellBundle:StoryContent')->findOneBy(array('storyChapter' => $previous_chapter));
+            $reading->setStoryChapter($previous_chapter);
+        }
+        $reading->setStoryContent($previous_page);
+        $em->persist($reading);
+        $em->flush();
+
+        return $this->redirectToRoute('read_story', array('story_id' => $reading->getStory()->getId()));
     }
 
     /**
@@ -375,8 +422,9 @@ class DefaultController extends Controller
 
         $next_page = $em->getRepository('StoryTellBundle:StoryChapter')->getNextPage($reading->getStoryChapter(), $reading->getStoryContent());
         if (!$next_page) { // Change chapter
-            $next_chapter = $em->getRepository('StoryTellBundle:Story')->getNextChapter($reading->getStory(), $reading->getStoryChapter());
+            $next_chapter = $em->getRepository('StoryTellBundle:Story')->getNextChapter($reading->getStory(), $reading->getStoryChapter(), true);
             if (!$next_chapter) { // Story finished
+                // TODO : Story not finished until bool story.isFinished is false (redirect to temporary finished story, set next chapter button when it's available)
                 $reading->setIsFinished(true);
                 $em->persist($reading);
                 $em->flush();

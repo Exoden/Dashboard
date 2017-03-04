@@ -65,6 +65,13 @@ class Story
      */
     private $isPublished;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="is_finished", type="boolean", options={"default" : 0})
+     */
+    private $isFinished;
+
 
     public function __construct() {
         $this->genres = new ArrayCollection();
@@ -196,10 +203,31 @@ class Story
         return $this->isPublished;
     }
 
-    // Notez le singulier, on ajoute une seule catégorie à la fois
+    /**
+     * Set isFinished
+     *
+     * @param integer $isFinished
+     * @return Story
+     */
+    public function setIsFinished($isFinished)
+    {
+        $this->isFinished = $isFinished;
+
+        return $this;
+    }
+
+    /**
+     * Get isFinished
+     *
+     * @return integer
+     */
+    public function getIsFinished()
+    {
+        return $this->isFinished;
+    }
+
     public function addStoryGenre(StoryGenre $genre)
     {
-        // Ici, on utilise l'ArrayCollection vraiment comme un tableau
         $this->genres[] = $genre;
 
         return $this;
@@ -207,11 +235,9 @@ class Story
 
     public function removeStoryGenre(StoryGenre $genre)
     {
-        // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
         $this->genres->removeElement($genre);
     }
 
-    // Notez le pluriel, on récupère une liste de catégories ici !
     public function getGenres()
     {
         return $this->genres;

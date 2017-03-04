@@ -12,10 +12,28 @@
     <div class="col-md-12">
         <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
         <h3>{{ "Chapter"|trans }} {{ reading.storyChapter.chapter }} : {{ reading.storyChapter.title }}</h3>
-        <div class="block-text">
-            <p>{{ reading.storyContent.content |replace({'\t': '&nbsp;&nbsp;&nbsp;&nbsp;'}) |raw |nl2br }}</p>
+        <div class="block-reading">
+            <div class="block-text">
+                <p>{{ reading.storyContent.content |replace({'\t': '&nbsp;&nbsp;&nbsp;&nbsp;'}) |raw |nl2br }}</p>
+            </div>
+            <div class="page-number">
+                <p>{{ "Page"|trans }} : {{ reading.storyContent.page }} / {{ nb_pages_chapter }}</p>
+            </div>
+            <div class="reading-buttons">
+                {% if reading.storyContent.page != 0 and reading.storyChapter.chapter != 1 %}
+                    <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous page"|trans }}</a>
+                {% elseif reading.storyContent.page == 0 and reading.storyChapter.chapter != 1 %}
+                    <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous chapter"|trans }}</a>
+                {% endif %}
+
+                {% if reading.storyContent.page != nb_pages_chapter and reading.storyChapter.chapter != nb_chapters %}
+                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "Next page"|trans }} ></a>
+                {% elseif reading.storyContent.page == nb_pages_chapter and reading.storyChapter.chapter != nb_chapters %}
+                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "Next chapter"|trans }} ></a>
+                {% else %}
+                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "The end"|trans }}</a>
+                {% endif %}
+            </div>
         </div>
-        <p>{{ "Page"|trans }} : {{ reading.storyContent.page }} / {{ nb_pages_chapter }}</p>
-        <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}">{{ "Next page"|trans }} ></a>
     </div>
 {% endblock %}

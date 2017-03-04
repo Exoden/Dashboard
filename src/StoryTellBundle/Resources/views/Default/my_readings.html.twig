@@ -16,6 +16,7 @@
             <div id="{{ reading.id }}">
                 <a href="{{ path('read_story', {'story_id': reading.id}) }}">{{ reading.title }}</a>
                 <span class="lang-xs" lang="{{ reading.language.code }}" title="{{ reading.language.name }}"></span>
+                - <a href="{{ path('detail_profile', {'user_id': reading.author.id}) }}">{{ reading.author.username }}</a>
                 <span class="btn fa fa-minus-circle remove-readings" title="{{ "Remove from my readings"|trans }}"></span>
             </div>
         {% endfor %}

@@ -21,7 +21,8 @@ class StoryChapterEditType extends AbstractType
                     'attr' => array('placeholder' => "Title"))
             )
             ->add('isPublished', CheckboxType::class, array(
-                'label' => "Publish")
+                    'label' => "Publish",
+                    'required' => false)
             )
             ->add('save', SubmitType::class, array('label' => 'Save Chapter'));
     }

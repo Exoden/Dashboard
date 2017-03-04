@@ -4,7 +4,7 @@ $border-color: #1b6d85;
 $debug_color: red;
 
 $small-space: 10px;
-$big-space: 20px;
+$large-space: 20px;
 
 $shadow-size: 3px;
 $shadow-color: #ccc;
@@ -452,21 +452,38 @@ body {
     .body {
         background-color: #fff;
         border-radius: 5px;
-        padding: $big-space !important;
+        padding: $large-space !important;
     }
 
     .main-menu {
         margin: $small-space 0;
     }
 
-    .block-text {
-        background-color: navajowhite;
+    .info {
+        font-size: x-small;
+    }
+
+    .block-reading {
         width: 600px;
         margin: 0 auto;
-        padding: $small-space;
-        border: solid 1px $border-color;
-        border-radius: 5px;
-        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+
+        .block-text {
+            background-color: navajowhite;
+            padding: $small-space;
+            border: solid 1px $border-color;
+            border-radius: 5px;
+            //box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+        }
+
+        .page-number {
+            float: right;
+            margin: $small-space 0;
+        }
+
+        .reading-buttons {
+            text-align: center;
+            margin-top: $large-space;
+        }
     }
 
     .block-menu {

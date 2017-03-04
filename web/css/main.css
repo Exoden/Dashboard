@@ -302,14 +302,22 @@ body {
   padding: 20px !important; }
 .story-tell .main-menu {
   margin: 10px 0; }
-.story-tell .block-text {
-  background-color: navajowhite;
+.story-tell .info {
+  font-size: x-small; }
+.story-tell .block-reading {
   width: 600px;
-  margin: 0 auto;
-  padding: 10px;
-  border: solid 1px #1b6d85;
-  border-radius: 5px;
-  box-shadow: 3px 3px 3px #ccc; }
+  margin: 0 auto; }
+  .story-tell .block-reading .block-text {
+    background-color: navajowhite;
+    padding: 10px;
+    border: solid 1px #1b6d85;
+    border-radius: 5px; }
+  .story-tell .block-reading .page-number {
+    float: right;
+    margin: 10px 0; }
+  .story-tell .block-reading .reading-buttons {
+    text-align: center;
+    margin-top: 20px; }
 .story-tell .block-menu {
   background-color: #eee;
   margin: 0 auto;

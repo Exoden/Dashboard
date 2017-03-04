@@ -26,40 +26,63 @@ class StoryRepository extends EntityRepository
             ->getResult();
     }
 
-    function getNbChapters(Story $story)
+    function getNbChapters(Story $story, $isPublished = false)
     {
-        return $this->createQueryBuilder('s')
+        $q = $this->createQueryBuilder('s')
             ->select('count(sch) as nb_pages')
             ->innerJoin('StoryTellBundle:StoryChapter', 'sch', 'WITH', 'sch.story = s.id')
             ->where('s.id = :story')
-            ->setParameter('story', $story)
-            ->getQuery()
+            ->setParameter('story', $story);
+        if ($isPublished)
+            $q = $q->andWhere('sch.isPublished = 1');
+        $q = $q->getQuery()
             ->getSingleScalarResult();
+        return $q;
     }
 
-    function getNbPages(Story $story)
+    function getNbPages(Story $story, $isPublished = false)
     {
-        return $this->createQueryBuilder('s')
+        $q = $this->createQueryBuilder('s')
             ->select('count(sco) as nb_pages')
             ->innerJoin('StoryTellBundle:StoryChapter', 'sch', 'WITH', 'sch.story = s.id')
             ->innerJoin('StoryTellBundle:StoryContent', 'sco', 'WITH', 'sco.storyChapter = sch.id')
             ->where('s.id = :story')
-            ->setParameter('story', $story)
-            ->getQuery()
+            ->setParameter('story', $story);
+        if ($isPublished)
+            $q = $q->andWhere('sch.isPublished = 1');
+        $q = $q->getQuery()
             ->getSingleScalarResult();
+        return $q;
     }
 
-    function getNextChapter(Story $story, StoryChapter $chapter)
+    function getPreviousChapter(Story $story, StoryChapter $chapter)
     {
-        return $this->createQueryBuilder('s')
+        $q =  $this->createQueryBuilder('s')
+            ->select('sc')
+            ->innerJoin('StoryTellBundle:StoryChapter', 'sc', 'WITH', 'sc.story = s.id')
+            ->where('sc.story = :story')
+            ->setParameter('story', $story)
+            ->andWhere('sc.chapter = :previous_chapter')
+            ->setParameter('previous_chapter', $chapter->getChapter() - 1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        return $q;
+    }
+
+    function getNextChapter(Story $story, StoryChapter $chapter, $isPublished = false)
+    {
+        $q =  $this->createQueryBuilder('s')
             ->select('sc')
             ->innerJoin('StoryTellBundle:StoryChapter', 'sc', 'WITH', 'sc.story = s.id')
             ->where('sc.story = :story')
             ->setParameter('story', $story)
             ->andWhere('sc.chapter = :next_chapter')
-            ->setParameter('next_chapter', $chapter->getChapter() + 1)
-            ->getQuery()
+            ->setParameter('next_chapter', $chapter->getChapter() + 1);
+        if ($isPublished)
+            $q = $q->andWhere('sc.isPublished = 1');
+        $q = $q->getQuery()
             ->getOneOrNullResult();
+        return $q;
     }
 
     function getStoriesWithGenre(StoryGenre $genre)

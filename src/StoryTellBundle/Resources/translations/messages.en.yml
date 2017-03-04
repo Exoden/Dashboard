@@ -11,6 +11,8 @@
 "Create a Story": "Create a Story"
 "Read Story": "Read Story"
 "Next page": "Next page"
+"Previous page": "Previous page"
+"The end": "The end"
 
 Homepage: Homepage
 Stories: Stories
@@ -26,6 +28,7 @@ Genres: Genres
 Page: Page
 Remove: Remove
 Publish: Publish
+Author: Author
 
 "Number of Chapters": "Number of Chapters"
 "Number of Pages": "Number of Pages"
@@ -58,3 +61,6 @@ Horror: Horror
 "Love Story": "Love Story"
 
 "Create your own story and share it ! Or simply read others stories !": "Create your own story and share it ! Or simply read others stories !"
+"Story still in writing process.": "Story still in writing process."
+"There is no chapter published. You must publish at least one chapter before publishing the Story.": "There is no chapter published. You must publish at least one chapter before publishing the story."
+"As long as you don't publish the stor, nobody will be able to read it.": "As long as you don't publish the stor, nobody will be able to read it."

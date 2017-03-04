@@ -18,7 +18,12 @@
             <h4>{{ "Chapters"|trans }}</h4>
             <ul>
                 {% for chapter in chapters %}
-                    <li><a href="{{ path('edit_chapter', {'story_id': story.id, 'chapter_id': chapter.id}) }}">{{ chapter.title }}</a></li>
+                    <li>
+                        <a href="{{ path('edit_chapter', {'story_id': story.id, 'chapter_id': chapter.id}) }}">{{ "Chapter"|trans }} {{ chapter.chapter }} : {{ chapter.title }}</a>
+                        {% if chapter.isPublished %}
+                            <span class="fa fa-check" title="published"></span>
+                        {% endif %}
+                    </li>
                 {% endfor %}
                 <li><a href="{{ path('create_chapter', {'story_id': story.id}) }}" class="btn btn-primary">+</a></li>
             </ul>
@@ -39,7 +44,9 @@
                 <ul class="form-list">
                     {% for genre in form.genres %}
                         <li>
-                            {{ form_errors(genre) }}
+                            <div class="bg-danger">
+                                {{ form_errors(genre) }}
+                            </div>
                             {{ form_widget(genre) }}
                             {{ form_label(genre) }}
                         </li>
@@ -47,9 +54,12 @@
                 </ul>
                 {{ "Language"|trans }} : {{ form_widget(form.language, {'attr': {'class': 'form-control'}}) }}
 
-                {{ form_errors(form.isPublished) }}
+                <div class="bg-danger">
+                    {{ form_errors(form.isPublished) }}
+                </div>
                 {{ form_widget(form.isPublished) }}
                 {{ form_label(form.isPublished) }}
+                <p class="info">{{ "As long as you don't publish the Story, nobody will be able to read it."|trans }}</p>
 
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
                 {{ form_end(form) }}

@@ -34,7 +34,7 @@ class DefaultController extends Controller
         $url = $this->container->get('request')->headers->get('referer');
         if (empty($url))
         {
-            $url = $this->container->get('router')->generate('index');
+            $url = $this->container->get('router')->generate('homepage');
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();

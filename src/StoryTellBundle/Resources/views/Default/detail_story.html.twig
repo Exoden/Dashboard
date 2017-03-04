@@ -13,6 +13,11 @@
         {{ include('AppBundle::flash_messages.html.twig') }}
 
         <h2>{{ "Title"|trans }} : {{ story.title }}</h2>
+        {% if story.isFinished == 0 %}
+            <p><span class="fa fa-warning"></span> {{ "Story still in writing process."|trans }}</p>
+        {% endif %}
+
+        <p>{{ "Author"|trans }} : <a href="{{ path('detail_profile', {'user_id': story.author.id}) }}">{{ story.author.username }}</a></p>
         <p>
             {{ "Genre"|trans }} :
             {% for genre in story_genres %}

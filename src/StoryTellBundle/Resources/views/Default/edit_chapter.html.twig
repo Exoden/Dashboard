@@ -36,7 +36,9 @@
 
                 {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
 
-                {{ form_errors(form.isPublished) }}
+                <div class="bg-danger">
+                    {{ form_errors(form.isPublished) }}
+                </div>
                 {{ form_widget(form.isPublished) }}
                 {{ form_label(form.isPublished) }}
 

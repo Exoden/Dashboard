@@ -10,7 +10,9 @@
 "Save Content": "Sauvegarder le Contenu"
 "Create a Story": "Créer une Histoire"
 "Read Story": "Lire l'Histoire"
-"Next page": "Next page"
+"Next page": "Page suivante"
+"Previous page": "Page Précédente"
+"The end": Fin
 
 Homepage: Accueil
 Stories: Histoires
@@ -26,6 +28,7 @@ Genres: Genres
 Page: Page
 Remove: Supprimer
 Publish: Publier
+Author: Auteur
 
 "Number of Chapters": "Nombre de Chapitres"
 "Number of Pages": "Nombre de Pages"
@@ -58,3 +61,6 @@ Horror: Horreur
 "Love Story": "Histoire d'Amour"
 
 "Create your own story and share it ! Or simply read others stories !": "Créez votre propre histoire et partagez la ! Ou lisez simplement les histoires des autres !"
+"Story still in writing process.": "Histoire toujours en cours d'écriture"
+"There is no chapter published. You must publish at least one chapter before publishing the Story.": "Il n'y a pas de chapitre publié. Vous devez publier au moins un chapitre avant de publier l'Histoire."
+"As long as you don't publish the Story, nobody will be able to read it.": "Tant que vous ne publiez pas l'Histoire, personne ne pourra l'a lire."
