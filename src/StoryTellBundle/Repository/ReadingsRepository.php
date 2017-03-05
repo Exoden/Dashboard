@@ -2,6 +2,7 @@
 
 namespace StoryTellBundle\Repository;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -12,4 +13,13 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReadingsRepository extends EntityRepository
 {
+    function getReadingsOfUser(User $user)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('StoryTellBundle:Story', 's', 'WITH', 's.id = r.story')
+            ->where('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }

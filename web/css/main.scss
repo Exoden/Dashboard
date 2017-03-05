@@ -1,13 +1,19 @@
 $bg-color: #ddd;
 $menu-color: #eee;
-$border-color: #1b6d85;
-$debug_color: red;
+$shadow-size: 3px;
+$shadow-color: #ccc;
+$font-color: #333;
+
+$bg-color-night: #333;
+$menu-color-night: #444;
+$shadow-color-night: #111;
+$font-color-night: #999;
 
 $small-space: 10px;
 $large-space: 20px;
 
-$shadow-size: 3px;
-$shadow-color: #ccc;
+$border-color: #1b6d85;
+$debug_color: red;
 
 @font-face {
     font-family: fontClicker;
@@ -23,6 +29,7 @@ body {
     padding-top: 40px;
     padding-bottom: 40px;
     background-color: $bg_color !important;
+    color: $font-color;
 }
 
 .starter-template { // Space under the navbar
@@ -31,6 +38,10 @@ body {
 
 .bg-debug {
     background-color: $debug_color !important;
+}
+
+.back-button {
+    margin-top: $small-space;
 }
 
 /*************/
@@ -459,8 +470,35 @@ body {
         margin: $small-space 0;
     }
 
-    .info {
+    p.info {
         font-size: x-small;
+    }
+
+    .bubble-new {
+        background-color: red;
+        color: whitesmoke;
+        font-size: small;
+        padding: 0 $small-space;
+        border: 0;
+        border-radius: 10px;
+    }
+
+    .bubble-info {
+        background-color: limegreen;
+        color: whitesmoke;
+        font-size: small;
+        padding: 0 $small-space;
+        border: 0;
+        border-radius: 10px;
+    }
+
+    .bubble-lock {
+        background-color: dimgrey;
+        color: whitesmoke;
+        font-size: small;
+        padding: 0 $small-space;
+        border: 0;
+        border-radius: 10px;
     }
 
     .block-reading {

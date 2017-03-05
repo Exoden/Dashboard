@@ -11,7 +11,15 @@
 {% block page %}
     <div class="col-md-12">
         <h2>{{ "Story"|trans }} : {{ reading.story.title }}</h2>
-        <h3>{{ "FINISHED"|trans }} !</h3>
+        {% if reading.story.isFinished %}
+            <h3>{{ "Finished"|trans }} !</h3>
+        {% else %}
+            <p>
+                <span class="fa fa-warning"></span> {{ "Story still in writing process."|trans }}
+                {{ "You will be able to read the next chapter when it's published."|trans }}
+            </p>
+        {% endif %}
+        <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous page"|trans }}</a><br>
         <a href="{{ path('read_again', {'reading_id': reading.id}) }}">{{ "Read again"|trans }} !</a><br>
         <a href="{{ path('my_readings') }}" title="My Readings">{{ "My Readings"|trans }}</a>
     </div>

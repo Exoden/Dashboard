@@ -16,16 +16,6 @@ use StoryTellBundle\Entity\StoryGenre;
  */
 class StoryRepository extends EntityRepository
 {
-    function getReadingsOfUser(User $user)
-    {
-        return $this->createQueryBuilder('s')
-            ->innerJoin('StoryTellBundle:Readings', 'r', 'WITH', 'r.story = s.id')
-            ->where('r.user = :user')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-    }
-
     function getNbChapters(Story $story, $isPublished = false)
     {
         $q = $this->createQueryBuilder('s')

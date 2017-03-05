@@ -7,13 +7,17 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #ddd !important; }
+  background-color: #ddd !important;
+  color: #333; }
 
 .starter-template {
   padding: 50px; }
 
 .bg-debug {
   background-color: red !important; }
+
+.back-button {
+  margin-top: 10px; }
 
 /*************/
 /* DASHBOARD */
@@ -302,8 +306,29 @@ body {
   padding: 20px !important; }
 .story-tell .main-menu {
   margin: 10px 0; }
-.story-tell .info {
+.story-tell p.info {
   font-size: x-small; }
+.story-tell .bubble-new {
+  background-color: red;
+  color: whitesmoke;
+  font-size: small;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px; }
+.story-tell .bubble-info {
+  background-color: limegreen;
+  color: whitesmoke;
+  font-size: small;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px; }
+.story-tell .bubble-lock {
+  background-color: dimgrey;
+  color: whitesmoke;
+  font-size: small;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px; }
 .story-tell .block-reading {
   width: 600px;
   margin: 0 auto; }

@@ -11,7 +11,7 @@
 {% block page %}
     <div class="col-md-12">
         <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
-        <h3>{{ "Chapter"|trans }} : {{ chapter.title }}</h3>
+        <h3>{{ "Chapter"|trans }} {{ chapter.chapter }} : {{ chapter.title }}</h3>
 
         {{ include('AppBundle::flash_messages.html.twig') }}
 
@@ -21,7 +21,9 @@
                 {% for content in contents %}
                     <li><a href="{{ path('edit_content', {'story_id': story.id, 'chapter_id': chapter.id, 'content_id': content.id}) }}">{{ "Page"|trans }} {{ content.page }}</a></li>
                 {% endfor %}
-                <li><a href="{{ path('create_content', {'story_id': story.id, 'chapter_id': chapter.id}) }}" class="btn btn-primary">+</a></li>
+                {% if chapter.isPublished == 0 %}
+                    <li><a href="{{ path('create_content', {'story_id': story.id, 'chapter_id': chapter.id}) }}" class="btn btn-primary">+</a></li>
+                {% endif %}
             </ul>
         </div>
         <div class="col-md-8">
@@ -41,11 +43,12 @@
                 </div>
                 {{ form_widget(form.isPublished) }}
                 {{ form_label(form.isPublished) }}
+                <p class="info">{{ "If you publish a chapter, you won't be able to create new contents on this chapter."|trans }}</p>
 
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
                 {{ form_end(form) }}
             </div>
         </div>
-        <a href="{{ path('edit_story', {'story_id': story.id}) }}" class="btn btn-primary">< {{ "Back"|trans }}</a>
+        <a href="{{ path('edit_story', {'story_id': story.id}) }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
     </div>
 {% endblock %}

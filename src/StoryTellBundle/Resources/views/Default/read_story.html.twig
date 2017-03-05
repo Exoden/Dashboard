@@ -11,6 +11,7 @@
 {% block page %}
     <div class="col-md-12">
         <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
+        <h2>{{ "Author"|trans }} : {{ story.author.username }}</h2>
         <h3>{{ "Chapter"|trans }} {{ reading.storyChapter.chapter }} : {{ reading.storyChapter.title }}</h3>
         <div class="block-reading">
             <div class="block-text">
@@ -20,9 +21,9 @@
                 <p>{{ "Page"|trans }} : {{ reading.storyContent.page }} / {{ nb_pages_chapter }}</p>
             </div>
             <div class="reading-buttons">
-                {% if reading.storyContent.page != 0 and reading.storyChapter.chapter != 1 %}
+                {% if reading.storyContent.page != 1 %}
                     <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous page"|trans }}</a>
-                {% elseif reading.storyContent.page == 0 and reading.storyChapter.chapter != 1 %}
+                {% elseif reading.storyContent.page == 1 and reading.storyChapter.chapter != 1 %}
                     <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous chapter"|trans }}</a>
                 {% endif %}
 

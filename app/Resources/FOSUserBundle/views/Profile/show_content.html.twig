@@ -22,14 +22,16 @@
                 <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
             </div>
             <div class="col-md-3">
-                <ul>
-                    <li>
-                        <a href="{{ path('fos_user_profile_edit') }}">{{ "Edit profile"|trans({}, 'messages') }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('fos_user_change_password') }}">{{ 'change_password.submit'|trans }}</a>
-                    </li>
-                </ul>
+                <div class="menu">
+                    <ul>
+                        <li>
+                            <a href="{{ path('fos_user_profile_edit') }}">{{ "Edit profile"|trans({}, 'messages') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('fos_user_change_password') }}">{{ 'change_password.submit'|trans }}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

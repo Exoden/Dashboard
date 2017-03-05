@@ -24,6 +24,6 @@
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}
         </div>
-        <a href="{{ path('edit_story', {'story_id': story.id}) }}" class="btn btn-primary">< {{ "Back"|trans }}</a>
+        <a href="{{ path('edit_story', {'story_id': story.id}) }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
     </div>
 {% endblock %}

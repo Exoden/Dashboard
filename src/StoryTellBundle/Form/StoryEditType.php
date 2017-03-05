@@ -47,6 +47,10 @@ class StoryEditType extends AbstractType
                     'label' => "Publish",
                     'required' => false)
             )
+            ->add('isFinished', CheckboxType::class, array(
+                    'label' => "Finish",
+                    'required' => false)
+            )
             ->add('save', SubmitType::class, array('label' => 'Save Story'));
     }
     

@@ -25,7 +25,9 @@
                         {% endif %}
                     </li>
                 {% endfor %}
-                <li><a href="{{ path('create_chapter', {'story_id': story.id}) }}" class="btn btn-primary">+</a></li>
+                {% if story.isFinished == 0 %}
+                    <li><a href="{{ path('create_chapter', {'story_id': story.id}) }}" class="btn btn-primary">+</a></li>
+                {% endif %}
             </ul>
         </div>
         <div class="col-md-8">
@@ -61,10 +63,20 @@
                 {{ form_label(form.isPublished) }}
                 <p class="info">{{ "As long as you don't publish the Story, nobody will be able to read it."|trans }}</p>
 
+                <div class="bg-danger">
+                    {{ form_errors(form.isFinished) }}
+                </div>
+                {{ form_widget(form.isFinished) }}
+                {{ form_label(form.isFinished) }}
+                <p class="info">
+                    {{ "If you finish a Story, you won't be able to create new chapters on this Story."|trans }}<br>
+                    {{ "Finished Stories have a better visibility."|trans }}
+                </p>
+
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
                 {{ form_end(form) }}
             </div>
         </div>
-        <a href="{{ path('my_stories') }}" class="btn btn-primary">< {{ "Back"|trans }}</a>
+        <a href="{{ path('my_stories') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
     </div>
 {% endblock %}

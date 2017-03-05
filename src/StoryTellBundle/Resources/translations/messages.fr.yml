@@ -28,6 +28,9 @@ Genres: Genres
 Page: Page
 Remove: Supprimer
 Publish: Publier
+Published: Publié
+Finish: Finir
+Finished: Fini
 Author: Auteur
 
 "Number of Chapters": "Nombre de Chapitres"
@@ -37,10 +40,11 @@ Author: Auteur
 "Choose the story genre": "Choisissez le genre de l'histoire"
 "Choose the language": "Choisissez la langue"
 "Finished Story": "Histoire Terminée"
-FINISHED: TERMINE
 "Read again": "Lire encore"
 "My Readings": "Mes Lectures"
 "My Stories": "Mes Histoires"
+"Reading": "En lecture"
+"All read": "Tout lu"
 
 "Changes saved": "Changements sauvegardés"
 "New Story saved": "Nouvelle Histoire sauvegardée"
@@ -62,5 +66,13 @@ Horror: Horreur
 
 "Create your own story and share it ! Or simply read others stories !": "Créez votre propre histoire et partagez la ! Ou lisez simplement les histoires des autres !"
 "Story still in writing process.": "Histoire toujours en cours d'écriture"
+"There is no content published. You must write at least one page before publishing the chapter.": "Il n'y a pas de contenu publié. Vous devez écrire au moins un contenu avant de publier le chapitre."
 "There is no chapter published. You must publish at least one chapter before publishing the Story.": "Il n'y a pas de chapitre publié. Vous devez publier au moins un chapitre avant de publier l'Histoire."
+"You can not unpublish this chapter since the next chapter is published.": "Vous ne pouvez pas dépublier ce chapitre car le chapitre suivant est publié."
+"The Story has been unpublished since there is no chapter published yet.": "L'Histoire a été dépubliée puisqu'il n'y a plus de chapitre publié."
+"All the chapters are not published. You must publish all the chapters to finish the Story.": "Tous les chapitres ne sont pas publié. Vous devez publier tous les chapitres pour finir l'Histoire."
 "As long as you don't publish the Story, nobody will be able to read it.": "Tant que vous ne publiez pas l'Histoire, personne ne pourra l'a lire."
+"You will be able to read the next chapter when it's published.": "Vous pourrez lire le prochain chapitre lorsqu'il sera publié."
+"If you publish a chapter, you won't be able to create new contents on this chapter.": "Si vous publiez un chapitre, vous ne pourrez pas créer de nouveaux contenus sur celui-ci."
+"If you finish a Story, you won't be able to create new chapters on this Story.": "Si vous finissez une Histoire, vous ne pourrez pas créer de nouveaux chapitres sur celle-ci."
+"Finished Stories have a better visibility.": "Les Histoires finies ont une meilleur visibilité."
