@@ -9,12 +9,7 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <div class="menu">
-                    <ul>
-                        <li><a href="#">{{ "My achievements"|trans({}, "messages") }}</a></li>
-                        <li><a href="#">{{ "My friends"|trans({}, "messages") }}</a></li>
-                    </ul>
-                </div>
+                {% include "AppBundle::profile_menu.html.twig" %}
             </div>
             <div class="col-md-6">
                 <img src="" alt="profile_image" class="profile-image"/>

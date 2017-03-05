@@ -19,6 +19,12 @@ body {
 .back-button {
   margin-top: 10px; }
 
+.color-mode {
+  background-color: darkgrey !important;
+  border-color: grey !important; }
+  .color-mode.active {
+    background-color: dimgrey !important; }
+
 /*************/
 /* DASHBOARD */
 /*************/

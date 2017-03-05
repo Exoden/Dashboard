@@ -25,6 +25,9 @@
                 {{ form_errors(form) }}
             </div>
 
+            <div class="bg-danger">
+                {{ form_errors(form.content) }}
+            </div>
             {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}

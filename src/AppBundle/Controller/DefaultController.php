@@ -61,6 +61,34 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/my-friends", name="my_friends")
+     */
+    public function myFriendsAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // TODO : Get friends from user
+
+        return $this->render('AppBundle::my_friends.html.twig', array(/* TODO : Add friends list */));
+    }
+
+    /**
+     * @Route("/my-achievements", name="my_achievements")
+     */
+    public function myAchievementsAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // TODO : Get achievements from user
+
+        return $this->render('AppBundle::my_achievements.html.twig', array(/* TODO : Add achievements list */));
+    }
+
+    /**
      * @Route("/contact", name="contact")
      */
     public function contactAction(Request $request)

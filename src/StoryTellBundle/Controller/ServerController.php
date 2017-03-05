@@ -3,6 +3,8 @@
 namespace StoryTellBundle\Controller;
 
 use StoryTellBundle\Entity\Readings;
+use StoryTellBundle\Entity\Story;
+use StoryTellBundle\Entity\StoryGenre;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -44,6 +44,15 @@ body {
     margin-top: $small-space;
 }
 
+.color-mode {
+    background-color: darkgrey !important;
+    border-color: grey !important;
+
+    &.active {
+        background-color: dimgrey !important;
+    }
+}
+
 /*************/
 /* DASHBOARD */
 /*************/

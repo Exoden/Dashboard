@@ -1,0 +1,27 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}{{ "My friends"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="container profile">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ "My friends"|trans({}, 'messages') }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                {% include "AppBundle::profile_menu.html.twig" %}
+            </div>
+            <div class="col-md-9">
+                <div class="menu">
+                    <ul>
+                        <li><a href="#">Friend1</a></li>
+                        <li><a href="#">Friend2</a></li>
+                        <li><a href="#">Friend2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

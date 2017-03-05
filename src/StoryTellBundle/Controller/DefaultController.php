@@ -140,15 +140,19 @@ class DefaultController extends Controller
         $chapter = new StoryChapter();
         $form = $this->createForm(StoryChapterCreateType::class, $chapter);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $chapter->setStory($story);
-            $chapter->setChapter($em->getRepository('StoryTellBundle:Story')->getNbChapters($story) + 1);
-            $chapter->setIsPublished(false);
-            $em->persist($chapter);
-            $em->flush();
-            $this->addFlash('success', "New Chapter saved");
-            return $this->redirectToRoute('edit_chapter', array('story_id' => $story->getId(), 'chapter_id' => $chapter->getId(), 'contents' => null));
-        }
+        if ($form->isSubmitted()) {
+
+            // Valid form
+            if ($form->isValid()) {
+                $chapter->setStory($story);
+                $chapter->setChapter($em->getRepository('StoryTellBundle:Story')->getNbChapters($story) + 1);
+                $chapter->setIsPublished(false);
+                $em->persist($chapter);
+                $em->flush();
+                $this->addFlash('success', "New Chapter saved");
+                return $this->redirectToRoute('edit_chapter', array('story_id' => $story->getId(), 'chapter_id' => $chapter->getId(), 'contents' => null));
+            }
+    }
         return $this->render('StoryTellBundle:Default:create_chapter.html.twig', array('story' => $story, 'form' => $form->createView()));
     }
 
@@ -191,6 +195,12 @@ class DefaultController extends Controller
             $form->get('isPublished')->addError($publishError);
             $this->addFlash('error', $error[0]);
         }
+        if ($session->getFlashBag()->has('title')) {
+            $error = $session->getFlashBag()->get('title');
+            $publishError = new FormError($error[0]);
+            $form->get('title')->addError($publishError);
+            $this->addFlash('error', $error[0]);
+        }
 
         if ($form->isSubmitted()) {
             // Control checkbox, and refresh if errors
@@ -200,7 +210,8 @@ class DefaultController extends Controller
                 $this->addFlash('isPublished', "There is no content published. You must write at least one page before publishing the chapter.");
             else if ($next_chapter && $next_chapter->getIsPublished() == true && $form->get('isPublished')->getData() == false)
                 $this->addFlash('isPublished', "You can not unpublish this chapter since the next chapter is published.");
-            if ($session->getFlashBag()->has('isPublished'))
+            $this->controlUrl('title', $chapter);
+            if ($session->getFlashBag()->has('isPublished') || $session->getFlashBag()->has('title'))
                 return $this->redirectToRoute('edit_chapter', array('story_id' => $story_id, 'chapter_id' => $chapter_id));
 
             // Valid form
@@ -264,6 +275,9 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Session $session */
+        $session = $request->getSession();
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         /** @var Story $story */
@@ -275,11 +289,13 @@ class DefaultController extends Controller
             throw $this->createAccessDeniedException();
         }
 
+        /** @var StoryChapter $chapter */
         $chapter = $em->getRepository('StoryTellBundle:StoryChapter')->find($chapter_id);
         if (!$chapter) {
             throw $this->createNotFoundException();
         }
 
+        /** @var StoryContent $content */
         $content = $em->getRepository('StoryTellBundle:StoryContent')->find($content_id);
         if (!$content) {
             throw $this->createNotFoundException();
@@ -287,11 +303,28 @@ class DefaultController extends Controller
 
         $form = $this->createForm(StoryContentType::class, $content);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+
+        // Errors from the validated form, added in FlashBag and form Errors
+        // TODO : Factoriser qui suit (déjà factorisé controlUrl)
+        if ($session->getFlashBag()->has('content')) {
+            $error = $session->getFlashBag()->get('content');
+            $contentError = new FormError($error[0]);
+            $form->get('content')->addError($contentError);
+            $this->addFlash('error', $error[0]);
+        }
+
+        if ($form->isSubmitted()) {
             // TODO : Comprendre pourquoi je ne recois pas la tabulation en début de chaine ($form['content']->getData()) => because fucking trim
-            $em->persist($content);
-            $em->flush();
-            $this->addFlash('success', "Changes saved");
+            $this->controlUrl('content', $content); // TODO : Ajouter le controlUrl dans les create/edit des champs titre/description/content PARTOUT !
+            if ($session->getFlashBag()->has('content'))
+                return $this->redirectToRoute('edit_content', array('story_id' => $story_id, 'chapter_id' => $chapter_id, 'content_id' => $content_id));
+
+            // Valid form
+            if ($form->isValid()) {
+                $em->persist($content);
+                $em->flush();
+                $this->addFlash('success', "Changes saved");
+            }
         }
 
         return $this->render('StoryTellBundle:Default:edit_content.html.twig', array('story' => $story, 'chapter' => $chapter, 'content' => $content, 'form' => $form->createView()));
@@ -314,6 +347,8 @@ class DefaultController extends Controller
             $story_tab[$i]['genres'] = $story->getGenres();
             $i++;
         }
+
+        // TODO : if the Story is new (based on published date), display "new" in bubble-new notification
 
         $genres = $em->getRepository('StoryTellBundle:StoryGenre')->findAll();
 
@@ -342,6 +377,8 @@ class DefaultController extends Controller
             $story_tab[$i]['genres'] = $story->getGenres();
             $i++;
         }
+
+        // TODO : if the Story is new (based on published date), display "new" in bubble-new notification
 
         $genres = $em->getRepository('StoryTellBundle:StoryGenre')->findAll();
 
@@ -542,5 +579,14 @@ class DefaultController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('read_story', array('story_id' => $reading->getStory()->getId()));
+    }
+
+    public function controlUrl($name, $obj)
+    {
+        $regex = '(https?:\/\/[^\s]+)';
+        if (preg_match($regex, $obj->{'get'.ucfirst($name)}())) {
+            $obj->{'set'.ucfirst($name)}(preg_replace($regex, ' ', $obj->{'get'.ucfirst($name)}()));
+            $this->addFlash($name, "Urls are not allowed.");
+        }
     }
 }

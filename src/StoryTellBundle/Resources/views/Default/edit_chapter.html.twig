@@ -36,6 +36,9 @@
                     {{ form_errors(form) }}
                 </div>
 
+                <div class="bg-danger">
+                    {{ form_errors(form.title) }}
+                </div>
                 {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
 
                 <div class="bg-danger">

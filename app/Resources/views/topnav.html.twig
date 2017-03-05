@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Dashboard</a>
+            <a class="navbar-brand" href="{{ path('homepage') }}">Dashboard</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-left">
@@ -25,18 +25,28 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                <li>
-                    <div class="btn-group dropdown" style="margin:0.5em">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="lang-sm lang-lbl-full" lang="{{ app.request.locale }}"></span> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            {% for lang in languages %}
-                                <li><a href="{{ path('change_locale', {'language': lang}) }}"><span class="lang-sm lang-lbl-full" lang="{{ lang }}"></span></a></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </li>
+                    <li>
+                        <div class="btn-group" data-toggle="buttons" style="margin:0.5em">
+                            <label class="btn btn-primary color-mode active">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked><span class="fa fa-sun-o"></span>
+                            </label>
+                            <label class="btn btn-primary color-mode">
+                                <input type="radio" name="options" id="option2" autocomplete="off"><span class="fa fa-moon-o"></span>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn-group dropdown" style="margin:0.5em">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="lang-sm lang-lbl-full" lang="{{ app.request.locale }}"></span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                {% for lang in languages %}
+                                    <li><a href="{{ path('change_locale', {'language': lang}) }}"><span class="lang-sm lang-lbl-full" lang="{{ lang }}"></span></a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
                 {% endif %}
                 {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
                     <li>
