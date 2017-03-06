@@ -10,6 +10,9 @@
 
 {% block page %}
     <div class="col-md-12">
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
         <div class="block-form">
             <div class="form-heading"><h2>{{ "Create Story"|trans }}</h2></div>
 
@@ -19,19 +22,37 @@
                 {{ form_errors(form) }}
             </div>
 
+            <div class="bg-danger">
+                {{ form_errors(form.title) }}
+            </div>
             {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form.description) }}
+            </div>
             {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form.genres) }}
+            </div>
             {{ "Genres"|trans }} :
             <ul class="form-list">
                 {% for genre in form.genres %}
                     <li>
-                        {{ form_errors(genre) }}
+                        <div class="bg-danger">
+                            {{ form_errors(genre) }}
+                        </div>
                         {{ form_widget(genre) }}
                         {{ form_label(genre) }}
                     </li>
                 {% endfor %}
             </ul>
+
+            <div class="bg-danger">
+                {{ form_errors(form.language) }}
+            </div>
             {{ "Language"|trans }} : {{ form_widget(form.language, {'attr': {'class': 'form-control'}}) }}
+            
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}
         </div>

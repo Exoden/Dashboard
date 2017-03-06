@@ -11,6 +11,9 @@
 {% block page %}
     <div class="col-md-12">
         <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
         <div class="block-form">
             <div class="form-heading"><h2>{{ "Create Chapter"|trans }}</h2></div>
 
@@ -20,7 +23,11 @@
                 {{ form_errors(form) }}
             </div>
 
+            <div class="bg-danger">
+                {{ form_errors(form.title) }}
+            </div>
             {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}
         </div>

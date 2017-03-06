@@ -45,11 +45,11 @@ body {
 }
 
 .color-mode {
-    background-color: darkgrey !important;
-    border-color: grey !important;
+    background-color: #666 !important;
+    border-color: #777 !important;
 
     &.active {
-        background-color: dimgrey !important;
+        background-color: #444 !important;
     }
 }
 

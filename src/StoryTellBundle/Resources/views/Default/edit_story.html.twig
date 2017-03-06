@@ -50,6 +50,9 @@
                 </div>
                 {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
 
+                <div class="bg-danger">
+                    {{ form_errors(form.genres) }}
+                </div>
                 {{ "Genres"|trans }} :
                 <ul class="form-list">
                     {% for genre in form.genres %}
@@ -62,6 +65,10 @@
                         </li>
                     {% endfor %}
                 </ul>
+
+                <div class="bg-danger">
+                    {{ form_errors(form.language) }}
+                </div>
                 {{ "Language"|trans }} : {{ form_widget(form.language, {'attr': {'class': 'form-control'}}) }}
 
                 <div class="bg-danger">

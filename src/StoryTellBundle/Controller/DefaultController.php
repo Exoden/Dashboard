@@ -34,19 +34,43 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Session $session */
+        $session = $request->getSession();
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $story = new Story();
         $form = $this->createForm(StoryCreateType::class, $story);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $story->setAuthor($user);
-            $story->setIsPublished(false);
-            $story->setIsFinished(false);
-            $em->persist($story);
-            $em->flush();
-            $this->addFlash('success', "New Story saved");
-            return $this->redirectToRoute('edit_story', array('story_id' => $story->getId(), 'chapters' => null));
+
+        $check_errors = array('title', 'description', 'genres');
+
+        // Errors from the submitted form, added in FlashBag and form Errors
+        foreach ($check_errors as $ce) {
+            $this->makeFormErrorAndFlash($form, $ce);
+        }
+
+        if ($form->isSubmitted()) {
+            $ctrl_url = array('title', 'description');
+            foreach ($ctrl_url as $ce) {
+                $this->controlUrl($ce, $story);
+            }
+            if (count($form->get('genres')->getData()) == 0)
+                $this->addFlash('genres', "You must select at least one genre.");
+            foreach ($check_errors as $ce) {
+                if ($session->getFlashBag()->has($ce))
+                    return $this->redirectToRoute('create_story');
+            }
+
+            if ($form->isValid()) {
+                $story->setAuthor($user);
+                $story->setIsPublished(false);
+                $story->setIsFinished(false);
+                $em->persist($story);
+                $em->flush();
+                $this->addFlash('success', "New Story saved");
+                return $this->redirectToRoute('edit_story', array('story_id' => $story->getId(), 'chapters' => null));
+            }
         }
         return $this->render('StoryTellBundle:Default:create_story.html.twig', array('form' => $form->createView()));
     }
@@ -77,23 +101,20 @@ class DefaultController extends Controller
         $form = $this->createForm(StoryEditType::class, $story);
         $form->handleRequest($request);
 
-        // Errors from the validated form, added in FlashBag and form Errors
-        if ($session->getFlashBag()->has('isPublished')) {
-            $error = $session->getFlashBag()->get('isPublished');
-            $publishError = new FormError($error[0]);
-            $form->get('isPublished')->addError($publishError);
-            $this->addFlash('error', $error[0]);
-        }
-        if ($session->getFlashBag()->has('isFinished')) {
-            $error = $session->getFlashBag()->get('isFinished');
-            $finishError = new FormError($error[0]);
-            $form->get('isFinished')->addError($finishError);
-            $this->addFlash('error', $error[0]);
+        $check_errors = array('title', 'description', 'isPublished', 'isFinished');
+
+        // Errors from the submitted form, added in FlashBag and form Errors
+        foreach ($check_errors as $ce) {
+            $this->makeFormErrorAndFlash($form, $ce);
         }
 
         if ($form->isSubmitted()) {
+            $ctrl_url = array('title', 'description');
+            foreach ($ctrl_url as $ce) {
+                $this->controlUrl($ce, $story);
+            }
             // Control checkbox, and refresh if errors
-            if (!$chapters || ($chapters && !$chapters[0]->getIsPublished()))
+            if ($form->get('isPublished')->getData() == true && (!$chapters || ($chapters && !$chapters[0]->getIsPublished())))
                 $this->addFlash('isPublished', "There is no chapter published. You must publish at least one chapter before publishing the Story.");
             if ($form->get('isFinished')->getData() == true) {
                 $are_all_chapters_published = true;
@@ -105,8 +126,10 @@ class DefaultController extends Controller
                 if (!$are_all_chapters_published)
                     $this->addFlash('isFinished', "All the chapters are not published. You must publish all the chapters to finish the Story.");
             }
-            if ($session->getFlashBag()->has('isPublished') || $session->getFlashBag()->has('isFinished'))
-                return $this->redirectToRoute('edit_story', array('story_id' => $story_id));
+            foreach ($check_errors as $ce) {
+                if ($session->getFlashBag()->has($ce))
+                    return $this->redirectToRoute('edit_story', array('story_id' => $story_id));
+            }
 
             // Valid form
             if ($form->isValid()) {
@@ -126,6 +149,9 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Session $session */
+        $session = $request->getSession();
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         /** @var Story $story */
@@ -140,7 +166,23 @@ class DefaultController extends Controller
         $chapter = new StoryChapter();
         $form = $this->createForm(StoryChapterCreateType::class, $chapter);
         $form->handleRequest($request);
+
+        $check_errors = array('title');
+
+        // Errors from the submitted form, added in FlashBag and form Errors
+        foreach ($check_errors as $ce) {
+            $this->makeFormErrorAndFlash($form, $ce);
+        }
+
         if ($form->isSubmitted()) {
+            $ctrl_url = array('title');
+            foreach ($ctrl_url as $ce) {
+                $this->controlUrl($ce, $chapter);
+            }
+            foreach ($check_errors as $ce) {
+                if ($session->getFlashBag()->has($ce))
+                    return $this->redirectToRoute('create_chapter', array('story_id' => $story_id));
+            }
 
             // Valid form
             if ($form->isValid()) {
@@ -188,21 +230,18 @@ class DefaultController extends Controller
         $form = $this->createForm(StoryChapterEditType::class, $chapter);
         $form->handleRequest($request);
 
-        // Errors from the validated form, added in FlashBag and form Errors
-        if ($session->getFlashBag()->has('isPublished')) {
-            $error = $session->getFlashBag()->get('isPublished');
-            $publishError = new FormError($error[0]);
-            $form->get('isPublished')->addError($publishError);
-            $this->addFlash('error', $error[0]);
-        }
-        if ($session->getFlashBag()->has('title')) {
-            $error = $session->getFlashBag()->get('title');
-            $publishError = new FormError($error[0]);
-            $form->get('title')->addError($publishError);
-            $this->addFlash('error', $error[0]);
+        $check_errors = array('title', 'isPublished');
+
+        // Errors from the submitted form, added in FlashBag and form Errors
+        foreach ($check_errors as $ce) {
+            $this->makeFormErrorAndFlash($form, $ce);
         }
 
         if ($form->isSubmitted()) {
+            $ctrl_url = array('title');
+            foreach ($ctrl_url as $ce) {
+                $this->controlUrl($ce, $chapter);
+            }
             // Control checkbox, and refresh if errors
             /** @var StoryChapter $next_chapter */
             $next_chapter = $em->getRepository('StoryTellBundle:Story')->getNextChapter($story, $chapter);
@@ -210,13 +249,14 @@ class DefaultController extends Controller
                 $this->addFlash('isPublished', "There is no content published. You must write at least one page before publishing the chapter.");
             else if ($next_chapter && $next_chapter->getIsPublished() == true && $form->get('isPublished')->getData() == false)
                 $this->addFlash('isPublished', "You can not unpublish this chapter since the next chapter is published.");
-            $this->controlUrl('title', $chapter);
-            if ($session->getFlashBag()->has('isPublished') || $session->getFlashBag()->has('title'))
-                return $this->redirectToRoute('edit_chapter', array('story_id' => $story_id, 'chapter_id' => $chapter_id));
+            foreach ($check_errors as $ce) {
+                if ($session->getFlashBag()->has($ce))
+                    return $this->redirectToRoute('edit_chapter', array('story_id' => $story_id, 'chapter_id' => $chapter_id));
+            }
 
             // Valid form
             if ($form->isValid()) {
-                if ($chapter->getChapter() == 1 && $form->get('isPublished')->getData() == false) {
+                if ($chapter->getChapter() == 1 && $form->get('isPublished')->getData() == false && $story->getIsPublished() == true) {
                     $story->setIsPublished(false);
                     $this->addFlash('warning', "The Story has been unpublished since there is no chapter published yet.");
                     $em->persist($story);
@@ -236,6 +276,9 @@ class DefaultController extends Controller
     public function createContentAction(Request $request, $story_id, $chapter_id)
     {
         $em = $this->getDoctrine()->getManager();
+
+        /** @var Session $session */
+        $session = $request->getSession();
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -257,13 +300,32 @@ class DefaultController extends Controller
         $content = new StoryContent();
         $form = $this->createForm(StoryContentType::class, $content);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $content->setStoryChapter($chapter);
-            $content->setPage($em->getRepository('StoryTellBundle:StoryChapter')->getNumberLastPage($chapter) + 1);
-            $em->persist($content);
-            $em->flush();
-            $this->addFlash('success', "New Content saved");
-            return $this->redirectToRoute('edit_content', array('story_id' => $story->getId(), 'chapter_id' => $chapter->getId(), 'content_id' => $content->getId()));
+
+        $check_errors = array('content');
+
+        // Errors from the submitted form, added in FlashBag and form Errors
+        foreach ($check_errors as $ce) {
+            $this->makeFormErrorAndFlash($form, $ce);
+        }
+
+        if ($form->isSubmitted()) {
+            $ctrl_url = array('content');
+            foreach ($ctrl_url as $ce) {
+                $this->controlUrl($ce, $content);
+            }
+            foreach ($check_errors as $ce) {
+                if ($session->getFlashBag()->has($ce))
+                    return $this->redirectToRoute('create_content', array('story_id' => $story_id, 'chapter_id' => $chapter_id));
+            }
+
+            if ($form->isValid()) {
+                $content->setStoryChapter($chapter);
+                $content->setPage($em->getRepository('StoryTellBundle:StoryChapter')->getNumberLastPage($chapter) + 1);
+                $em->persist($content);
+                $em->flush();
+                $this->addFlash('success', "New Content saved");
+                return $this->redirectToRoute('edit_content', array('story_id' => $story->getId(), 'chapter_id' => $chapter->getId(), 'content_id' => $content->getId()));
+            }
         }
         return $this->render('StoryTellBundle:Default:create_content.html.twig', array('story' => $story, 'chapter' => $chapter, 'form' => $form->createView()));
     }
@@ -304,20 +366,23 @@ class DefaultController extends Controller
         $form = $this->createForm(StoryContentType::class, $content);
         $form->handleRequest($request);
 
-        // Errors from the validated form, added in FlashBag and form Errors
-        // TODO : Factoriser qui suit (déjà factorisé controlUrl)
-        if ($session->getFlashBag()->has('content')) {
-            $error = $session->getFlashBag()->get('content');
-            $contentError = new FormError($error[0]);
-            $form->get('content')->addError($contentError);
-            $this->addFlash('error', $error[0]);
+        $check_errors = array('content');
+
+        // Errors from the submitted form, added in FlashBag and form Errors
+        foreach ($check_errors as $ce) {
+            $this->makeFormErrorAndFlash($form, $ce);
         }
 
         if ($form->isSubmitted()) {
             // TODO : Comprendre pourquoi je ne recois pas la tabulation en début de chaine ($form['content']->getData()) => because fucking trim
-            $this->controlUrl('content', $content); // TODO : Ajouter le controlUrl dans les create/edit des champs titre/description/content PARTOUT !
-            if ($session->getFlashBag()->has('content'))
-                return $this->redirectToRoute('edit_content', array('story_id' => $story_id, 'chapter_id' => $chapter_id, 'content_id' => $content_id));
+            $ctrl_url = array('content');
+            foreach ($ctrl_url as $ce) {
+                $this->controlUrl($ce, $content); // TODO : Ajouter le controlUrl dans les create/edit des champs titre/description/content PARTOUT !
+            }
+            foreach ($check_errors as $ce) {
+                if ($session->getFlashBag()->has($ce))
+                    return $this->redirectToRoute('edit_content', array('story_id' => $story_id, 'chapter_id' => $chapter_id, 'content_id' => $content_id));
+            }
 
             // Valid form
             if ($form->isValid()) {
@@ -583,10 +648,22 @@ class DefaultController extends Controller
 
     public function controlUrl($name, $obj)
     {
-        $regex = '(https?:\/\/[^\s]+)';
+        $regex = '#(https?|ftp|ssh|mailto):\/\/[a-z0-9\/:%_+.,\#?!@&=-]+#i'; // '(https?:\/\/[^\s]+)'
         if (preg_match($regex, $obj->{'get'.ucfirst($name)}())) {
             $obj->{'set'.ucfirst($name)}(preg_replace($regex, ' ', $obj->{'get'.ucfirst($name)}()));
             $this->addFlash($name, "Urls are not allowed.");
+        }
+    }
+
+    public function makeFormErrorAndFlash($form, $error_name)
+    {
+        $session = $this->get('session');
+
+        if ($session->getFlashBag()->has($error_name)) {
+            $error = $session->getFlashBag()->get($error_name);
+            $msgError = new FormError($error[0]);
+            $form->get($error_name)->addError($msgError);
+            $this->addFlash('error', $error[0]);
         }
     }
 }

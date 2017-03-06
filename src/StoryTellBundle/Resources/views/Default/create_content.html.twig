@@ -12,6 +12,9 @@
     <div class="col-md-12">
         <h2>{{ "Story"|trans }} : {{ story.title }}</h2>
         <h3>{{ "Chapter"|trans }} : {{ chapter.title }}</h3>
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
         <div class="block-form">
             <div class="form-heading"><h2>{{ "Create Content"|trans }}</h2></div>
 
@@ -21,7 +24,11 @@
                 {{ form_errors(form) }}
             </div>
 
+            <div class="bg-danger">
+                {{ form_errors(form.content) }}
+            </div>
             {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}
         </div>

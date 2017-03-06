@@ -20,10 +20,10 @@ body {
   margin-top: 10px; }
 
 .color-mode {
-  background-color: darkgrey !important;
-  border-color: grey !important; }
+  background-color: #666 !important;
+  border-color: #777 !important; }
   .color-mode.active {
-    background-color: dimgrey !important; }
+    background-color: #444 !important; }
 
 /*************/
 /* DASHBOARD */
