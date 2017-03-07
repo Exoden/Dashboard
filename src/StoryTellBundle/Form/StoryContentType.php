@@ -17,7 +17,9 @@ class StoryContentType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, array(
-                    'attr' => array('placeholder' => "Content", 'rows' => '10'))
+                    'attr' => array('placeholder' => "Content", 'rows' => '10'),
+                    'trim' => false,
+                )
             )
             ->add('save', SubmitType::class, array('label' => 'Save Content'));;
     }

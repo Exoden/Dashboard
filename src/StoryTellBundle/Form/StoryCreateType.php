@@ -25,7 +25,9 @@ class StoryCreateType extends AbstractType
                 'attr' => array('placeholder' => "Title"))
             )
             ->add('description', TextareaType::class, array(
-                'attr' => array('placeholder' => "Description", 'rows' => '4'))
+                    'attr' => array('placeholder' => "Description", 'rows' => '4'),
+                    'trim' => false,
+                )
             )
             ->add('genres', EntityType::class, array(
                 'class' => StoryGenre::class,
