@@ -30,6 +30,8 @@
                         <label for="password" class="sr-only">{{ 'security.login.password'|trans }}</label>
                         <input type="password" id="password" name="_password" class="form-control" placeholder="{{ 'security.login.password'|trans }}" required />
 
+                        <a href="{{ path('fos_user_resetting_request') }}">Forgot password ?</a>
+
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox"
