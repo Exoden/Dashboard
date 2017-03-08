@@ -374,10 +374,9 @@ class DefaultController extends Controller
         }
 
         if ($form->isSubmitted()) {
-            // TODO : Comprendre pourquoi je ne recois pas la tabulation en début de chaine ($form['content']->getData()) => because fucking trim
             $ctrl_url = array('content');
             foreach ($ctrl_url as $ce) {
-                $this->controlUrl($ce, $content); // TODO : Ajouter le controlUrl dans les create/edit des champs titre/description/content PARTOUT !
+                $this->controlUrl($ce, $content);
             }
             foreach ($check_errors as $ce) {
                 if ($session->getFlashBag()->has($ce))

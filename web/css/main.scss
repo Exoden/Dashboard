@@ -7,13 +7,13 @@ $font-color: #333;
 $bg-color-night: #333;
 $menu-color-night: #444;
 $shadow-color-night: #111;
-$font-color-night: #999;
+$font-color-night: #aaa;
 
 $small-space: 10px;
 $large-space: 20px;
 
 $border-color: #1b6d85;
-$debug_color: red;
+$debug-color: red;
 
 @font-face {
     font-family: fontClicker;
@@ -25,11 +25,45 @@ $debug_color: red;
     src: url("../fonts/nasalization-rg.ttf");
 }
 
+$bool: false;
 body {
     padding-top: 40px;
     padding-bottom: 40px;
-    background-color: $bg_color !important;
-    color: $font-color;
+
+    &.day {
+        background-color: $bg-color !important;
+        color: $font-color;
+        .border-menu {
+            background-color: $menu-color;
+            margin: 0 auto;
+            padding: $small-space;
+            border: solid 1px $border-color;
+            border-radius: 10px;
+            box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+        }
+        .story-tell {
+            .body {
+                background-color: #fff;
+            }
+        }
+    }
+    &.night {
+        background-color: $bg-color-night !important;
+        color: $font-color-night;
+        .border-menu {
+            background-color: $menu-color-night;
+            margin: 0 auto;
+            padding: $small-space;
+            border: solid 1px $border-color;
+            border-radius: 10px;
+            box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color-night;
+        }
+        .story-tell {
+            .body {
+                background-color: #444;
+            }
+        }
+    }
 }
 
 .starter-template { // Space under the navbar
@@ -37,14 +71,14 @@ body {
 }
 
 .bg-debug {
-    background-color: $debug_color !important;
+    background-color: $debug-color !important;
 }
 
 .back-button {
     margin-top: $small-space;
 }
 
-.color-mode {
+.color-mode-button {
     background-color: #666 !important;
     border-color: #777 !important;
 
@@ -89,12 +123,7 @@ body {
 /* FORM STYLE */
 /**************/
 .block-form {
-    background-color: $menu-color;
-    margin: 0 auto;
-    padding: $small-space;
-    border: solid 1px $border-color;
-    border-radius: 10px;
-    box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+    //@include border-menu();
 
     .form-heading {
         text-align: center;
@@ -156,13 +185,8 @@ body {
         height: 120px;
     }
 
-    .menu {
-        background-color: $menu-color;
-        margin: 0;
-        padding: $small-space;
-        border: solid 1px $border-color;
-        border-radius: 10px;
-        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+    .border-menu {
+        //@include border-menu();
 
         ul {
             padding: 0;
@@ -181,6 +205,7 @@ body {
 /*****************/
 .clicker {
     background-color: #4a3c2f;
+    color: $font-color;
     font-family: fontClicker serif;
     width: 1600px !important;
     height: 800px !important;
@@ -370,6 +395,7 @@ body {
 /******************/
 .strategy {
     background-color: #06b;
+    color: $font-color;
     width: 1600px !important;
     font-family: fontStrategy serif;
 
@@ -470,9 +496,10 @@ body {
 .story-tell {
 
     .body {
-        background-color: #fff;
+        background-color: #444;
         border-radius: 5px;
         padding: $large-space !important;
+        border: 1px solid #aaa;
     }
 
     .main-menu {
@@ -519,7 +546,7 @@ body {
             padding: $small-space;
             border: solid 1px $border-color;
             border-radius: 5px;
-            //box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+            color: $font-color;
         }
 
         .page-number {
@@ -534,21 +561,11 @@ body {
     }
 
     .block-menu {
-        background-color: $menu-color;
-        margin: 0 auto;
-        padding: $small-space;
-        border: solid 1px $border-color;
-        border-radius: 10px;
-        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+        //@include border-menu();
     }
 
     .block-form {
-        background-color: $menu-color;
-        margin: 0 auto;
-        padding: $small-space;
-        border: solid 1px $border-color;
-        border-radius: 10px;
-        box-shadow: $shadow-size $shadow-size $shadow-size $shadow-color;
+        //@include border-menu();
 
         .form-heading {
             text-align: center;

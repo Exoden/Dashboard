@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 border-menu">
                 {% include "AppBundle::profile_menu.html.twig" %}
             </div>
             <div class="col-md-6">
@@ -17,7 +17,7 @@
                 <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
             </div>
             <div class="col-md-3">
-                <div class="menu">
+                <div class="border-menu">
                     <ul>
                         <li>
                             <a href="{{ path('fos_user_profile_edit') }}">{{ "Edit profile"|trans({}, 'messages') }}</a>

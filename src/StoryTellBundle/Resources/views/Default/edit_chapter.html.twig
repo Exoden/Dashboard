@@ -15,7 +15,7 @@
 
         {{ include('AppBundle::flash_messages.html.twig') }}
 
-        <div class="col-md-4 block-menu">
+        <div class="col-md-4 border-menu">
             <h4>{{ "Contents"|trans }}</h4>
             <ul>
                 {% for content in contents %}
@@ -27,7 +27,7 @@
             </ul>
         </div>
         <div class="col-md-8">
-            <div class="block-form">
+            <div class="block-form border-menu">
                 <div class="form-heading"><h2>{{ "Edit Chapter"|trans }}</h2></div>
 
                 {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}

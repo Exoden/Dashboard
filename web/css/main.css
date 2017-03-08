@@ -6,9 +6,31 @@
   src: url("../fonts/nasalization-rg.ttf"); }
 body {
   padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #ddd !important;
-  color: #333; }
+  padding-bottom: 40px; }
+  body.day {
+    background-color: #ddd !important;
+    color: #333; }
+    body.day .border-menu {
+      background-color: #eee;
+      margin: 0 auto;
+      padding: 10px;
+      border: solid 1px #1b6d85;
+      border-radius: 10px;
+      box-shadow: 3px 3px 3px #ccc; }
+    body.day .story-tell .body {
+      background-color: #fff; }
+  body.night {
+    background-color: #333 !important;
+    color: #aaa; }
+    body.night .border-menu {
+      background-color: #444;
+      margin: 0 auto;
+      padding: 10px;
+      border: solid 1px #1b6d85;
+      border-radius: 10px;
+      box-shadow: 3px 3px 3px #111; }
+    body.night .story-tell .body {
+      background-color: #444; }
 
 .starter-template {
   padding: 50px; }
@@ -19,10 +41,10 @@ body {
 .back-button {
   margin-top: 10px; }
 
-.color-mode {
+.color-mode-button {
   background-color: #666 !important;
   border-color: #777 !important; }
-  .color-mode.active {
+  .color-mode-button.active {
     background-color: #444 !important; }
 
 /*************/
@@ -49,43 +71,36 @@ body {
 /**************/
 /* FORM STYLE */
 /**************/
-.block-form {
-  background-color: #eee;
+.block-form .form-heading {
+  text-align: center; }
+.block-form .form-style {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto; }
+  .block-form .form-style .form-control {
+    height: auto;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px; }
+  .block-form .form-style .input-button {
+    margin: 10px 0 10px; }
+.block-form .mail-style {
+  max-width: 600px;
+  padding: 15px;
   margin: 0 auto;
-  padding: 10px;
-  border: solid 1px #1b6d85;
-  border-radius: 10px;
-  box-shadow: 3px 3px 3px #ccc; }
-  .block-form .form-heading {
-    text-align: center; }
-  .block-form .form-style {
-    max-width: 330px;
-    padding: 15px;
-    margin: 0 auto; }
-    .block-form .form-style .form-control {
-      height: auto;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      font-size: 16px; }
-    .block-form .form-style .input-button {
-      margin: 10px 0 10px; }
-  .block-form .mail-style {
-    max-width: 600px;
-    padding: 15px;
-    margin: 0 auto;
-    text-align: center; }
-    .block-form .mail-style p {
-      text-align: left; }
-    .block-form .mail-style .form-control {
-      height: auto;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      font-size: 16px; }
-    .block-form .mail-style .input-button {
-      margin: 10px auto 10px;
-      width: 300px; }
+  text-align: center; }
+  .block-form .mail-style p {
+    text-align: left; }
+  .block-form .mail-style .form-control {
+    height: auto;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px; }
+  .block-form .mail-style .input-button {
+    margin: 10px auto 10px;
+    width: 300px; }
 
 /*****************/
 /* PROFILE STYLE */
@@ -95,25 +110,19 @@ body {
 .profile .profile-image {
   width: 120px;
   height: 120px; }
-.profile .menu {
-  background-color: #eee;
-  margin: 0;
-  padding: 10px;
-  border: solid 1px #1b6d85;
-  border-radius: 10px;
-  box-shadow: 3px 3px 3px #ccc; }
-  .profile .menu ul {
-    padding: 0;
-    margin: 0; }
-  .profile .menu li {
-    list-style-type: none;
-    text-align: center; }
+.profile .border-menu ul {
+  padding: 0;
+  margin: 0; }
+.profile .border-menu li {
+  list-style-type: none;
+  text-align: center; }
 
 /*****************/
 /* CLICKER STYLE */
 /*****************/
 .clicker {
   background-color: #4a3c2f;
+  color: #333;
   font-family: fontClicker serif;
   width: 1600px !important;
   height: 800px !important; }
@@ -242,6 +251,7 @@ body {
 /******************/
 .strategy {
   background-color: #06b;
+  color: #333;
   width: 1600px !important;
   font-family: fontStrategy serif; }
   .strategy h1 {
@@ -307,9 +317,10 @@ body {
 /* STORY-TELL STYLE */
 /********************/
 .story-tell .body {
-  background-color: #fff;
+  background-color: #444;
   border-radius: 5px;
-  padding: 20px !important; }
+  padding: 20px !important;
+  border: 1px solid #aaa; }
 .story-tell .main-menu {
   margin: 10px 0; }
 .story-tell p.info {
@@ -342,45 +353,32 @@ body {
     background-color: navajowhite;
     padding: 10px;
     border: solid 1px #1b6d85;
-    border-radius: 5px; }
+    border-radius: 5px;
+    color: #333; }
   .story-tell .block-reading .page-number {
     float: right;
     margin: 10px 0; }
   .story-tell .block-reading .reading-buttons {
     text-align: center;
     margin-top: 20px; }
-.story-tell .block-menu {
-  background-color: #eee;
-  margin: 0 auto;
-  padding: 10px;
-  border: solid 1px #1b6d85;
-  border-radius: 10px;
-  box-shadow: 3px 3px 3px #ccc; }
-.story-tell .block-form {
-  background-color: #eee;
-  margin: 0 auto;
-  padding: 10px;
-  border: solid 1px #1b6d85;
-  border-radius: 10px;
-  box-shadow: 3px 3px 3px #ccc; }
-  .story-tell .block-form .form-heading {
-    text-align: center; }
-  .story-tell .block-form .form-style {
-    max-width: 800px;
-    padding: 15px;
-    margin: 0 auto; }
-    .story-tell .block-form .form-style .form-control {
-      height: auto;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      font-size: 16px; }
-    .story-tell .block-form .form-style .form-list {
-      list-style-type: none;
-      height: auto;
-      padding-left: 10px;
-      margin-bottom: 10px; }
-    .story-tell .block-form .form-style .input-button {
-      margin: 10px 0 10px; }
+.story-tell .block-form .form-heading {
+  text-align: center; }
+.story-tell .block-form .form-style {
+  max-width: 800px;
+  padding: 15px;
+  margin: 0 auto; }
+  .story-tell .block-form .form-style .form-control {
+    height: auto;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px; }
+  .story-tell .block-form .form-style .form-list {
+    list-style-type: none;
+    height: auto;
+    padding-left: 10px;
+    margin-bottom: 10px; }
+  .story-tell .block-form .form-style .input-button {
+    margin: 10px 0 10px; }
 
 /*# sourceMappingURL=main.css.map */
