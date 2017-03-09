@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="story")
  * @ORM\Entity(repositoryClass="StoryTellBundle\Repository\StoryRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Story
 {
@@ -71,6 +72,27 @@ class Story
      * @ORM\Column(name="is_finished", type="boolean", options={"default" : 0})
      */
     private $isFinished;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="published_at", type="datetime", nullable=true)
+     */
+    private $publishedAt;
 
 
     public function __construct() {
@@ -190,6 +212,10 @@ class Story
     {
         $this->isPublished = $isPublished;
 
+        if ($isPublished == true) {
+            $this->setPublishedAt(new \Datetime());
+        }
+
         return $this;
     }
 
@@ -225,6 +251,88 @@ class Story
     {
         return $this->isFinished;
     }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Story
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Story
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set publishedAt
+     *
+     * @param \DateTime $publishedAt
+     * @return Story
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get publishedAt
+     *
+     * @return \DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateDate()
+    {
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt(new \Datetime());
+        }
+        $this->setUpdatedAt(new \DateTime());
+    }
+
 
     public function addStoryGenre(StoryGenre $genre)
     {

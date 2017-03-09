@@ -31,24 +31,57 @@
         </nav>
 
         <h3>{{ "List"|trans }}</h3>
-        {% for story in story_tab %}
-            <div id="{{ story['story'].id }}">
-                <a href="{{ path('detail_story', {'story_id': story['story'].id}) }}">{{ story['story'].title }}</a> <span class="lang-xs" lang="{{ story['story'].language.code }}" title="{{ story['story'].language.name }}"></span>
-                (
-                {% for genre in story['genres'] %}
-                    {% if loop.index0 > 0 %}, {% endif %}
-                    <a href="{{ path('stories_genre', {'genre_name': genre.name}) }}">{{ genre.name|trans }}</a>
-                {% endfor %}
-                )
-                - <a href="{{ path('detail_profile', {'user_id': story['story'].author.id}) }}">{{ story['story'].author.username }}</a>
-                <span class="btn fa fa-plus-circle add-readings" title="{{ "Add to my readings"|trans }}"></span>
-            </div>
-        {% endfor %}
+        <div class="table-responsive">
+            <table id="stories-table" class="table">
+                <thead>
+                    <th>{{ "Title"|trans }}</th>
+                    <th>{{ "Language"|trans }}</th>
+                    <th>{{ "Genres"|trans }}</th>
+                    <th>{{ "Author"|trans }}</th>
+                    <th>{{ "Publish date"|trans }}</th>
+                    <th>{{ "Action"|trans }}</th>
+                </thead>
+                <tbody>
+                    {% for story in story_tab %}
+                        <tr id="{{ story['story'].id }}">
+                            <td>
+                                <a href="{{ path('detail_story', {'story_id': story['story'].id}) }}">{{ story['story'].title }}</a>
+                                {% if date(story['story'].publishedAt) > date('-7days', 'Europe/Paris') %}
+                                    <span class="bubble-new" title="{{ "New"|trans }}">{{ "New"|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center">
+                                <span class="lang-xs" lang="{{ story['story'].language.code }}" title="{{ story['story'].language.name }}"></span>
+                            </td>
+                            <td>
+                                {% for genre in story['genres'] %}
+                                    {% if loop.index0 > 0 %}, {% endif %}
+                                    <a href="{{ path('stories_genre', {'genre_name': genre.name}) }}">{{ genre.name|trans }}</a>
+                                {% endfor %}
+                            </td>
+                            <td style="text-align: center">
+                                <a href="{{ path('detail_profile', {'user_id': story['story'].author.id}) }}">{{ story['story'].author.username }}</a>
+                            </td>
+                            <td style="text-align: center">
+                                {{ story['story'].publishedAt|date('d/m/Y') }}
+                            </td>
+                            <td style="text-align: center">
+                                <span class="btn fa fa-plus-circle add-readings" title="{{ "Add to my readings"|trans }}"></span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
 <script>
+//    $(document).ready(function() {
+//        $('#stories-table').DataTable();
+//    } );
+
     $('.add-readings').click(function (e) {
         var url = '{{ path("add_readings", {'story_id': 'STORY_ID'}) }}';
         url = url.replace("STORY_ID", $(e.target).closest('tr').prop('id'));

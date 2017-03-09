@@ -316,6 +316,8 @@ body {
 /*********************/
 /* STORY-TELL STYLE */
 /********************/
+.story-tell #stories-table th {
+  text-align: center; }
 .story-tell .body {
   background-color: #444;
   border-radius: 5px;
