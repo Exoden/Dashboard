@@ -70,13 +70,9 @@ class DefaultController extends Controller
      */
     public function myFriendsAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        // TODO : Get friends from user
-
-        return $this->render('AppBundle::my_friends.html.twig', array(/* TODO : Add friends list */));
+        return $this->render('AppBundle::my_friends.html.twig', array('profile' => $user));
     }
 
     /**

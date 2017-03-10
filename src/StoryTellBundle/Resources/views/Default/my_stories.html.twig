@@ -13,7 +13,7 @@
         {% for story in stories %}
             <div>
                 <a href="#">{{ story.title }}</a>
-                <a href="{{ path('edit_story', {'story_id': story.id}) }}"><span class="btn fa fa-edit" title="{{ "Edit Story"|trans }}"></span></a>
+                <a href="{{ path('edit_story', {'story_id': story.id}) }}"><span class="fa fa-edit" title="{{ "Edit Story"|trans }}"></span></a>
             </div>
         {% endfor %}
     </div>

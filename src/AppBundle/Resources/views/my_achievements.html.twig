@@ -1,12 +1,12 @@
 {% extends '::base.html.twig' %}
 
-{% block title %}{{ parent() }}{{ "My achievementes"|trans }}{% endblock %}
+{% block title %}{{ parent() }}{{ "My achievements"|trans }}{% endblock %}
 
 {% block content %}
     <div class="container profile">
         <div class="row">
             <div class="col-md-12">
-                <h1>{{ "My achievementes"|trans({}, 'messages') }}</h1>
+                <h1>{{ "My achievements"|trans({}, 'messages') }}</h1>
             </div>
         </div>
         <div class="row">
@@ -14,11 +14,11 @@
                 {% include "AppBundle::profile_menu.html.twig" %}
             </div>
             <div class="col-md-9">
-                <div class="menu">
+                <div class="border-menu">
                     <ul>
                         <li><a href="#">Achivement1</a></li>
                         <li><a href="#">Achivement2</a></li>
-                        <li><a href="#">Achivement2</a></li>
+                        <li><a href="#">Achivement3</a></li>
                     </ul>
                 </div>
             </div>

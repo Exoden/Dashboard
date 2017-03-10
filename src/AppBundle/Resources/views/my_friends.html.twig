@@ -14,12 +14,18 @@
                 {% include "AppBundle::profile_menu.html.twig" %}
             </div>
             <div class="col-md-9">
-                <div class="menu">
-                    <ul>
-                        <li><a href="#">Friend1</a></li>
-                        <li><a href="#">Friend2</a></li>
-                        <li><a href="#">Friend2</a></li>
-                    </ul>
+                <div class="border-menu">
+                    {% if profile.getFriends |length == 0 %}
+                        <p>{{ "No friends."|trans({}, 'messages') }}</p>
+                    {% else %}
+                        <ul>
+                            {% for friend in profile.getFriends %}
+                                <li>
+                                    <a href="{{ path('detail_profile', {'user_id': friend.id}) }}">{{ friend.username }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>

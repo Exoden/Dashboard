@@ -43,15 +43,15 @@
                 </thead>
                 <tbody>
                     {% for story in story_tab %}
-                        <tr id="{{ story['story'].id }}">
+                        <tr data-id="{{ story['story'].id }}">
                             <td>
                                 <a href="{{ path('detail_story', {'story_id': story['story'].id}) }}">{{ story['story'].title }}</a>
                                 {% if date(story['story'].publishedAt) > date('-7days', 'Europe/Paris') %}
-                                    <span class="bubble-new" title="{{ "New"|trans }}">{{ "New"|trans }}</span>
+                                    <span class="badge new" title="{{ "New"|trans }}">{{ "New"|trans }}</span>
                                 {% endif %}
                             </td>
                             <td style="text-align: center">
-                                <span class="lang-xs" lang="{{ story['story'].language.code }}" title="{{ story['story'].language.name }}"></span>
+                                <span class="lang-sm" lang="{{ story['story'].language.code }}" title="{{ story['story'].language.name }}"></span>
                             </td>
                             <td>
                                 {% for genre in story['genres'] %}
@@ -84,7 +84,7 @@
 
     $('.add-readings').click(function (e) {
         var url = '{{ path("add_readings", {'story_id': 'STORY_ID'}) }}';
-        url = url.replace("STORY_ID", $(e.target).closest('tr').prop('id'));
+        url = url.replace("STORY_ID", $(e.target).closest('tr').data('id'));
 //        console.log(url);
         var jhrx = $.ajax(url)
             .done(function (data) {

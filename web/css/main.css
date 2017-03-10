@@ -8,7 +8,7 @@ body {
   padding-top: 40px;
   padding-bottom: 40px; }
   body.day {
-    background-color: #ddd !important;
+    background-color: #ddd;
     color: #333; }
     body.day .border-menu {
       background-color: #eee;
@@ -20,8 +20,38 @@ body {
     body.day .story-tell .body {
       background-color: #fff; }
   body.night {
-    background-color: #333 !important;
+    background-color: #333;
     color: #aaa; }
+    body.night a {
+      color: dodgerblue; }
+      body.night a:hover {
+        color: deepskyblue; }
+    body.night .dropdown-menu > li > a {
+      color: #333; }
+    body.night .add-readings:hover {
+      color: whitesmoke; }
+    body.night .navbar-default {
+      background-color: #555;
+      border-color: #666; }
+      body.night .navbar-default .navbar-brand {
+        color: #bbb; }
+      body.night .navbar-default .navbar-nav > li > a {
+        color: #bbb; }
+        body.night .navbar-default .navbar-nav > li > a:hover {
+          color: #ddd; }
+      body.night .navbar-default .navbar-nav > .active > a {
+        background-color: #777;
+        color: #ddd; }
+      body.night .navbar-default .navbar-nav > .open > a {
+        background-color: #777;
+        color: #ddd; }
+      body.night .navbar-default .navbar-nav .dropdown-menu {
+        background-color: #666; }
+        body.night .navbar-default .navbar-nav .dropdown-menu > li > a {
+          color: #bbb; }
+          body.night .navbar-default .navbar-nav .dropdown-menu > li > a:hover {
+            background-color: #777;
+            color: #ddd; }
     body.night .border-menu {
       background-color: #444;
       margin: 10px auto;
@@ -32,20 +62,29 @@ body {
     body.night .story-tell .body {
       background-color: #444; }
 
-.starter-template {
-  padding: 50px; }
-
-.bg-debug {
-  background-color: red !important; }
+a.btn {
+  color: whitesmoke !important; }
 
 .back-button {
-  margin-top: 10px; }
+  margin-top: 10px;
+  color: whitesmoke; }
 
 .color-mode-button {
-  background-color: #666 !important;
-  border-color: #777 !important; }
-  .color-mode-button.active {
-    background-color: #444 !important; }
+  background-color: #666;
+  border-color: #777;
+  color: whitesmoke; }
+  .color-mode-button.btn:focus, .color-mode-button.btn:active:focus, .color-mode-button.btn.active:focus, .color-mode-button.btn.focus, .color-mode-button.btn:active.focus, .color-mode-button.btn.active.focus {
+    outline-color: ghostwhite; }
+  .color-mode-button.btn:hover, .color-mode-button.btn:focus, .color-mode-button.btn.focus {
+    background-color: #555;
+    color: whitesmoke;
+    border-color: darkgrey; }
+  .color-mode-button.active, .color-mode-button:active {
+    background-color: #444;
+    color: whitesmoke; }
+
+.starter-template {
+  padding: 50px; }
 
 /*************/
 /* DASHBOARD */
@@ -321,33 +360,21 @@ body {
 .story-tell .body {
   background-color: #444;
   border-radius: 5px;
-  padding: 20px !important;
+  padding: 20px;
   border: 1px solid #aaa; }
 .story-tell .main-menu {
   margin: 10px 0; }
 .story-tell p.info {
   font-size: x-small; }
-.story-tell .bubble-new {
+.story-tell .badge.new {
   background-color: red;
-  color: whitesmoke;
-  font-size: small;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 10px; }
-.story-tell .bubble-info {
+  color: whitesmoke; }
+.story-tell .badge.info {
   background-color: limegreen;
-  color: whitesmoke;
-  font-size: small;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 10px; }
-.story-tell .bubble-lock {
+  color: whitesmoke; }
+.story-tell .badge.lock {
   background-color: dimgrey;
-  color: whitesmoke;
-  font-size: small;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 10px; }
+  color: whitesmoke; }
 .story-tell .block-reading {
   width: 600px;
   margin: 0 auto; }

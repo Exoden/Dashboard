@@ -13,7 +13,6 @@ $small-space: 10px;
 $large-space: 20px;
 
 $border-color: #1b6d85;
-$debug-color: red;
 
 @font-face {
     font-family: fontClicker;
@@ -30,7 +29,7 @@ body {
     padding-bottom: 40px;
 
     &.day {
-        background-color: $bg-color !important;
+        background-color: $bg-color;
         color: $font-color;
         .border-menu {
             background-color: $menu-color;
@@ -47,8 +46,55 @@ body {
         }
     }
     &.night {
-        background-color: $bg-color-night !important;
+        background-color: $bg-color-night;
         color: $font-color-night;
+        a {
+            color: dodgerblue;
+            &:hover {
+                color: deepskyblue;
+            }
+        }
+        .dropdown-menu {
+            &>li>a {
+                color: #333;
+            }
+        }
+        .add-readings:hover {
+            color: whitesmoke;
+        }
+        .navbar-default {
+            background-color: #555;
+            border-color: #666;
+            .navbar-brand {
+                color: #bbb;
+            }
+            .navbar-nav {
+                &>li>a {
+                    color: #bbb;
+                    &:hover {
+                        color: #ddd;
+                    }
+                }
+                &>.active>a {
+                    background-color: #777;
+                    color: #ddd;
+                }
+                &>.open>a {
+                    background-color: #777;
+                    color: #ddd;
+                }
+                .dropdown-menu {
+                    background-color: #666;
+                    &>li>a {
+                        color: #bbb;
+                        &:hover {
+                            background-color: #777;
+                            color: #ddd;
+                        }
+                    }
+                }
+            }
+        }
         .border-menu {
             background-color: $menu-color-night;
             margin: $small-space auto;
@@ -64,26 +110,43 @@ body {
         }
     }
 }
-
-.starter-template { // Space under the navbar
-    padding: 50px;
-}
-
-.bg-debug {
-    background-color: $debug-color !important;
+a.btn {
+    color: whitesmoke !important;
 }
 
 .back-button {
     margin-top: $small-space;
+    color: whitesmoke;
 }
 
 .color-mode-button {
-    background-color: #666 !important;
-    border-color: #777 !important;
-
-    &.active {
-        background-color: #444 !important;
+    background-color: #666;
+    border-color: #777;
+    color: whitesmoke;
+    &.btn:focus,
+    &.btn:active:focus,
+    &.btn.active:focus,
+    &.btn.focus,
+    &.btn:active.focus,
+    &.btn.active.focus {
+        outline-color: ghostwhite;
     }
+    &.btn:hover,
+    &.btn:focus,
+    &.btn.focus {
+        background-color: #555;
+        color: whitesmoke;
+        border-color: darkgrey;
+    }
+    &.active,
+    &:active {
+        background-color: #444;
+        color: whitesmoke;
+    }
+}
+
+.starter-template { // Space under the navbar
+    padding: 50px;
 }
 
 /*************/
@@ -503,7 +566,7 @@ body {
     .body {
         background-color: #444;
         border-radius: 5px;
-        padding: $large-space !important;
+        padding: $large-space;
         border: 1px solid #aaa;
     }
 
@@ -515,31 +578,21 @@ body {
         font-size: x-small;
     }
 
-    .bubble-new {
-        background-color: red;
-        color: whitesmoke;
-        font-size: small;
-        padding: 0 $small-space;
-        border: 0;
-        border-radius: 10px;
-    }
+    .badge {
+        &.new {
+            background-color: red;
+            color: whitesmoke;
+        }
 
-    .bubble-info {
-        background-color: limegreen;
-        color: whitesmoke;
-        font-size: small;
-        padding: 0 $small-space;
-        border: 0;
-        border-radius: 10px;
-    }
+        &.info {
+            background-color: limegreen;
+            color: whitesmoke;
+        }
 
-    .bubble-lock {
-        background-color: dimgrey;
-        color: whitesmoke;
-        font-size: small;
-        padding: 0 $small-space;
-        border: 0;
-        border-radius: 10px;
+        &.lock {
+            background-color: dimgrey;
+            color: whitesmoke;
+        }
     }
 
     .block-reading {

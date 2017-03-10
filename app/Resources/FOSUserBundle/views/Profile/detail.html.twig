@@ -2,7 +2,7 @@
 
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% block title %}{{ parent() }}{{ "Profile"|trans }}{% endblock %}
+{% block title %}{{ parent() }}{{ "Profile"|trans({}, 'messages') }}{% endblock %}
 
 {% block fos_user_content %}
     {{ include('AppBundle::flash_messages.html.twig') }}
