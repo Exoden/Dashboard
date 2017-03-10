@@ -34,7 +34,7 @@ body {
         color: $font-color;
         .border-menu {
             background-color: $menu-color;
-            margin: 0 auto;
+            margin: $small-space auto;
             padding: $small-space;
             border: solid 1px $border-color;
             border-radius: 10px;
@@ -51,7 +51,7 @@ body {
         color: $font-color-night;
         .border-menu {
             background-color: $menu-color-night;
-            margin: 0 auto;
+            margin: $small-space auto;
             padding: $small-space;
             border: solid 1px $border-color;
             border-radius: 10px;

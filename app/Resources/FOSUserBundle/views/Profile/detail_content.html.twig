@@ -10,26 +10,38 @@
         <div class="row">
             <div class="col-md-12">
                 <img src="" alt="profile_image" class="profile-image"/>
-                <p>{{ 'profile.show.username'|trans }}: {{ user.username }}</p>
-                <p>{{ 'profile.show.email'|trans }}: {{ user.email }} (<span class="fa fa-mail-forward"></span> <a href="{{ path('send_mail', {'user_id': user.id}) }}">{{ "Send mail"|trans({}, 'messages') }}</a>)</p>
+                <p>
+                    {{ 'profile.show.username'|trans }}: {{ profile.username }}
+                    {% if user != profile and profile not in user.getFriends %}
+                        <span id="{{ profile.id }}" class="btn fa fa-plus-circle add-friends" title="{{ "Add to my friends"|trans({}, 'messages') }}"> {{ "Add to my friends"|trans({}, 'messages') }}</span>
+                    {% endif %}
+                </p>
+                <p>{{ 'profile.show.email'|trans }}: {{ profile.email }} (<a href="{{ path('send_mail', {'user_id': profile.id}) }}"><span class="fa fa-mail-forward"></span> {{ "Send mail"|trans({}, 'messages') }}</a>)</p>
+
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="menu">
-                    <h3>Friends</h3>
-                    <ul>
-                        <li><a href="#">Friend1</a></li>
-                        <li><a href="#">Friend2</a></li>
-                        <li><a href="#">Friend2</a></li>
-                    </ul>
+                <div class="border-menu">
+                    <h3>{{ "Friends"|trans({}, 'messages') }}</h3>
+                    {% if profile.getFriends |length == 0 %}
+                        <p>{{ "No friends."|trans({}, 'messages') }}</p>
+                    {% else %}
+                        <ul>
+                            {% for friend in profile.getFriends %}
+                                <li>
+                                    <a href="{{ path('detail_profile', {'user_id': friend.id}) }}">{{ friend.username }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="menu">
-                    <h3>Achivements</h3>
+                <div class="border-menu">
+                    <h3>{{ "Achievements"|trans({}, 'messages') }}</h3>
                     <ul>
                         <li><a href="#">Achivement1</a></li>
                         <li><a href="#">Achivement2</a></li>
@@ -40,3 +52,23 @@
         </div>
     </div>
 </div>
+
+{% block javascripts %}
+    <script>
+        $('.add-friends').click(function (e) {
+            var url = '{{ path("add_friend", {'friend_id': 'FRIEND_ID'}) }}';
+            url = url.replace("FRIEND_ID", {{ profile.id }});
+//        console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    var obj = data;
+                    if (obj.success) {
+                        console.log("Success : " + obj.message);
+                    }
+                    else if (obj.error) {
+                        console.log("Error : " + obj.message);
+                    }
+                })
+        });
+    </script>
+{% endblock %}

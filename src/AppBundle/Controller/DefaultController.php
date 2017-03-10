@@ -55,9 +55,14 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('AppBundle:User')->find($user_id);
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        return $this->render('FOSUserBundle:Profile:detail.html.twig', array('user' => $user));
+        $profile = $em->getRepository('AppBundle:User')->find($user_id);
+        if (!$profile) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('FOSUserBundle:Profile:detail.html.twig', array('profile' => $profile, 'user' => $user));
     }
 
     /**

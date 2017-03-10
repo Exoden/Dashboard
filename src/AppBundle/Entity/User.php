@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,6 +26,15 @@ class User extends BaseUser
     protected $locale;
 
     /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinTable(name="friend_list",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="friend_id", referencedColumnName="id")}
+     *      )
+     */
+    private $friends;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -39,11 +49,11 @@ class User extends BaseUser
     private $updatedAt;
 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
-        // your own logic
+        $this->friends = new ArrayCollection();
     }
+
 
     /**
      * Set locale
@@ -123,5 +133,23 @@ class User extends BaseUser
             $this->setCreatedAt(new \Datetime());
         }
         $this->setUpdatedAt(new \DateTime());
+    }
+
+
+    public function addFriend(User $friend)
+    {
+        $this->friends[] = $friend;
+
+        return $this;
+    }
+
+    public function removeFriend(User $friend)
+    {
+        $this->friends->removeElement($friend);
+    }
+
+    public function getFriends()
+    {
+        return $this->friends;
     }
 }

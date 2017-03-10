@@ -3,5 +3,6 @@
 {% block title %}{{ parent() }}{{ "Edit profile"|trans }}{% endblock %}
 
 {% block fos_user_content %}
+    {{ include('AppBundle::flash_messages.html.twig') }}
     {% include "FOSUserBundle:Profile:edit_content.html.twig" %}
 {% endblock fos_user_content %}

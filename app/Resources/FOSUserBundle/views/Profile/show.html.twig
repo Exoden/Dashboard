@@ -5,5 +5,6 @@
 {% block title %}{{ parent() }}{{ "Profile"|trans }}{% endblock %}
 
 {% block fos_user_content %}
+    {{ include('AppBundle::flash_messages.html.twig') }}
     {% include "FOSUserBundle:Profile:show_content.html.twig" %}
 {% endblock fos_user_content %}
