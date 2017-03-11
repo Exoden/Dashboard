@@ -12,4 +12,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class NewsRepository extends EntityRepository
 {
+    function getOrderedNews()
+    {
+        return $this->createQueryBuilder('n')
+            ->orderBy('n.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

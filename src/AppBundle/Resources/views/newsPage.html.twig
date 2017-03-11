@@ -12,8 +12,11 @@
         <div class="row">
             <div class="col-md-12">
                 {% for news in all_news %}
-                    {{ news.title }}
-                    {{ news.content }}
+                    <div class="border-menu">
+                        <p style="float: right;">{{ news.createdAt|date('d/m/Y') }}</p>
+                        <h3>{{ news.title }}</h3>
+                        <p>{{ news.content|raw }}</p>
+                    </div>
                 {% endfor %}
             </div>
         </div>

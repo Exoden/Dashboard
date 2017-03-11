@@ -96,7 +96,7 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $news = $em->getRepository('AppBundle:News')->findAll();
+        $news = $em->getRepository('AppBundle:News')->getOrderedNews();
 
         return $this->render('AppBundle::newsPage.html.twig', array('all_news' => $news));
     }

@@ -32,7 +32,7 @@ class News
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="string", length=1000)
+     * @ORM\Column(name="content", type="string", length=10000)
      */
     private $content;
 
