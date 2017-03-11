@@ -22,7 +22,7 @@ class Mailer
         $this->templating = $templating;
     }
 
-    protected function sendMessage($mailSent)
+    protected function sendMessage(MailSent $mailSent)
     {
         $mail = \Swift_Message::newInstance();
 

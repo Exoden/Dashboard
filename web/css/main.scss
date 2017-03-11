@@ -26,7 +26,6 @@ $border-color: #1b6d85;
 
 body {
     padding-top: 40px;
-    padding-bottom: 40px;
 
     &.day {
         background-color: $bg-color;
@@ -561,6 +560,12 @@ a.btn {
         th {
             text-align: center;
         }
+    }
+    #readings-table {
+        width: auto !important;
+    }
+    #mystories-table {
+        width: auto !important;
     }
 
     .body {

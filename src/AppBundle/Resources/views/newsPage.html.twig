@@ -1,0 +1,21 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}{{ "News"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="container game-library">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ "News"|trans() }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% for news in all_news %}
+                    {{ news.title }}
+                    {{ news.content }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

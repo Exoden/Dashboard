@@ -26,6 +26,17 @@
     <script src="{{ asset('js/flash_message.js') }}"></script>
     <script src="{{ asset('js/textarea_tabulation.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            var w = window.innerWidth
+                || document.documentElement.clientWidth
+                || document.body.clientWidth;
+
+            var h = window.innerHeight
+                || document.documentElement.clientHeight
+                || document.body.clientHeight;
+
+            $('.starter-template').css('min-height', h - 100);
+        });
         $('#flash-messages').flashNotification('init');
     </script>
 

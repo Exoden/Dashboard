@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-12">
                 <p>{{ "Developer"|trans }} : Marc Vanrenterghem</p>
-                <p>{{ "Email address"|trans }} : {{ user.email }} (<span class="fa fa-mail-forward"></span> <a href="{{ path('send_mail', {'user_id': user.id}) }}">{{ "Send mail"|trans({}, 'messages') }}</a>)</p>
+                <p>{{ "Email address"|trans }} : {{ user.email }} (<a href="{{ path('send_mail', {'user_id': user.id}) }}"><span class="fa fa-mail-forward"></span> {{ "Send mail"|trans({}, 'messages') }}</a>)</p>
             </div>
         </div>
     </div>

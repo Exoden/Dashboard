@@ -10,11 +10,33 @@
 
 {% block page %}
     <div class="col-md-12">
-        {% for story in stories %}
-            <div>
-                <a href="#">{{ story.title }}</a>
-                <a href="{{ path('edit_story', {'story_id': story.id}) }}"><span class="fa fa-edit" title="{{ "Edit Story"|trans }}"></span></a>
-            </div>
-        {% endfor %}
+        <div class="table-responsive">
+            <table id="readings-table" class="table">
+                <thead>
+                    <th>{{ "Title"|trans }}</th>
+                    <th>{{ "Chapters"|trans }}</th>
+                    <th>{{ "Pages"|trans }}</th>
+                    <th>{{ "Action"|trans }}</th>
+                </thead>
+                <tbody>
+                {% for story in story_tab %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('edit_story', {'story_id': story['story'].id}) }}">{{ story['story'].title }}</a>
+                        </td>
+                        <td style="text-align: center">
+                            <p>{#{{ story['nb_chapters_published'] }} / #}{{ story['nb_chapters'] }}</p>
+                        </td>
+                        <td style="text-align: center">
+                            <p>{#{{ story['nb_pages_published'] }} / #}{{ story['nb_pages'] }}</p>
+                        </td>
+                        <td style="text-align: center">
+                            <a href="{{ path('edit_story', {'story_id': story['story'].id}) }}"><span class="fa fa-edit" title="{{ "Edit Story"|trans }}"></span></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}

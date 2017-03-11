@@ -12,23 +12,37 @@
     <div class="col-md-12">
         {{ include('AppBundle::flash_messages.html.twig') }}
 
-        {% for reading in readings %}
-            <div data-id="{{ reading.story.id }}">
-                <a href="{{ path('read_story', {'story_id': reading.story.id}) }}">{{ reading.story.title }}</a>
-                <span class="lang-xs" lang="{{ reading.story.language.code }}" title="{{ reading.story.language.name }}"></span>
-
-                {% if reading.isFinished == 1 and reading.story.isFinished == 1 %}
-                    <span class="badge lock" title="{{ "Finished"|trans }}">{{ "Finished"|trans }}</span>
-                {% elseif reading.isFinished == 1 and reading.story.isFinished == 0 %}
-                    <span class="badge lock" title="{{ "All read"|trans }}">{{ "All read"|trans }}</span>
-                {% else %}
-                    <span class="badge info" title="{{ "Reading"|trans }}">{{ "Reading"|trans }}</span>
-                {% endif %}
-
-                - <a href="{{ path('detail_profile', {'user_id': reading.story.author.id}) }}">{{ reading.story.author.username }}</a>
-                <span class="btn fa fa-minus-circle remove-readings" title="{{ "Remove from my readings"|trans }}"></span>
-            </div>
-        {% endfor %}
+        <div class="table-responsive">
+            <table id="readings-table" class="table">
+                <tbody>
+                {% for reading in readings %}
+                    <tr data-id="{{ reading.story.id }}">
+                        <td>
+                            <a href="{{ path('read_story', {'story_id': reading.story.id}) }}">{{ reading.story.title }}</a>
+                        </td>
+                        <td style="text-align: center">
+                            <span class="lang-sm" lang="{{ reading.story.language.code }}" title="{{ reading.story.language.name }}"></span>
+                        </td>
+                        <td>
+                            {% if reading.isFinished == 1 and reading.story.isFinished == 1 %}
+                                <span class="badge lock" title="{{ "Finished"|trans }}">{{ "Finished"|trans }}</span>
+                            {% elseif reading.isFinished == 1 and reading.story.isFinished == 0 %}
+                                <span class="badge lock" title="{{ "All read"|trans }}">{{ "All read"|trans }}</span>
+                            {% else %}
+                                <span class="badge info" title="{{ "Reading"|trans }}">{{ "Reading"|trans }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center">
+                            <a href="{{ path('detail_profile', {'user_id': reading.story.author.id}) }}">{{ reading.story.author.username }}</a>
+                        </td>
+                        <td style="text-align: center">
+                            <span class="btn fa fa-minus-circle remove-readings" title="{{ "Remove from my readings"|trans }}"></span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 

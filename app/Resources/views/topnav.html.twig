@@ -14,26 +14,18 @@
                 <li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('homepage') %}class="active"{% endif %}>
                     <a href="{{ path('homepage') }}"><span class="fa fa-home"></span> {{ 'Home'|trans({}, 'messages') }}</a>
                 </li>
+                <li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('news_page') %}class="active"{% endif %}>
+                    <a href="{{ path('news_page') }}"><span class="fa fa-list"></span> {{ 'News'|trans({}, 'messages') }}</a>
+                </li>
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                     <li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('fos_user_profile_show') %}class="active"{% endif %}>
                         <a href="{{ path('fos_user_profile_show') }}"><span class="fa fa-user"></span> {{ 'Profile'|trans({}, 'messages') }}</a>
                     </li>
                     {#<li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('homepage') %}class="active"{% endif %}><a href="{{ path('homepage') }}"><span class="fa fa-comment"></span> {{ 'Chat'|trans }}</a></li>#}
                     {#<li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('homepage') %}class="active"{% endif %}><a href="{{ path('homepage') }}"><span class="fa fa-star"></span> {{ 'Ranking'|trans }}</a></li>#}
-                    <li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('contact') %}class="active"{% endif %}><a href="{{ path('contact') }}"><span class="fa fa-book"></span> {{ 'Contact'|trans }}</a></li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <div class="btn-group" data-toggle="buttons" style="margin:0.5em">
-                            <label id="day-mode" class="btn color-mode-button">
-                                <input type="radio" name="day"><span class="fa fa-sun-o"></span>
-                            </label>
-                            <label id="night-mode" class="btn color-mode-button">
-                                <input type="radio" name="night"><span class="fa fa-moon-o"></span>
-                            </label>
-                        </div>
-                    </li>
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                     <li>
                         <div class="btn-group dropdown" style="margin:0.5em">
@@ -70,46 +62,3 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-
-{% block javascripts %}
-    <script>
-        $(document).ready(function(){
-            if (localStorage.getItem('color-mode')) {
-                if (localStorage.getItem('color-mode') == 'night') {
-                    $('#day-mode').removeClass('active');
-                    $('#night-mode').addClass('active');
-                }
-                else {
-                    $('#day-mode').addClass('active');
-                    $('#night-mode').removeClass('active');
-                }
-
-                $('body')
-                    .removeClass('day')
-                    .removeClass('night')
-                    .addClass(localStorage.getItem('color-mode'));
-            }
-            else {
-                $('body').addClass('day');
-            }
-        });
-
-        $('#day-mode').click(function(e) {
-            localStorage.setItem('color-mode', 'day');
-            $('body')
-                .removeClass('day')
-                .removeClass('night')
-                .addClass(localStorage.getItem('color-mode'));
-            console.log(localStorage.getItem('color-mode'));
-        });
-
-        $('#night-mode').click(function(e) {
-            localStorage.setItem('color-mode', 'night');
-            $('body')
-                .removeClass('day')
-                .removeClass('night')
-                .addClass(localStorage.getItem('color-mode'));
-            console.log(localStorage.getItem('color-mode'));
-        });
-    </script>
-{% endblock %}

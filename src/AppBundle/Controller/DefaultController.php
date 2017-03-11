@@ -90,6 +90,18 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/news", name="news_page")
+     */
+    public function newsPageAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $news = $em->getRepository('AppBundle:News')->findAll();
+
+        return $this->render('AppBundle::newsPage.html.twig', array('all_news' => $news));
+    }
+
+    /**
      * @Route("/contact", name="contact")
      */
     public function contactAction(Request $request)

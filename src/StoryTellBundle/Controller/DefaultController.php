@@ -72,7 +72,7 @@ class DefaultController extends Controller
                 return $this->redirectToRoute('edit_story', array('story_id' => $story->getId(), 'chapters' => null));
             }
         }
-        return $this->render('StoryTellBundle:Default:create_story.html.twig', array('form' => $form->createView()));
+        return $this->render('StoryTellBundle:Form:create_story.html.twig', array('form' => $form->createView()));
     }
 
     /**
@@ -139,7 +139,7 @@ class DefaultController extends Controller
             }
         }
 
-        return $this->render('StoryTellBundle:Default:edit_story.html.twig', array('story' => $story, 'chapters' => $chapters, 'form' => $form->createView()));
+        return $this->render('StoryTellBundle:Form:edit_story.html.twig', array('story' => $story, 'chapters' => $chapters, 'form' => $form->createView()));
     }
 
     /**
@@ -195,7 +195,7 @@ class DefaultController extends Controller
                 return $this->redirectToRoute('edit_chapter', array('story_id' => $story->getId(), 'chapter_id' => $chapter->getId(), 'contents' => null));
             }
     }
-        return $this->render('StoryTellBundle:Default:create_chapter.html.twig', array('story' => $story, 'form' => $form->createView()));
+        return $this->render('StoryTellBundle:Form:create_chapter.html.twig', array('story' => $story, 'form' => $form->createView()));
     }
 
     /**
@@ -267,7 +267,7 @@ class DefaultController extends Controller
             }
         }
 
-        return $this->render('StoryTellBundle:Default:edit_chapter.html.twig', array('story' => $story, 'chapter' => $chapter, 'contents' => $contents, 'form' => $form->createView()));
+        return $this->render('StoryTellBundle:Form:edit_chapter.html.twig', array('story' => $story, 'chapter' => $chapter, 'contents' => $contents, 'form' => $form->createView()));
     }
 
     /**
@@ -327,7 +327,7 @@ class DefaultController extends Controller
                 return $this->redirectToRoute('edit_content', array('story_id' => $story->getId(), 'chapter_id' => $chapter->getId(), 'content_id' => $content->getId()));
             }
         }
-        return $this->render('StoryTellBundle:Default:create_content.html.twig', array('story' => $story, 'chapter' => $chapter, 'form' => $form->createView()));
+        return $this->render('StoryTellBundle:Form:create_content.html.twig', array('story' => $story, 'chapter' => $chapter, 'form' => $form->createView()));
     }
 
     /**
@@ -391,7 +391,7 @@ class DefaultController extends Controller
             }
         }
 
-        return $this->render('StoryTellBundle:Default:edit_content.html.twig', array('story' => $story, 'chapter' => $chapter, 'content' => $content, 'form' => $form->createView()));
+        return $this->render('StoryTellBundle:Form:edit_content.html.twig', array('story' => $story, 'chapter' => $chapter, 'content' => $content, 'form' => $form->createView()));
     }
 
     /**
@@ -411,8 +411,6 @@ class DefaultController extends Controller
             $story_tab[$i]['genres'] = $story->getGenres();
             $i++;
         }
-
-        // TODO : if the Story is new (based on published date), display "new" in bubble-new notification
 
         $genres = $em->getRepository('StoryTellBundle:StoryGenre')->findAll();
 
@@ -476,7 +474,18 @@ class DefaultController extends Controller
 
         $stories = $em->getRepository('StoryTellBundle:Story')->findBy(array('author' => $user));
 
-        return $this->render('StoryTellBundle:Default:my_stories.html.twig', array('stories' => $stories));
+        $story_tab = array();
+        $i = 0;
+        foreach ($stories as $story) {
+            $story_tab[$i]['story'] = $story;
+            $story_tab[$i]['nb_chapters_published'] = $em->getRepository('StoryTellBundle:Story')->getNbChapters($story, true);
+            $story_tab[$i]['nb_pages_published'] = $em->getRepository('StoryTellBundle:Story')->getNbPages($story, true);
+            $story_tab[$i]['nb_chapters'] = $em->getRepository('StoryTellBundle:Story')->getNbChapters($story);
+            $story_tab[$i]['nb_pages'] = $em->getRepository('StoryTellBundle:Story')->getNbPages($story);
+            $i++;
+        }
+
+        return $this->render('StoryTellBundle:Default:my_stories.html.twig', array('story_tab' => $story_tab));
     }
 
     /**

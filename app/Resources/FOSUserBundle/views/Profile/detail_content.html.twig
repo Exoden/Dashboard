@@ -4,14 +4,13 @@
     <div class="container profile">
         <div class="row">
             <div class="col-md-12">
-                <h1>{{ "Profile"|trans({}, 'messages') }}</h1>
+                <h1>{{ profile.username }}</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <img src="" alt="profile_image" class="profile-image"/>
                 <p>
-                    {{ 'profile.show.username'|trans }}: {{ profile.username }}
                     {% if user != profile and profile not in user.getFriends %}
                         <span id="{{ profile.id }}" class="btn fa fa-plus-circle add-friends" title="{{ "Add to my friends"|trans({}, 'messages') }}"> {{ "Add to my friends"|trans({}, 'messages') }}</span>
                     {% endif %}

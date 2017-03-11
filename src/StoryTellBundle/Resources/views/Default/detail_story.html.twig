@@ -29,7 +29,10 @@
         </div>
         <p>{{ "Number of Chapters"|trans }} : {{ nb_chapters }}</p>
         <p>{{ "Number of Pages"|trans }} : {{ nb_pages }}</p>
-        <a href="#" class="add-readings">{{ "Add to my readings"|trans }}</a>
+
+        <a href="#" class="btn btn-success add-readings">{{ "Add to my readings"|trans }}</a><br>
+
+        <a href="{{ path('stories') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
     </div>
 {% endblock %}
 
