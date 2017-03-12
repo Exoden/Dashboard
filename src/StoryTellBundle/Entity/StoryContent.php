@@ -184,6 +184,7 @@ class StoryContent
 
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateDate()

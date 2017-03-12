@@ -15,12 +15,12 @@
             <h3>{{ "Finished"|trans }} !</h3>
         {% else %}
             <p>
-                <span class="fa fa-warning"></span> {{ "Story still in writing process."|trans }}
+                <span class="fa fa-warning"></span> {{ "Story still in writing process."|trans }}<br>
                 {{ "You will be able to read the next chapter when it's published."|trans }}
             </p>
         {% endif %}
         <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous page"|trans }}</a><br>
-        <a href="{{ path('read_again', {'reading_id': reading.id}) }}">{{ "Read again"|trans }} !</a><br>
-        <a href="{{ path('my_readings') }}" title="My Readings">{{ "My Readings"|trans }}</a>
+        <a href="{{ path('read_again', {'reading_id': reading.id}) }}" class="btn btn-success">{{ "Read again"|trans }} !</a><br>
+        <a href="{{ path('my_readings') }}" title="My Readings" class="btn btn-primary">{{ "My Readings"|trans }}</a>
     </div>
 {% endblock %}

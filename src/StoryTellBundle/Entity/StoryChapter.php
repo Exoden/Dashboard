@@ -248,6 +248,7 @@ class StoryChapter
 
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateDate()

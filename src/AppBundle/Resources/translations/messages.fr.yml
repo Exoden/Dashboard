@@ -15,11 +15,13 @@ Send: Envoyer
 "Email address": "Adresse mail"
 Subject: Sujet
 Message: Message
+Content: Contenu
 From: De
 To: A
 Back: Retour
 Developer: Développeur
 "Access denied": "Accès refusé"
+Admin: Admin
 
 "User not found.": "Utilisateur introuvable."
 "Add to my friends": "Ajouter à mes amis"

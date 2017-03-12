@@ -49,6 +49,7 @@ Action: Action
 "Reading": "En lecture"
 "All read": "Tout lu"
 New: Nouveau
+"New chapter": "Nouveau chapitre"
 
 "Changes saved": "Changements sauvegardés"
 "New Story saved": "Nouvelle Histoire sauvegardée"
@@ -69,7 +70,7 @@ Horror: Horreur
 "Love Story": "Histoire d'Amour"
 
 "Create your own story and share it ! Or simply read others stories !": "Créez votre propre histoire et partagez la ! Ou lisez simplement les histoires des autres !"
-"Story still in writing process.": "Histoire toujours en cours d'écriture"
+"Story still in writing process.": "Histoire toujours en cours d'écriture."
 "There is no content published. You must write at least one page before publishing the chapter.": "Il n'y a pas de contenu publié. Vous devez écrire au moins un contenu avant de publier le chapitre."
 "There is no chapter published. You must publish at least one chapter before publishing the Story.": "Il n'y a pas de chapitre publié. Vous devez publier au moins un chapitre avant de publier l'Histoire."
 "You can not unpublish this chapter since the next chapter is published.": "Vous ne pouvez pas dépublier ce chapitre car le chapitre suivant est publié."

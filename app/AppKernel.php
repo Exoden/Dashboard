@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new ClickerBundle\ClickerBundle(),
             new StrategyBundle\StrategyBundle(),
             new StoryTellBundle\StoryTellBundle(),
+            new AdminBundle\AdminBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

@@ -111,7 +111,7 @@ class News
      * Set createdAt
      *
      * @param \DateTime $createdAt
-     * @return User
+     * @return News
      */
     public function setCreatedAt($createdAt)
     {
@@ -134,7 +134,7 @@ class News
      * Set updatedAt
      *
      * @param \DateTime $updatedAt
-     * @return User
+     * @return News
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -155,6 +155,7 @@ class News
 
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateDate()

@@ -1,0 +1,17 @@
+{% extends "AdminBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Admin"|trans }}{% endblock %}
+
+{% block page %}
+    <div class="container">
+        <div class="row">
+            <h1>{{ "Home"|trans() }}</h1>
+        </div>
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <div class="row">
+            Admin Page
+        </div>
+    </div>
+{% endblock %}

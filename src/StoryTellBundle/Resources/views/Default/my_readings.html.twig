@@ -15,25 +15,27 @@
         <div class="table-responsive">
             <table id="readings-table" class="table">
                 <tbody>
-                {% for reading in readings %}
-                    <tr data-id="{{ reading.story.id }}">
+                {% for reading in readings_tab %}
+                    <tr data-id="{{ reading['reading'].story.id }}">
                         <td>
-                            <a href="{{ path('read_story', {'story_id': reading.story.id}) }}">{{ reading.story.title }}</a>
+                            <a href="{{ path('read_story', {'story_id': reading['reading'].story.id}) }}">{{ reading['reading'].story.title }}</a>
                         </td>
                         <td style="text-align: center">
-                            <span class="lang-sm" lang="{{ reading.story.language.code }}" title="{{ reading.story.language.name }}"></span>
+                            <span class="lang-sm" lang="{{ reading['reading'].story.language.code }}" title="{{ reading['reading'].story.language.name }}"></span>
                         </td>
                         <td>
-                            {% if reading.isFinished == 1 and reading.story.isFinished == 1 %}
+                            {% if reading['reading'].isFinished == 1 and reading['reading'].story.isFinished == 1 %}
                                 <span class="badge lock" title="{{ "Finished"|trans }}">{{ "Finished"|trans }}</span>
-                            {% elseif reading.isFinished == 1 and reading.story.isFinished == 0 %}
+                            {% elseif reading['new_chapter'] %}
+                                <span class="badge new" title="{{ "All read"|trans }}">{{ "New chapter"|trans }}</span>
+                            {% elseif reading['reading'].isFinished == 1 and reading['reading'].story.isFinished == 0 %}
                                 <span class="badge lock" title="{{ "All read"|trans }}">{{ "All read"|trans }}</span>
                             {% else %}
                                 <span class="badge info" title="{{ "Reading"|trans }}">{{ "Reading"|trans }}</span>
                             {% endif %}
                         </td>
                         <td style="text-align: center">
-                            <a href="{{ path('detail_profile', {'user_id': reading.story.author.id}) }}">{{ reading.story.author.username }}</a>
+                            <a href="{{ path('detail_profile', {'user_id': reading['reading'].story.author.id}) }}">{{ reading['reading'].story.author.username }}</a>
                         </td>
                         <td style="text-align: center">
                             <span class="btn fa fa-minus-circle remove-readings" title="{{ "Remove from my readings"|trans }}"></span>

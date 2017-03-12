@@ -91,6 +91,29 @@ a.btn {
 .dashboard h1 {
   text-align: center; }
 
+/*********************/
+/* ADMIN STYLE */
+/********************/
+.admin .block-form .form-heading {
+  text-align: center; }
+.admin .block-form .form-style {
+  max-width: 800px;
+  padding: 15px;
+  margin: 0 auto; }
+  .admin .block-form .form-style .form-control {
+    height: auto;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px; }
+  .admin .block-form .form-style .form-list {
+    list-style-type: none;
+    height: auto;
+    padding-left: 10px;
+    margin-bottom: 10px; }
+  .admin .block-form .form-style .input-button {
+    margin: 10px 0 10px; }
+
 /****************/
 /* GAME LIBRARY */
 /****************/

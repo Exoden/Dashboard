@@ -323,6 +323,7 @@ class Story
 
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateDate()

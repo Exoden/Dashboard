@@ -15,11 +15,13 @@ Send: Send
 "Email address": "Email address"
 Subject: Subject
 Message: Message
+Content: Content
 From: From
 To: To
 Back: Back
 Developer: Developer
 "Access denied": "Access Denied"
+Admin: Admin
 
 "User not found.": "User not found."
 "Add to my friends": "Add to my friends"

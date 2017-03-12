@@ -440,8 +440,6 @@ class DefaultController extends Controller
             $i++;
         }
 
-        // TODO : if the Story is new (based on published date), display "new" in bubble-new notification
-
         $genres = $em->getRepository('StoryTellBundle:StoryGenre')->findAll();
 
         return $this->render('StoryTellBundle:Default:stories.html.twig', array('story_tab' => $story_tab, 'genres' => $genres));
@@ -458,9 +456,16 @@ class DefaultController extends Controller
 
         $readings = $em->getRepository('StoryTellBundle:Readings')->getReadingsOfUser($user);
 
-        // TODO : if there is a new chapter on a "all read" story, display "new" in bubble-new notification
+        $readings_tab = array();
+        $i = 0;
+        /** @var Readings $reading */
+        foreach ($readings as $reading) {
+            $readings_tab[$i]['reading'] = $reading;
+            $readings_tab[$i]['new_chapter'] = ($reading->getIsFinished() && $em->getRepository('StoryTellBundle:Story')->getNbChapters($reading->getStory(), true) > $reading->getStoryChapter()->getChapter()) ? true : false;
+            $i++;
+        }
 
-        return $this->render('StoryTellBundle:Default:my_readings.html.twig', array('readings' => $readings));
+        return $this->render('StoryTellBundle:Default:my_readings.html.twig', array('readings_tab' => $readings_tab));
     }
 
     /**

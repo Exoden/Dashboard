@@ -19,7 +19,7 @@ class StoryRepository extends EntityRepository
     function getNbChapters(Story $story, $isPublished = false)
     {
         $q = $this->createQueryBuilder('s')
-            ->select('count(sch) as nb_pages')
+            ->select('count(sch) as nb_chapters')
             ->innerJoin('StoryTellBundle:StoryChapter', 'sch', 'WITH', 'sch.story = s.id')
             ->where('s.id = :story')
             ->setParameter('story', $story);

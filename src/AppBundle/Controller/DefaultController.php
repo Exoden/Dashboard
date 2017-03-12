@@ -98,7 +98,7 @@ class DefaultController extends Controller
 
         $news = $em->getRepository('AppBundle:News')->getOrderedNews();
 
-        return $this->render('AppBundle::newsPage.html.twig', array('all_news' => $news));
+        return $this->render('AppBundle::news_page.html.twig', array('all_news' => $news));
     }
 
     /**

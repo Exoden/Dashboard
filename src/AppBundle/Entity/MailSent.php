@@ -213,6 +213,7 @@ class MailSent
 
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateDate()

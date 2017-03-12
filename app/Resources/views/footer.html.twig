@@ -10,6 +10,13 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li>
+                            <div style="margin:0.5em">
+                                <a href="{{ path('homepage_admin') }}" class="btn btn-danger">Admin</a>
+                            </div>
+                        </li>
+                    {% endif %}
                     <li>
                         <div style="margin:0.5em">
                             <a href="{{ path('send_mail', {'user_id': 1}) }}" class="btn btn-danger"><span class="fa fa-warning"> Report Bug</span></a>

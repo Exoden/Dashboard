@@ -125,6 +125,7 @@ class User extends BaseUser
 
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function updateDate()
