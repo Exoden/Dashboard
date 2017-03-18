@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,6 +24,10 @@ class NewsType extends AbstractType
             ->add('content', TextareaType::class, array(
                 'attr' => array('placeholder' => "Content", 'rows' => '4')
             ))
+            ->add('isPublished', CheckboxType::class, array(
+                    'label' => "Publish",
+                    'required' => false)
+            )
             ->add('save', SubmitType::class, array('label' => 'Save News'));
     }
     

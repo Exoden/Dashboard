@@ -8,30 +8,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class DefaultController extends Controller
 {
     /**
      * @Route("/homepage_admin", name="homepage_admin")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException("Access denied");
-        }
-
         return $this->render('AdminBundle:Default:homepage.html.twig');
     }
 
     /**
      * @Route("/create_news", name="create_news")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function createNewsAction(Request $request)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException("Access denied");
-        }
-
         $em = $this->getDoctrine()->getEntityManager();
 
         $news = new News();
@@ -52,13 +47,10 @@ class DefaultController extends Controller
 
     /**
      * @Route("/edit_news/{news_id}", name="edit_news")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editNewsAction(Request $request, $news_id)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException("Access denied");
-        }
-
         $em = $this->getDoctrine()->getEntityManager();
 
         $news = $em->getRepository('AppBundle:News')->find($news_id);
@@ -70,11 +62,24 @@ class DefaultController extends Controller
             if ($form->isValid()) {
                 $em->persist($news);
                 $em->flush();
-                $this->addFlash('success', "New news saved");
+                $this->addFlash('success', "Changes saved");
                 return $this->redirectToRoute('edit_news', array('news_id' => $news->getId()));
             }
         }
 
         return $this->render('AdminBundle:Form:edit_news.html.twig', array('news' => $news, 'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/list_news", name="list_news")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function listNewsAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $news_list = $em->getRepository('AppBundle:News')->getOrderedNews();
+
+        return $this->render('AdminBundle:Default:list_news.html.twig', array('news_list' => $news_list));
     }
 }

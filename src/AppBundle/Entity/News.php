@@ -37,6 +37,13 @@ class News
     private $content;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="is_published", type="boolean", options={"default" : 0})
+     */
+    private $isPublished;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -49,6 +56,13 @@ class News
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="published_at", type="datetime", nullable=true)
+     */
+    private $publishedAt;
 
 
     /**
@@ -108,6 +122,33 @@ class News
     }
 
     /**
+     * Set isPublished
+     *
+     * @param integer $isPublished
+     * @return News
+     */
+    public function setIsPublished($isPublished)
+    {
+        $this->isPublished = $isPublished;
+
+        if ($isPublished == true) {
+            $this->setPublishedAt(new \Datetime());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get isPublished
+     *
+     * @return integer
+     */
+    public function getIsPublished()
+    {
+        return $this->isPublished;
+    }
+
+    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
@@ -151,6 +192,29 @@ class News
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set publishedAt
+     *
+     * @param \DateTime $publishedAt
+     * @return News
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get publishedAt
+     *
+     * @return \DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
     }
 
 
