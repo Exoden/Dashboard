@@ -15,7 +15,7 @@
                     <div class="border-menu">
                         <p style="float: right;">{{ news.createdAt|date('d/m/Y') }}</p>
                         <h3>{{ news.title }}</h3>
-                        <p>{{ news.content|raw }}</p>
+                        <p>{{ news.content |nl2br |raw }}</p>
                     </div>
                 {% endfor %}
             </div>
