@@ -1,0 +1,26 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{{ parent() }}{{ "Report Bug"|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="block-form border-menu">
+            <div class="form-heading"><h2>{{ "Report Bug"|trans }}</h2></div>
+
+            {{ form_start(form, {'method': 'POST', 'attr': {'class': 'mail-style'} }) }}
+
+            <p>{{ "From"|trans }} : {{ fromUser.email }} ({{ fromUser.username }})</p>
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            {{ form_widget(form.body, {'attr': {'class': 'form-control'}}) }}
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+            {{ form_end(form) }}
+        </div>
+        <a href="{{ path('homepage') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
+    </div>
+    <div class="col-md-3"></div>
+{% endblock %}

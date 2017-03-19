@@ -19,7 +19,7 @@
                     {% endif %}
                     <li>
                         <div style="margin:0.5em">
-                            <a href="{{ path('send_mail', {'user_id': 1}) }}" class="btn btn-danger"><span class="fa fa-warning"> Report Bug</span></a>
+                            <a href="{{ path('report_bug') }}" class="btn btn-danger"><span class="fa fa-warning"> Report Bug</span></a>
                         </div>
                     </li>
                     <li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('contact') %}class="active"{% endif %}>

@@ -3,7 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\MailSent;
+use AppBundle\Entity\User;
 use AppBundle\Form\MailSentType;
+use AppBundle\Form\ReportBugType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,6 +39,7 @@ class DefaultController extends Controller
             $url = $this->container->get('router')->generate('homepage');
         }
 
+        /** @var User $user */
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         if ($user->getLocale() != $language) {
             $user->setLocale($language);
@@ -121,16 +124,44 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $fromUser = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $toUser */
         $toUser = $em->getRepository('AppBundle:User')->find($user_id);
 
         $mailSent = new MailSent();
         $form = $this->createForm(MailSentType::class, $mailSent);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.mailer')->sendSimpleMail($fromUser, $toUser, "suject", "title", "message");
+            $this->get('app.mailer')->sendSimpleMail($fromUser, $toUser, $mailSent->getSubject(), $mailSent->getSubject(), $mailSent->getBody());
+
             return $this->redirectToRoute('detail_profile', array('user_id' => $toUser->getId()));
         }
 
         return $this->render('AppBundle::form_mail.html.twig', array('fromUser' => $fromUser, 'toUser' => $toUser, 'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/report-bug", name="report_bug")
+     */
+    public function reportBugAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $fromUser = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $toUser */
+        $toUser = $em->getRepository('AppBundle:User')->find(1);
+
+        $mailSent = new MailSent();
+        $form = $this->createForm(ReportBugType::class, $mailSent);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.mailer')->sendSimpleMail($fromUser, $toUser, "[Report Bug]", "Report Bug", $mailSent->getBody());
+            $this->addFlash('success', "Thank you for your contribution !");
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('AppBundle::form_report_bug.html.twig', array('fromUser' => $fromUser, 'form' => $form->createView()));
     }
 }
