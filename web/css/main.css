@@ -29,6 +29,8 @@ body {
       color: #333; }
     body.night .add-readings:hover {
       color: whitesmoke; }
+    body.night .remove-readings:hover {
+      color: whitesmoke; }
     body.night .navbar-default {
       background-color: #555;
       border-color: #666; }
