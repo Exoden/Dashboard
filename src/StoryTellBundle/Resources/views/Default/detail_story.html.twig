@@ -21,6 +21,9 @@
         <p>
             {{ "Genre"|trans }} :
             {% for genre in story_genres %}
+                {% if not loop.first %}
+                    ,
+                {% endif %}
                 {{ genre.name }}
             {% endfor %}
         </p>

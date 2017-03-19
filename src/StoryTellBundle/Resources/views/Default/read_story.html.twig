@@ -27,12 +27,12 @@
                     <a href="{{ path('read_previous_page', {'reading_id': reading.id}) }}" class="btn btn-primary">< {{ "Previous chapter"|trans }}</a>
                 {% endif %}
 
-                {% if reading.storyContent.page != nb_pages_chapter and reading.storyChapter.chapter != nb_chapters %}
-                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "Next page"|trans }} ></a>
+                {% if reading.storyContent.page == nb_pages_chapter and reading.storyChapter.chapter == nb_chapters %}
+                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "The end"|trans }}</a>
                 {% elseif reading.storyContent.page == nb_pages_chapter and reading.storyChapter.chapter != nb_chapters %}
                     <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "Next chapter"|trans }} ></a>
                 {% else %}
-                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "The end"|trans }}</a>
+                    <a href="{{ path('read_next_page', {'reading_id': reading.id}) }}" class="btn btn-primary">{{ "Next page"|trans }} ></a>
                 {% endif %}
             </div>
         </div>
