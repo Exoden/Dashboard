@@ -15,7 +15,7 @@ $large-space: 20px;
 $border-color: #1b6d85;
 
 @font-face {
-    font-family: fontClicker;
+    font-family: fontIdle;
     src: url("../fonts/monof55.ttf");
 }
 
@@ -302,12 +302,12 @@ a.btn {
 }
 
 /*****************/
-/* CLICKER STYLE */
+/* IDLE STYLE */
 /*****************/
-.clicker {
+.idle {
     background-color: #4a3c2f;
     color: $font-color;
-    font-family: fontClicker serif;
+    font-family: fontIdle serif;
     width: 1600px !important;
     height: 800px !important;
 

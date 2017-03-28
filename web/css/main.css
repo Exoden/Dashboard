@@ -1,5 +1,5 @@
 @font-face {
-  font-family: fontClicker;
+  font-family: fontIdle;
   src: url("../fonts/monof55.ttf"); }
 @font-face {
   font-family: fontStrategy;
@@ -181,44 +181,44 @@ a.btn {
   text-align: center; }
 
 /*****************/
-/* CLICKER STYLE */
+/* IDLE STYLE */
 /*****************/
-.clicker {
+.idle {
   background-color: #4a3c2f;
   color: #333;
-  font-family: fontClicker serif;
+  font-family: fontIdle serif;
   width: 1600px !important;
   height: 800px !important; }
-  .clicker h1 {
+  .idle h1 {
     text-align: center;
     color: whitesmoke; }
-  .clicker .container-top-menu {
+  .idle .container-top-menu {
     text-align: center; }
-    .clicker .container-top-menu .top-menu {
+    .idle .container-top-menu .top-menu {
       background-color: #94795f;
       margin: 10px;
       padding: 10px;
       display: inline-block;
       border: solid 4px;
       border-image: url("../images/border.png") 4 fill repeat; }
-      .clicker .container-top-menu .top-menu ul {
+      .idle .container-top-menu .top-menu ul {
         padding: 0;
         margin: 0;
         text-align: center; }
-      .clicker .container-top-menu .top-menu li {
+      .idle .container-top-menu .top-menu li {
         list-style-type: none;
         display: inline-block; }
-      .clicker .container-top-menu .top-menu .btn-menu {
+      .idle .container-top-menu .top-menu .btn-menu {
         background-color: #584839;
         color: yellow;
         font-size: 24px; }
-        .clicker .container-top-menu .top-menu .btn-menu:hover {
+        .idle .container-top-menu .top-menu .btn-menu:hover {
           background-color: #675442; }
-      .clicker .container-top-menu .top-menu .active {
+      .idle .container-top-menu .top-menu .active {
         background-color: #776655; }
-  .clicker .out-hero-menu {
+  .idle .out-hero-menu {
     text-align: center; }
-    .clicker .out-hero-menu .hero-menu {
+    .idle .out-hero-menu .hero-menu {
       background-color: #94795f;
       max-height: 600px;
       margin: 0;
@@ -226,53 +226,53 @@ a.btn {
       display: inline-block;
       border: solid 4px;
       border-image: url("../images/border.png") 4 fill repeat; }
-      .clicker .out-hero-menu .hero-menu .details-hero {
+      .idle .out-hero-menu .hero-menu .details-hero {
         padding: 10px;
         margin: 10px;
         height: 200px; }
-        .clicker .out-hero-menu .hero-menu .details-hero .top {
+        .idle .out-hero-menu .hero-menu .details-hero .top {
           text-align: left;
           padding-left: 10px; }
-          .clicker .out-hero-menu .hero-menu .details-hero .top .progress-hp {
+          .idle .out-hero-menu .hero-menu .details-hero .top .progress-hp {
             height: 8px !important;
             width: 200px;
             border: 1px solid lightgray;
             margin: 10px 0 10px 0;
             padding: 0; }
-          .clicker .out-hero-menu .hero-menu .details-hero .top .progress-bar-hp {
+          .idle .out-hero-menu .hero-menu .details-hero .top .progress-bar-hp {
             width: 0;
             height: 100%;
             background-color: #eb0000; }
-        .clicker .out-hero-menu .hero-menu .details-hero .bottom {
+        .idle .out-hero-menu .hero-menu .details-hero .bottom {
           text-align: left;
           padding-left: 10px;
           line-height: 28px; }
-          .clicker .out-hero-menu .hero-menu .details-hero .bottom .progress-exp {
+          .idle .out-hero-menu .hero-menu .details-hero .bottom .progress-exp {
             height: 8px !important;
             width: 250px;
             border: 1px solid lightgray;
             margin: 10px 0 10px 0;
             padding: 0; }
-          .clicker .out-hero-menu .hero-menu .details-hero .bottom .progress-bar-exp {
+          .idle .out-hero-menu .hero-menu .details-hero .bottom .progress-bar-exp {
             width: 0;
             height: 100%;
             background-color: #1e82eb; }
-        .clicker .out-hero-menu .hero-menu .details-hero .hero {
+        .idle .out-hero-menu .hero-menu .details-hero .hero {
           width: 180px;
           height: 180px;
           border: solid 4px;
           border-image: url("../images/border.png") 4 fill repeat;
           cursor: pointer; }
-        .clicker .out-hero-menu .hero-menu .details-hero .one {
+        .idle .out-hero-menu .hero-menu .details-hero .one {
           padding-bottom: 10px; }
-        .clicker .out-hero-menu .hero-menu .details-hero .equipement {
+        .idle .out-hero-menu .hero-menu .details-hero .equipement {
           width: 60px;
           height: 60px;
           border: solid 4px;
           border-image: url("../images/border.png") 4 fill repeat; }
-  .clicker .out-mob-menu {
+  .idle .out-mob-menu {
     text-align: center; }
-    .clicker .out-mob-menu .mob-menu {
+    .idle .out-mob-menu .mob-menu {
       background-color: #94795f;
       max-height: 600px;
       margin: 0;
@@ -280,31 +280,31 @@ a.btn {
       display: inline-block;
       border: solid 4px;
       border-image: url("../images/border.png") 4 fill repeat; }
-      .clicker .out-mob-menu .mob-menu .details-mob {
+      .idle .out-mob-menu .mob-menu .details-mob {
         padding: 10px;
         margin: 10px;
         height: 200px; }
-        .clicker .out-mob-menu .mob-menu .details-mob .monster {
+        .idle .out-mob-menu .mob-menu .details-mob .monster {
           width: 180px;
           height: 180px;
           border: solid 4px;
           border-image: url("../images/border.png") 4 fill repeat; }
-        .clicker .out-mob-menu .mob-menu .details-mob .damage {
+        .idle .out-mob-menu .mob-menu .details-mob .damage {
           position: absolute;
           left: 90px;
           top: 90px;
           font-size: 36px;
           opacity: 1; }
-        .clicker .out-mob-menu .mob-menu .details-mob .top {
+        .idle .out-mob-menu .mob-menu .details-mob .top {
           text-align: left;
           padding-left: 10px; }
-          .clicker .out-mob-menu .mob-menu .details-mob .top .progress-hp {
+          .idle .out-mob-menu .mob-menu .details-mob .top .progress-hp {
             height: 8px !important;
             width: 250px;
             border: 1px solid lightgray;
             margin: 10px auto;
             padding: 0; }
-          .clicker .out-mob-menu .mob-menu .details-mob .top .progress-bar-hp {
+          .idle .out-mob-menu .mob-menu .details-mob .top .progress-bar-hp {
             width: 0;
             height: 100%;
             background-color: #be0000; }

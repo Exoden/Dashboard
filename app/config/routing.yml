@@ -13,10 +13,10 @@ strategy:
     type:     annotation
     prefix:   /strategy
 
-clicker:
-    resource: "@ClickerBundle/Controller/"
+idle:
+    resource: "@IdleBundle/Controller/"
     type:     annotation
-    prefix:   /clicker
+    prefix:   /idle
 
 app:
     resource: "@AppBundle/Controller/"

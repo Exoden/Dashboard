@@ -1,0 +1,4 @@
+services:
+#    idle.example:
+#        class: IdleBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

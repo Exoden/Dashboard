@@ -1,6 +1,6 @@
 <?php
 
-namespace ClickerBundle\Tests\Controller;
+namespace IdleBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

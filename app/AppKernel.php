@@ -20,7 +20,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 
             new AppBundle\AppBundle(),
-            new ClickerBundle\ClickerBundle(),
+            new IdleBundle\IdleBundle(),
             new StrategyBundle\StrategyBundle(),
             new StoryTellBundle\StoryTellBundle(),
             new AdminBundle\AdminBundle(),
