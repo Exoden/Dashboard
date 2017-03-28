@@ -14,10 +14,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            $this->addFlash(
-                'danger',
-                "Access denied"
-            );
+            $this->addFlash('error', "Access denied");
             return $this->redirectToRoute('homepage');
         }
 

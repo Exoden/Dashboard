@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class HeroRepository extends EntityRepository
 {
-
     public function nbHeroHLForUser($u)
     {
         return $this->createQueryBuilder('h')
@@ -20,7 +19,7 @@ class HeroRepository extends EntityRepository
             ->innerJoin('h.user', 'u')
             ->where('h.user = :user')
             ->setParameter('user', $u)
-            ->andWhere('h.level >= 100')
+            ->andWhere('h.age >= 100')
             ->getQuery()
             ->getOneOrNullResult();
     }

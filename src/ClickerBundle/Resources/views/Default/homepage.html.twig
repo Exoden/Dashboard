@@ -15,11 +15,12 @@
         <div class="col-md-6 out-hero-menu">
             <div class="col-md-12 hero-menu">
                 {% for key, hero in heroes %}
-                    <div id="hero{{ key }}" class="row details-hero {% if hero.isSelected == true %}selected{% endif %}">
+                    <div id="hero_{{ key }}" class="row details-hero {#{% if hero.isSelected == true %}selected{% endif %}#}">
                         <div class="col-md-4 character" data-value="{{ hero.id }}">
                             <span title="{{ hero.name }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Level: {{ hero.level }}<br />
-                                    Experience: {{ hero.experience }}<br />
+                                    Age: {{ hero.age }}<br />
+                                    {#Level: {{ hero.level }}<br />#}
+                                    {#Experience: {{ hero.experience }}<br />#}
                                     State: {% if hero.isRested %}OK{% else %}KO{% endif %}">
                                 <img src="" alt="hero" class="hero">
                             </span>
@@ -95,7 +96,7 @@
                             </div>
                             <div class="row bottom">
                                 <div class="col-md-3">
-                                    <p class="level">Level: {{ hero.level }}</p>
+                                    {#<p class="level">Level: {{ hero.level }}</p>#}
                                         {# TODO : Barre d'xp #}
                                         {#HP: {{ hero.characteristics.health }}#}
                                         {#Armor:  {{ hero.characteristics.armor }}#}
@@ -105,9 +106,9 @@
                                         {#Delay: {{ hero.characteristics.attackDelay }}#}
                                         {#Precision: {{ hero.characteristics.hitPrecision }}#}
                                 </div>
-                                <div class="col-md-9 progress progress-exp" title="Exp. : {{ hero.experience }}/{{ next_level[key] }}">
-                                    <div class="progress-bar-exp" role="progressbar" data-value="{{ hero.experience }}" style="width: {{ (hero.experience / next_level[key]) * 100 }}%"></div>
-                                </div>
+                                {#<div class="col-md-9 progress progress-exp" title="Exp. : {{ hero.experience }}/{{ next_level[key] }}">#}
+                                    {#<div class="progress-bar-exp" role="progressbar" data-value="{{ hero.experience }}" style="width: {{ (hero.experience / next_level[key]) * 100 }}%"></div>#}
+                                {#</div>#}
                             </div>
                         </div>
                     </div>
@@ -122,7 +123,7 @@
         <div class="col-md-6 out-mob-menu">
             <div class="col-md-12 mob-menu">
                 {% for key, hero in heroes%}
-                    <div id="mob{{ key }}" class="row details-mob">
+                    <div id="mob_{{ key }}" class="row details-mob">
                         <div class="col-md-4 character">
                             <img src="" alt="monster" class="monster">
                             <h2 class="damage"></h2>
@@ -131,10 +132,10 @@
                             <div class="row top">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <p>Field {{ selected_hero.fieldLevel }}</p>
+                                        <p>Field {{ hero.fieldLevel }}</p>
                                     </div>
                                     <div class="col-md-3">
-                                        <p>Field Max {{ selected_hero.fieldMaxLevel }}</p>
+                                        <p>Field Max {{ hero.fieldMaxLevel }}</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -203,6 +204,69 @@
         });
     });
 
+    {% for key, hero in heroes %}
+        getBattleHistory({{ key }});
+    {% endfor %}
+
+    function getBattleHistory(id)
+    {
+        var url = '{{ path("battle_history", {'hero_id': 'HERO_ID'}) }}';
+        url = url.replace("HERO_ID", $('#hero_' + id).children('.character').data('value'));
+
+        var jhrx = $.ajax({
+            method: "POST",
+            url: url
+        })
+            .done(function (data) {
+                var obj = data;
+                if (obj.success) {
+                    animateBattle(obj.battle_history, id);
+                }
+            })
+    }
+
+    function animateBattle(bh, id)
+    {
+        $.each(bh, function(key, arr) {
+
+            if ((arr.time * 1000) >= (new Date()).getTime()) { // arr[key] time is past now, so we must play previous key
+//                console.log((new Date()).getTime());
+//                console.log(key + ": " + bh[key-1].time * 1000 + ": " + bh[key-1].damage);
+                t = (new Date()).getTime();
+
+                if (bh[key-1].type == "HIT") { // Attack
+                    console.log('HIT');
+
+                    var progress_bar = $('#mob_' + id + ' .progress-bar-hp');
+                    var hp = progress_bar.data('value');
+
+                    hp -= bh[key-1].damage;
+                    progress_bar.data('value', hp);
+
+                    progress_bar.animate({width: ((hp / 100) * 100) + '%'}, 200);
+                    $('#mob_' + id + ' .progress-hp').attr('title', "HP : " + hp + "/100");
+                    $('#mob_' + id + ' .damage')
+                        .html(bh[key-1].damage)
+                        .removeAttr('style')
+                        .animate({opacity: 0, top: "-=120px"}, 500);
+
+//                    console.log('next call : ' + ((arr.time * 1000) - (new Date()).getTime()));
+                    window.setTimeout(function () {
+                        animateBattle(bh.slice(key), id); // we slice from the current element, because we skip the played element (key-1)
+                    }, Math.floor(arr.time * 1000) - t);
+                    return false;
+                }
+                else if (bh[key-1].type == "GEN") { // Generate Enemy
+                    window.setTimeout(function () {
+                        $('#mob_' + id + ' .progress-bar-hp').animate({width: '100%'}, 200);
+                        animateBattle(id);
+                    }, Math.floor(arr.time * 1000) - (new Date()).getTime());
+                }
+            }
+
+        });
+    }
+
     {#function animateBattle(id) {#}
         {#var hp{{ key }} = $('#mob{{ key }} .progress-bar-hp').data('value');#}
 
@@ -239,80 +303,80 @@
         {#}, delay * 1000);#}
     {#}#}
 
-    {% for key, hero in heroes %}
+    {#{% for key, hero in heroes %}#}
         {#animateBattle({{ key }});#}
-    var hp{{ key }} = $('#mob{{ key }} .progress-bar-hp').data('value');
+    {#var hp{{ key }} = $('#mob{{ key }} .progress-bar-hp').data('value');#}
 
-    {% if stuff[key]['weapon'].characteristics is defined %}
-    {% set weapon = stuff[key]['weapon'].characteristics %}
-    {% else %}
-    {% set weapon = hero.characteristics %}
-    {% endif %}
+    {#{% if stuff[key]['weapon'].characteristics is defined %}#}
+    {#{% set weapon = stuff[key]['weapon'].characteristics %}#}
+    {#{% else %}#}
+    {#{% set weapon = hero.characteristics %}#}
+    {#{% endif %}#}
 
-    var delay = {{ weapon.attackDelay }};
-    var hit = window.setInterval(function () {
-        if (hp{{ key }} > 0) { // Hit the mob
-            var damage = Math.floor(Math.random() * ({{ weapon.damageMaximum }} - {{ weapon.damageMinimum }} +1)) + {{ weapon.damageMinimum }};
-            hp{{ key }} -= damage;
-            if (hp{{ key }} < 0)
-                hp{{ key }} = 0;
-            $('#mob{{ key }} .progress-bar-hp').animate({width: ((hp{{ key }} / 100) * 100) + '%'}, 200);
-            $('#mob{{ key }} .progress-hp').attr('title', "HP : " + hp{{ key }} + "/100");
-            $('#mob{{ key }} .damage').html("-" + damage);
-            $('#mob{{ key }} .damage').removeAttr('style');
-            $('#mob{{ key }} .damage').animate({opacity: 0, top: "-=90px"}, 1000);
-
-
-            if (hp{{ key }} <= 0) { // New mob : Full life
-                earnExp('{{ key }}', 1);
-//                clearInterval(hit);
-                window.setTimeout(function () {
-                    hp{{ key }} = 100;
-                    $('#mob{{ key }} .progress-bar-hp').animate({width: '100%'}, 200);
-//                    animateBattle(id);
-                }, 1000);
-            }
-        }
-    }, delay * 1000);
-    {% endfor %}
-
-    function earnExp(id, xp) {
-        var url = '{{ path("exp_hero", {'hero_id': 'HERO_ID'}) }}';
-        url = url.replace("HERO_ID", $('#hero' + id).children('.character').data('value'));
-//        console.log(url);
-        var jhrx = $.ajax({
-                method: "POST",
-                url: url,
-                data: { exp: xp }
-            })
-            .done(function (data) {
-                var obj = data;
-                if (obj.success) {
-                    $('#hero' + id + ' .progress-exp .progress-bar-exp').animate({ width: ((obj.experience / obj.next_level) * 100) + '%' }, 200);
-                    $('#hero' + id + ' .progress-exp').attr('title', "Exp. : " + obj.experience + "/" + obj.next_level);
-                    $('#hero' + id + ' .level').html("Level: " + obj.level)
-                }
-            })
-    }
+    {#var delay = {{ weapon.attackDelay }};#}
+    {#var hit = window.setInterval(function () {#}
+        {#if (hp{{ key }} > 0) { // Hit the mob#}
+            {#var damage = Math.floor(Math.random() * ({{ weapon.damageMaximum }} - {{ weapon.damageMinimum }} +1)) + {{ weapon.damageMinimum }};#}
+            {#hp{{ key }} -= damage;#}
+            {#if (hp{{ key }} < 0)#}
+                {#hp{{ key }} = 0;#}
+            {#$('#mob{{ key }} .progress-bar-hp').animate({width: ((hp{{ key }} / 100) * 100) + '%'}, 200);#}
+            {#$('#mob{{ key }} .progress-hp').attr('title', "HP : " + hp{{ key }} + "/100");#}
+            {#$('#mob{{ key }} .damage').html("-" + damage);#}
+            {#$('#mob{{ key }} .damage').removeAttr('style');#}
+            {#$('#mob{{ key }} .damage').animate({opacity: 0, top: "-=90px"}, 1000);#}
 
 
-    $('.character').click(function (e) {
-        var url = '{{ path("switch_hero", {'hero_id': 'HERO_ID'}) }}';
-        url = url.replace("HERO_ID", $(e.target).closest('.character').data('value'));
-//        console.log(url);
-        var jhrx = $.ajax(url)
-            .done(function (data) {
-                var obj = data;
-                if (obj.success) {
-                    {% for key, hero in heroes %}
-                    if ($('#hero{{ key }}').hasClass('selected'))
-                        $('#hero{{ key }}').removeClass('selected');
-                    if ($('#hero{{ key }}').children('.character').data('value') == obj.selected_hero_id)
-                        $('#hero{{ key }}').addClass('selected');
-                    {% endfor %}
-                }
-            })
-    });
+            {#if (hp{{ key }} <= 0) { // New mob : Full life#}
+                {#earnExp('{{ key }}', 1);#}
+{#//                clearInterval(hit);#}
+                {#window.setTimeout(function () {#}
+                    {#hp{{ key }} = 100;#}
+                    {#$('#mob{{ key }} .progress-bar-hp').animate({width: '100%'}, 200);#}
+{#//                    animateBattle(id);#}
+                {#}, 1000);#}
+            {#}#}
+        {#}#}
+    {#}, delay * 1000);#}
+    {#{% endfor %}#}
+
+    {#function earnExp(id, xp) {#}
+        {#var url = '{{ path("exp_hero", {'hero_id': 'HERO_ID'}) }}';#}
+        {#url = url.replace("HERO_ID", $('#hero' + id).children('.character').data('value'));#}
+{#//        console.log(url);#}
+        {#var jhrx = $.ajax({#}
+                {#method: "POST",#}
+                {#url: url,#}
+                {#data: { exp: xp }#}
+            {#})#}
+            {#.done(function (data) {#}
+                {#var obj = data;#}
+                {#if (obj.success) {#}
+                    {#$('#hero' + id + ' .progress-exp .progress-bar-exp').animate({ width: ((obj.experience / obj.next_level) * 100) + '%' }, 200);#}
+                    {#$('#hero' + id + ' .progress-exp').attr('title', "Exp. : " + obj.experience + "/" + obj.next_level);#}
+                    {#$('#hero' + id + ' .level').html("Level: " + obj.level)#}
+                {#}#}
+            {#})#}
+    {#}#}
+
+
+    {#$('.character').click(function (e) {#}
+        {#var url = '{{ path("switch_hero", {'hero_id': 'HERO_ID'}) }}';#}
+        {#url = url.replace("HERO_ID", $(e.target).closest('.character').data('value'));#}
+{#//        console.log(url);#}
+        {#var jhrx = $.ajax(url)#}
+            {#.done(function (data) {#}
+                {#var obj = data;#}
+                {#if (obj.success) {#}
+                    {#{% for key, hero in heroes %}#}
+                    {#if ($('#hero{{ key }}').hasClass('selected'))#}
+                        {#$('#hero{{ key }}').removeClass('selected');#}
+                    {#if ($('#hero{{ key }}').children('.character').data('value') == obj.selected_hero_id)#}
+                        {#$('#hero{{ key }}').addClass('selected');#}
+                    {#{% endfor %}#}
+                {#}#}
+            {#})#}
+    {#});#}
 
 //    var click_up = 1;
 //

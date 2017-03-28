@@ -38,16 +38,9 @@ class Hero
     /**
      * @var int
      *
-     * @ORM\Column(name="level", type="integer")
+     * @ORM\Column(name="age", type="integer")
      */
-    private $level;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="experience", type="integer")
-     */
-    private $experience;
+    private $age;
 
     /**
      * @var int
@@ -96,13 +89,6 @@ class Hero
      * @ORM\Column(name="rest_end_time", type="datetime", nullable=true)
      */
     private $restEndTime;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_selected", type="boolean")
-     */
-    private $isSelected;
 
 
     /**
@@ -162,49 +148,26 @@ class Hero
     }
 
     /**
-     * Set level
+     * Set age
      *
-     * @param integer $level
+     * @param integer $age
      * @return Hero
      */
-    public function setLevel($level)
+    public function setAge($age)
     {
-        $this->level = $level;
+        $this->age = $age;
 
         return $this;
     }
 
     /**
-     * Get level
+     * Get age
      *
-     * @return integer 
+     * @return integer
      */
-    public function getLevel()
+    public function getAge()
     {
-        return $this->level;
-    }
-
-    /**
-     * Set experience
-     *
-     * @param integer $experience
-     * @return Hero
-     */
-    public function setExperience($experience)
-    {
-        $this->experience = $experience;
-
-        return $this;
-    }
-
-    /**
-     * Get experience
-     *
-     * @return integer 
-     */
-    public function getExperience()
-    {
-        return $this->experience;
+        return $this->age;
     }
 
     /**
@@ -366,28 +329,5 @@ class Hero
     public function getRestEndTime()
     {
         return $this->restEndTime;
-    }
-
-    /**
-     * Set isSelected
-     *
-     * @param boolean $isSelected
-     * @return Hero
-     */
-    public function setIsSelected($isSelected)
-    {
-        $this->isSelected = $isSelected;
-
-        return $this;
-    }
-
-    /**
-     * Get isSelected
-     *
-     * @return boolean
-     */
-    public function getIsSelected()
-    {
-        return $this->isSelected;
     }
 }

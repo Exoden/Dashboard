@@ -18,64 +18,53 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            $this->addFlash(
-                'danger',
-                "Access denied"
-            );
+            $this->addFlash('error', "Access denied");
             return $this->redirectToRoute('homepage');
         }
 
         $em = $this->getDoctrine()->getManager();
 
+        /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $heroes = $em->getRepository('ClickerBundle:Hero')->findBy(array('user' => $user->getId()));
-        $hero = $em->getRepository('ClickerBundle:Hero')->findOneBy(array('user' => $user, 'isSelected' => true));
 
         $stuff = array();
+        /** @var Hero $hero */
         foreach ($heroes as $key => $hero) {
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Weapon"));
-            $stuff[$key]['weapon'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "OffHand"));
-            $stuff[$key]['offhand'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Artifact"));
-            $stuff[$key]['artifact'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Armor"));
-            $stuff[$key]['armor'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Helmet"));
-            $stuff[$key]['helmet'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Gloves"));
-            $stuff[$key]['gloves'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $type_weapon = $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Jewel"));
-            $stuff[$key]['jewel'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $type_weapon->getId()));
-            $next_level[$key] = $em->getRepository('ClickerBundle:ExperienceTable')->find($hero->getLevel())->getExperience();
+            $stuff[$key]['weapon'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Weapon"))->getId()));
+            $stuff[$key]['offhand'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "OffHand"))->getId()));
+            $stuff[$key]['artifact'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Artifact"))->getId()));
+            $stuff[$key]['armor'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Armor"))->getId()));
+            $stuff[$key]['helmet'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Helmet"))->getId()));
+            $stuff[$key]['gloves'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Gloves"))->getId()));
+            $stuff[$key]['jewel'] = $em->getRepository('ClickerBundle:Stuff')->findOneBy(array('hero' => $hero->getId(), 'type' => $em->getRepository('ClickerBundle:StuffType')->findOneBy(array('name' => "Jewel"))->getId()));
         }
 
-        $nb_hero_hl = $em->getRepository('ClickerBundle:Hero')->nbHeroHLForUser($user);
-        if ($nb_hero_hl['nb'] > 0) {
+        if (count($heroes) == 0) {
             $hero = new Hero();
             $form = $this->createForm(HeroType::class, $hero);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                /** @var Characteristics $charac */
                 $charac = new Characteristics();
                 $charac->setArmor(0);
-                $charac->setAttackDelay(1);
+                $charac->setAttackDelay(3);
                 $charac->setDamageMinimum(1);
                 $charac->setDamageMaximum(1);
                 $charac->setDodge(0);
                 $charac->setHealth(100);
                 $charac->setHitPrecision(75);
-                $charac->setSpeed(2);
+                $charac->setSpeed(1);
                 $em->persist($charac);
 
                 $hero->setCharacteristics($charac);
-                $hero->setLevel(1);
-                $hero->setExperience(0);
+                $hero->setAge(15);
+                $hero->setCurrentHealth(100);
                 $hero->setFieldLevel(1);
                 $hero->setFieldMaxLevel(1);
                 $hero->setIsRested(true);
                 $hero->setRestStartTime(null);
                 $hero->setRestEndTime(null);
-                $hero->setIsSelected(false);
                 $hero->setUser($user);
                 $em->persist($hero);
 
@@ -86,7 +75,7 @@ class DefaultController extends Controller
             return $this->render('ClickerBundle:Default:homepage.html.twig', array('heroes' => $heroes, 'form' => $form->createView()));
         }
 
-        return $this->render('ClickerBundle:Default:homepage.html.twig', array('heroes' => $heroes, 'selected_hero' => $hero, 'stuff' => $stuff, 'next_level' => $next_level));
+        return $this->render('ClickerBundle:Default:homepage.html.twig', array('heroes' => $heroes, 'stuff' => $stuff));
     }
 
     /**
