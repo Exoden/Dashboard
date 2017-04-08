@@ -186,7 +186,7 @@ a.btn {
 .idle {
   background-color: #4a3c2f;
   color: #333;
-  font-family: fontIdle serif;
+  font-family: fontIdle;
   width: 1600px !important;
   height: 800px !important; }
   .idle h1 {
@@ -210,9 +210,13 @@ a.btn {
         display: inline-block; }
       .idle .container-top-menu .top-menu .btn-menu {
         background-color: #584839;
-        color: yellow;
         font-size: 24px; }
         .idle .container-top-menu .top-menu .btn-menu:hover {
+          background-color: #675442; }
+      .idle .container-top-menu .top-menu .btn-armory-menu {
+        background-color: #584839;
+        font-size: 14px; }
+        .idle .container-top-menu .top-menu .btn-armory-menu:hover {
           background-color: #675442; }
       .idle .container-top-menu .top-menu .active {
         background-color: #776655; }
@@ -226,53 +230,9 @@ a.btn {
       display: inline-block;
       border: solid 4px;
       border-image: url("../images/border.png") 4 fill repeat; }
-      .idle .out-hero-menu .hero-menu .details-hero {
-        padding: 10px;
-        margin: 10px;
-        height: 200px; }
-        .idle .out-hero-menu .hero-menu .details-hero .top {
-          text-align: left;
-          padding-left: 10px; }
-          .idle .out-hero-menu .hero-menu .details-hero .top .progress-hp {
-            height: 8px !important;
-            width: 200px;
-            border: 1px solid lightgray;
-            margin: 10px 0 10px 0;
-            padding: 0; }
-          .idle .out-hero-menu .hero-menu .details-hero .top .progress-bar-hp {
-            width: 0;
-            height: 100%;
-            background-color: #eb0000; }
-        .idle .out-hero-menu .hero-menu .details-hero .bottom {
-          text-align: left;
-          padding-left: 10px;
-          line-height: 28px; }
-          .idle .out-hero-menu .hero-menu .details-hero .bottom .progress-exp {
-            height: 8px !important;
-            width: 250px;
-            border: 1px solid lightgray;
-            margin: 10px 0 10px 0;
-            padding: 0; }
-          .idle .out-hero-menu .hero-menu .details-hero .bottom .progress-bar-exp {
-            width: 0;
-            height: 100%;
-            background-color: #1e82eb; }
-        .idle .out-hero-menu .hero-menu .details-hero .hero {
-          width: 180px;
-          height: 180px;
-          border: solid 4px;
-          border-image: url("../images/border.png") 4 fill repeat;
-          cursor: pointer; }
-        .idle .out-hero-menu .hero-menu .details-hero .one {
-          padding-bottom: 10px; }
-        .idle .out-hero-menu .hero-menu .details-hero .equipement {
-          width: 60px;
-          height: 60px;
-          border: solid 4px;
-          border-image: url("../images/border.png") 4 fill repeat; }
-  .idle .out-mob-menu {
+  .idle .out-menu {
     text-align: center; }
-    .idle .out-mob-menu .mob-menu {
+    .idle .out-menu .menu {
       background-color: #94795f;
       max-height: 600px;
       margin: 0;
@@ -280,34 +240,92 @@ a.btn {
       display: inline-block;
       border: solid 4px;
       border-image: url("../images/border.png") 4 fill repeat; }
-      .idle .out-mob-menu .mob-menu .details-mob {
+      .idle .out-menu .menu .details-hero {
+        padding: 10px;
+        margin: 10px; }
+        .idle .out-menu .menu .details-hero .top {
+          text-align: left;
+          padding-left: 10px; }
+          .idle .out-menu .menu .details-hero .top .progress-hp {
+            height: 8px !important;
+            width: 200px;
+            border: 1px solid lightgray;
+            margin: 10px 0 10px 0;
+            padding: 0; }
+          .idle .out-menu .menu .details-hero .top .progress-bar-hp {
+            width: 0;
+            height: 100%;
+            background-color: #eb0000; }
+        .idle .out-menu .menu .details-hero .bottom {
+          text-align: left;
+          padding-left: 10px;
+          line-height: 28px; }
+          .idle .out-menu .menu .details-hero .bottom .progress-exp {
+            height: 8px !important;
+            width: 250px;
+            border: 1px solid lightgray;
+            margin: 10px 0 10px 0;
+            padding: 0; }
+          .idle .out-menu .menu .details-hero .bottom .progress-bar-exp {
+            width: 0;
+            height: 100%;
+            background-color: #1e82eb; }
+        .idle .out-menu .menu .details-hero .one {
+          padding-bottom: 10px; }
+        .idle .out-menu .menu .details-hero .equipement {
+          width: 60px;
+          height: 60px;
+          border: solid 4px;
+          border-image: url("../images/border.png") 4 fill repeat; }
+      .idle .out-menu .menu .details-mob {
         padding: 10px;
         margin: 10px;
         height: 200px; }
-        .idle .out-mob-menu .mob-menu .details-mob .monster {
-          width: 180px;
-          height: 180px;
-          border: solid 4px;
-          border-image: url("../images/border.png") 4 fill repeat; }
-        .idle .out-mob-menu .mob-menu .details-mob .damage {
-          position: absolute;
-          left: 90px;
-          top: 90px;
-          font-size: 36px;
-          opacity: 1; }
-        .idle .out-mob-menu .mob-menu .details-mob .top {
+        .idle .out-menu .menu .details-mob .top {
           text-align: left;
           padding-left: 10px; }
-          .idle .out-mob-menu .mob-menu .details-mob .top .progress-hp {
+          .idle .out-menu .menu .details-mob .top .progress-hp {
             height: 8px !important;
             width: 250px;
             border: 1px solid lightgray;
             margin: 10px auto;
             padding: 0; }
-          .idle .out-mob-menu .mob-menu .details-mob .top .progress-bar-hp {
+          .idle .out-menu .menu .details-mob .top .progress-bar-hp {
             width: 0;
             height: 100%;
             background-color: #be0000; }
+      .idle .out-menu .menu .character img {
+        width: 180px;
+        height: 180px;
+        border: solid 4px;
+        border-image: url("../images/border.png") 4 fill repeat; }
+      .idle .out-menu .menu .damage {
+        color: red;
+        font-weight: bold;
+        position: absolute;
+        left: 110px;
+        top: 70px;
+        font-size: 42px;
+        opacity: 1; }
+      .idle .out-menu .menu .recipe {
+        cursor: pointer; }
+      .idle .out-menu .menu .item, .idle .out-menu .menu .draw-item {
+        margin: 10px;
+        padding: 0;
+        float: left;
+        cursor: pointer; }
+        .idle .out-menu .menu .item img, .idle .out-menu .menu .draw-item img {
+          width: 60px;
+          height: 60px;
+          border: solid 4px;
+          border-image: url("../images/border.png") 4 fill repeat; }
+      .idle .out-menu .menu .fixed {
+        width: 120px; }
+      .idle .out-menu .menu .refresh-inventory {
+        float: right;
+        margin: 5px; }
+      .idle .out-menu .menu .btn-craft {
+        margin-left: 5px; }
 
 /*******************/
 /* STRATEGY STYLE */

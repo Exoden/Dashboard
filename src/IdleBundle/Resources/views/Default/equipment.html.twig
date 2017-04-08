@@ -1,0 +1,120 @@
+{% extends "IdleBundle:Default:armory.html.twig" %}
+
+{% block page_armory %}
+    <div class="col-md-5 out-menu">
+        <div class="col-md-12 menu">
+            <h3>Heroes</h3>
+            {% for key, hero in heroes %}
+                <div id="hero_{{ key }}" class="row details-hero">
+                    <p>{{ hero.name }} ({{ hero.age }})</p>
+                    <div class="item"
+                         title="{% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Damages: {% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].characteristics.damageMinimum }} - {{ equipments[key]['weapon'].characteristics.damageMaximum }}{% else %}{{ hero.characteristics.damageMinimum }} - {{ hero.characteristics.damageMaximum }}{% endif %}<br />
+                            Precision: {% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].characteristics.hitPrecision }}{% else %}{{ hero.characteristics.hitPrecision }}{% endif %}<br />
+                            Delay: {% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].characteristics.attackDelay }}{% else %}{{ hero.characteristics.attackDelay }}{% endif %} sec<br />">
+                        <img src="" alt="weapon" class="equipement">
+                    </div>
+                    <div class="item"
+                         title="{% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Health: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.health }}{% endif %}<br />
+                            Armor: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.armor }}{% endif %}<br />
+                            Dodge: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.dodge }}%{% endif %}<br />
+                            Blocking: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.blocking }}%{% endif %}<br />">
+                        <img src="" alt="offhand" class="equipement">
+                    </div>
+                    <div class="item"
+                         title="{% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Health: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.health }}{% endif %}<br />
+                            Armor: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.armor }}{% endif %}<br />
+                            Dodge: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.dodge }}%{% endif %}<br />
+                            Blocking: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.blocking }}%{% endif %}<br />">
+                        <img src="" alt="artifact" class="equipement">
+                    </div>
+                    <div class="item"
+                         title="{% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Health: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.health }}{% endif %}<br />
+                            Armor: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.armor }}{% endif %}<br />
+                            Dodge: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.dodge }}%{% endif %}<br />
+                            Blocking: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.blocking }}%{% endif %}<br />">
+                        <img src="" alt="armor" class="equipement">
+                    </div>
+                    <div class="item"
+                         title="{% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Health: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.health }}{% endif %}<br />
+                            Armor: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.armor }}{% endif %}<br />
+                            Dodge: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.dodge }}%{% endif %}<br />
+                            Blocking: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.blocking }}%{% endif %}<br />">
+                        <img src="" alt="helmet" class="equipement">
+                    </div>
+                    <div class="item"
+                         title="{% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Health: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.health }}{% endif %}<br />
+                            Armor: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.armor }}{% endif %}<br />
+                            Dodge: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.dodge }}%{% endif %}<br />
+                            Blocking: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.blocking }}%{% endif %}<br />">
+                        <img src="" alt="gloves" class="equipement">
+                    </div>
+                    <div class="item"
+                         title="{% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].name }}{% endif %}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            Health: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.health }}{% endif %}<br />
+                            Armor: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.armor }}{% endif %}<br />
+                            Dodge: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.dodge }}%{% endif %}<br />
+                            Blocking: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.blocking }}%{% endif %}<br />">
+                        <img src="" alt="jewel" class="equipement">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-3 out-menu">
+        <div class="col-md-12 menu">
+            <h3>Stuff</h3>
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th style="text-align: center">Charac</th>
+                    <th style="text-align: center">Equiped</th>
+                    <th style="text-align: center">Modif</th>
+                    <th style="text-align: center">Selected</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Health</td>
+                    <td>+4</td>
+                    <td>+1</td>
+                    <td>+5</td>
+                </tr>
+                <tr>
+                    <td>Dodge</td>
+                    <td>+12</td>
+                    <td>-4</td>
+                    <td>+8</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-danger" style="float: left; margin: 5px;">Drop</button>
+            <button class="btn btn-success" style="float: right; margin: 5px;">Equiped</button>
+        </div>
+    </div>
+    <div class="col-md-4 out-menu">
+        <div class="col-md-12 menu">
+            <h3>Equipments</h3>
+            <div class="equipments">
+                {% for stuff in stuffs %}
+                    <div class="item fixed" title="{{ stuff.item.name }}" data-value="{{ stuff.item.id }}">
+                        <img src="{% if stuff.item.image is not null %}{{ asset('images/Idle/' ~ stuff.item.typeItem.name ~ 's/' ~ stuff.item.image) }}{% endif %}" alt="{{ stuff.item.name }}">
+                        <p>{{ stuff.item.name }} x<span class="quantity">{{ stuff.quantity }}</span></p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

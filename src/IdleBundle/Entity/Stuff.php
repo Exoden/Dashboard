@@ -22,19 +22,6 @@ class Stuff
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Hero")
-     * @ORM\JoinColumn(name="hero_id", referencedColumnName="id")
-     */
-    private $hero;
-
-    /**
      * @ORM\OneToOne(targetEntity="Characteristics")
      * @ORM\JoinColumn(name="characteristics_id", referencedColumnName="id")
      */
@@ -42,9 +29,15 @@ class Stuff
 
     /**
      * @ORM\ManyToOne(targetEntity="StuffType")
-     * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
     private $type;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Item")
+     * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
+     */
+    private $item;
 
 
     /**
@@ -55,52 +48,6 @@ class Stuff
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Stuff
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set hero
-     *
-     * @param Hero $hero
-     * @return Stuff
-     */
-    public function setHero($hero)
-    {
-        $this->hero = $hero;
-
-        return $this;
-    }
-
-    /**
-     * Get hero
-     *
-     * @return Hero
-     */
-    public function getHero()
-    {
-        return $this->hero;
     }
 
     /**
@@ -147,5 +94,28 @@ class Stuff
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set item
+     *
+     * @param Item $item
+     * @return Stuff
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return Item
+     */
+    public function getItem()
+    {
+        return $this->item;
     }
 }

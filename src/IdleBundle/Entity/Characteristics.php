@@ -73,9 +73,16 @@ class Characteristics
     /**
      * @var int
      *
-     * @ORM\Column(name="speed", type="integer")
+     * @ORM\Column(name="criticalChance", type="integer")
      */
-    private $speed;
+    private $criticalChance;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="blocking", type="integer")
+     */
+    private $blocking;
 
 
     /**
@@ -273,25 +280,48 @@ class Characteristics
     }
 
     /**
-     * Set speed
+     * Set criticalChance
      *
-     * @param integer $speed
+     * @param integer $criticalChance
      * @return Characteristics
      */
-    public function setSpeed($speed)
+    public function setCriticalChance($criticalChance)
     {
-        $this->speed = $speed;
+        $this->criticalChance = $criticalChance;
 
         return $this;
     }
 
     /**
-     * Get speed
+     * Get criticalChance
      *
-     * @return integer 
+     * @return integer
      */
-    public function getSpeed()
+    public function getCriticalChance()
     {
-        return $this->speed;
+        return $this->criticalChance;
+    }
+
+    /**
+     * Set blocking
+     *
+     * @param integer $blocking
+     * @return Characteristics
+     */
+    public function setBlocking($blocking)
+    {
+        $this->blocking = $blocking;
+
+        return $this;
+    }
+
+    /**
+     * Get blocking
+     *
+     * @return integer
+     */
+    public function getBlocking()
+    {
+        return $this->blocking;
     }
 }

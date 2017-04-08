@@ -12,24 +12,25 @@
 
 {% block page %}
     <div class="row">
-        <div class="col-md-6 out-hero-menu">
-            <div class="col-md-12 hero-menu">
+        <div class="col-md-6 out-menu">
+            <div class="col-md-12 menu">
                 {% for key, hero in heroes %}
                     <div id="hero_{{ key }}" class="row details-hero {#{% if hero.isSelected == true %}selected{% endif %}#}">
                         <div class="col-md-4 character" data-value="{{ hero.id }}">
-                            <span title="{{ hero.name }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Age: {{ hero.age }}<br />
+                            {#<span title="{{ hero.name }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="#}
+                                    {#Age: {{ hero.age }}<br />#}
                                     {#Level: {{ hero.level }}<br />#}
                                     {#Experience: {{ hero.experience }}<br />#}
-                                    State: {% if hero.isRested %}OK{% else %}KO{% endif %}">
-                                <img src="" alt="hero" class="hero">
-                            </span>
+                                    {#State: {% if hero.isRested %}OK{% else %}KO{% endif %}">#}
+                            <img src="" alt="hero" class="hero">
+                            {#</span>#}
+                            <h2 class="damage"></h2>
                         </div>
                         <div class="col-md-8">
                             <div class="row top">
                                 <div class="col-md-3">
                                     <p>
-                                        {{ hero.name }}
+                                        {{ hero.name }} ({{ hero.age }})
                                         {# TODO : Barre d'hp #}
                                         {# TODO : Icone etat #}
                                         {% if hero.isRested %}OK{% else %}KO{% endif %}
@@ -43,54 +44,54 @@
                                 </div>
                             </div>
                             <div class="row one">
-                                <span title="{% if stuff[key]['weapon'] is not null %}{{ stuff[key]['weapon'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Damages: {% if stuff[key]['weapon'] is not null %}{{ stuff[key]['weapon'].characteristics.damageMinimum }} - {{ stuff[key]['weapon'].characteristics.damageMaximum }}{% else %}{{ hero.characteristics.damageMinimum }} - {{ hero.characteristics.damageMaximum }}{% endif %}<br />
-                                    Hit: {% if stuff[key]['weapon'] is not null %}{{ stuff[key]['weapon'].characteristics.hitPrecision }}{% else %}{{ hero.characteristics.hitPrecision }}{% endif %}<br />
-                                    Delay: {% if stuff[key]['weapon'] is not null %}{{ stuff[key]['weapon'].characteristics.attackDelay }}{% else %}{{ hero.characteristics.attackDelay }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Damages: {% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].characteristics.damageMinimum }} - {{ equipments[key]['weapon'].characteristics.damageMaximum }}{% else %}{{ hero.characteristics.damageMinimum }} - {{ hero.characteristics.damageMaximum }}{% endif %}<br />
+                                    Precision: {% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].characteristics.hitPrecision }}{% else %}{{ hero.characteristics.hitPrecision }}{% endif %}<br />
+                                    Delay: {% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].characteristics.attackDelay }}{% else %}{{ hero.characteristics.attackDelay }}{% endif %} sec<br />">
                                     <img src="" alt="weapon" class="equipement">
                                 </span>
-                                <span title="{% if stuff[key]['offhand'] is not null %}{{ stuff[key]['offhand'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Health: {% if stuff[key]['offhand'] is not null %}{{ stuff[key]['offhand'].characteristics.health }}{% endif %}<br />
-                                    Armor: {% if stuff[key]['offhand'] is not null %}{{ stuff[key]['offhand'].characteristics.armor }}{% endif %}<br />
-                                    Dodge: {% if stuff[key]['offhand'] is not null %}{{ stuff[key]['offhand'].characteristics.dodge }}{% endif %}<br />
-                                    Speed: {% if stuff[key]['offhand'] is not null %}{{ stuff[key]['offhand'].characteristics.speed }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Health: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.health }}{% endif %}<br />
+                                    Armor: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.armor }}{% endif %}<br />
+                                    Dodge: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.dodge }}%{% endif %}<br />
+                                    Blocking: {% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].characteristics.blocking }}%{% endif %}<br />">
                                     <img src="" alt="offhand" class="equipement">
                                 </span>
-                                <span title="{% if stuff[key]['artifact'] is not null %}{{ stuff[key]['artifact'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Health: {% if stuff[key]['artifact'] is not null %}{{ stuff[key]['artifact'].characteristics.health }}{% endif %}<br />
-                                    Armor: {% if stuff[key]['artifact'] is not null %}{{ stuff[key]['artifact'].characteristics.armor }}{% endif %}<br />
-                                    Dodge: {% if stuff[key]['artifact'] is not null %}{{ stuff[key]['artifact'].characteristics.dodge }}{% endif %}<br />
-                                    Speed: {% if stuff[key]['artifact'] is not null %}{{ stuff[key]['artifact'].characteristics.speed }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Health: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.health }}{% endif %}<br />
+                                    Armor: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.armor }}{% endif %}<br />
+                                    Dodge: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.dodge }}%{% endif %}<br />
+                                    Blocking: {% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].characteristics.blocking }}%{% endif %}<br />">
                                     <img src="" alt="artifact" class="equipement">
                                 </span>
                             </div>
                             <div class="row two">
-                                <span title="{% if stuff[key]['armor'] is not null %}{{ stuff[key]['armor'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Health: {% if stuff[key]['armor'] is not null %}{{ stuff[key]['armor'].characteristics.health }}{% endif %}<br />
-                                    Armor: {% if stuff[key]['armor'] is not null %}{{ stuff[key]['armor'].characteristics.armor }}{% endif %}<br />
-                                    Dodge: {% if stuff[key]['armor'] is not null %}{{ stuff[key]['armor'].characteristics.dodge }}{% endif %}<br />
-                                    Speed: {% if stuff[key]['armor'] is not null %}{{ stuff[key]['armor'].characteristics.speed }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Health: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.health }}{% endif %}<br />
+                                    Armor: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.armor }}{% endif %}<br />
+                                    Dodge: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.dodge }}%{% endif %}<br />
+                                    Blocking: {% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].characteristics.blocking }}%{% endif %}<br />">
                                     <img src="" alt="armor" class="equipement">
                                 </span>
-                                <span title="{% if stuff[key]['helmet'] is not null %}{{ stuff[key]['helmet'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Health: {% if stuff[key]['helmet'] is not null %}{{ stuff[key]['helmet'].characteristics.health }}{% endif %}<br />
-                                    Armor: {% if stuff[key]['helmet'] is not null %}{{ stuff[key]['helmet'].characteristics.armor }}{% endif %}<br />
-                                    Dodge: {% if stuff[key]['helmet'] is not null %}{{ stuff[key]['helmet'].characteristics.dodge }}{% endif %}<br />
-                                    Speed: {% if stuff[key]['helmet'] is not null %}{{ stuff[key]['helmet'].characteristics.speed }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Health: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.health }}{% endif %}<br />
+                                    Armor: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.armor }}{% endif %}<br />
+                                    Dodge: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.dodge }}%{% endif %}<br />
+                                    Blocking: {% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].characteristics.blocking }}%{% endif %}<br />">
                                     <img src="" alt="helmet" class="equipement">
                                 </span>
-                                <span title="{% if stuff[key]['gloves'] is not null %}{{ stuff[key]['gloves'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Health: {% if stuff[key]['gloves'] is not null %}{{ stuff[key]['gloves'].characteristics.health }}{% endif %}<br />
-                                    Armor: {% if stuff[key]['gloves'] is not null %}{{ stuff[key]['gloves'].characteristics.armor }}{% endif %}<br />
-                                    Dodge: {% if stuff[key]['gloves'] is not null %}{{ stuff[key]['gloves'].characteristics.dodge }}{% endif %}<br />
-                                    Speed: {% if stuff[key]['gloves'] is not null %}{{ stuff[key]['gloves'].characteristics.speed }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Health: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.health }}{% endif %}<br />
+                                    Armor: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.armor }}{% endif %}<br />
+                                    Dodge: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.dodge }}%{% endif %}<br />
+                                    Blocking: {% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].characteristics.blocking }}%{% endif %}<br />">
                                     <img src="" alt="gloves" class="equipement">
                                 </span>
-                                <span title="{% if stuff[key]['jewel'] is not null %}{{ stuff[key]['jewel'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                                    Health: {% if stuff[key]['jewel'] is not null %}{{ stuff[key]['jewel'].characteristics.health }}{% endif %}<br />
-                                    Armor: {% if stuff[key]['jewel'] is not null %}{{ stuff[key]['jewel'].characteristics.armor }}{% endif %}<br />
-                                    Dodge: {% if stuff[key]['jewel'] is not null %}{{ stuff[key]['jewel'].characteristics.dodge }}{% endif %}<br />
-                                    Speed: {% if stuff[key]['jewel'] is not null %}{{ stuff[key]['jewel'].characteristics.speed }}{% endif %}<br />">
+                                <span title="{% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                                    Health: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.health }}{% endif %}<br />
+                                    Armor: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.armor }}{% endif %}<br />
+                                    Dodge: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.dodge }}%{% endif %}<br />
+                                    Blocking: {% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].characteristics.blocking }}%{% endif %}<br />">
                                     <img src="" alt="jewel" class="equipement">
                                 </span>
                             </div>
@@ -101,7 +102,6 @@
                                         {#HP: {{ hero.characteristics.health }}#}
                                         {#Armor:  {{ hero.characteristics.armor }}#}
                                         {#Dodge: {{ hero.characteristics.dodge }}#}
-                                        {#Speed: {{ hero.characteristics.speed }}#}
                                         {#Attack: {{ hero.characteristics.damageMinimum }}-{{ hero.characteristics.damageMaximum }}#}
                                         {#Delay: {{ hero.characteristics.attackDelay }}#}
                                         {#Precision: {{ hero.characteristics.hitPrecision }}#}
@@ -120,12 +120,12 @@
         </div>
 
 
-        <div class="col-md-6 out-mob-menu">
-            <div class="col-md-12 mob-menu">
-                {% for key, hero in heroes%}
+        <div class="col-md-6 out-menu">
+            <div class="col-md-12 menu">
+                {% for key, hero in heroes %}
                     <div id="mob_{{ key }}" class="row details-mob">
                         <div class="col-md-4 character">
-                            <img src="" alt="monster" class="monster">
+                            <img src="{{ asset('images/Idle/Enemy/' ~ hero.target.enemy.image) }}" alt="monster" class="monster">
                             <h2 class="damage"></h2>
                         </div>
                         <div class="col-md-8">
@@ -139,24 +139,24 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <p>Monster</p>
+                                    <p>{{ hero.target.enemy.name }}</p>
                                 </div>
-                                <div class="col-md-9 progress progress-hp" title="HP : 100/100">
-                                    <div class="progress-bar-hp" role="progressbar" data-value="100" style="width: 100%"></div>
+                                <div class="col-md-9 progress progress-hp" title="HP : {{ hero.target.currentHealth }}/{{ hero.target.enemy.characteristics.health }}">
+                                    <div class="progress-bar-hp" role="progressbar" data-value="{{ hero.target.currentHealth }}" style="width: {{ ( hero.target.currentHealth * 100) / hero.target.enemy.characteristics.health }}%"></div>
                                 </div>
                             </div>
                             <div class="row bottom">
                                 <div class="col-md-3">
-                                    Health: 100
+                                    Health: {{ hero.target.enemy.characteristics.health }}
                                 </div>
                                 <div class="col-md-3">
-                                    Armor: 5
+                                    Armor: {{ hero.target.enemy.characteristics.armor }}
                                 </div>
                                 <div class="col-md-3">
-                                    Dodge: 0
+                                    Dodge: {{ hero.target.enemy.characteristics.dodge }}%
                                 </div>
                                 <div class="col-md-3">
-                                    Delay: 1
+                                    Delay: {{ hero.target.enemy.characteristics.attackDelay }} sec
                                 </div>
                             </div>
                         </div>
@@ -202,6 +202,13 @@
         $('[data-toggle="popover"]').popover({
             html:true
         });
+
+//        $('a[rel=popover-img]').popover({
+//            html: true,
+//            trigger: 'hover',
+//            placement: 'top',
+//            content: function() { return '<img src="' + $(this).data('img') + '" />'; }
+//        });
     });
 
     {% for key, hero in heroes %}
@@ -228,27 +235,25 @@
     function animateBattle(bh, id)
     {
         $.each(bh, function(key, arr) {
-
             if ((arr.time * 1000) >= (new Date()).getTime()) { // arr[key] time is past now, so we must play previous key
 //                console.log((new Date()).getTime());
-//                console.log(key + ": " + bh[key-1].time * 1000 + ": " + bh[key-1].damage);
-                t = (new Date()).getTime();
+                console.log(key + ": " + bh[key-1].time * 1000 + ": " + bh[key-1].damage + ": " + bh[key-1].currentHealth + "/" + bh[key-1].health);
 
-                if (bh[key-1].type == "HIT") { // Attack
-                    console.log('HIT');
+                var t = (new Date()).getTime();
+                var progress_bar_mob = $('#mob_' + id + ' .progress-bar-hp');
+                var progress_bar_hero = $('#hero_' + id + ' .progress-bar-hp');
 
-                    var progress_bar = $('#mob_' + id + ' .progress-bar-hp');
-                    var hp = progress_bar.data('value');
+                if (bh[key-1].type == "HIT_E") { // Attack
+                    console.log('HIT_E');
 
-                    hp -= bh[key-1].damage;
-                    progress_bar.data('value', hp);
+                    progress_bar_mob.data('value', bh[key-1].currentHealth);
 
-                    progress_bar.animate({width: ((hp / 100) * 100) + '%'}, 200);
-                    $('#mob_' + id + ' .progress-hp').attr('title', "HP : " + hp + "/100");
+                    progress_bar_mob.animate({width: ((bh[key-1].currentHealth * 100) / bh[key-1].health) + '%'}, 200);
+                    $('#mob_' + id + ' .progress-hp').attr('title', "HP : " + bh[key-1].currentHealth + "/" + bh[key-1].health);
                     $('#mob_' + id + ' .damage')
                         .html(bh[key-1].damage)
                         .removeAttr('style')
-                        .animate({opacity: 0, top: "-=120px"}, 500);
+                        .animate({opacity: 0, top: "-=100px"}, 1000);
 
 //                    console.log('next call : ' + ((arr.time * 1000) - (new Date()).getTime()));
                     window.setTimeout(function () {
@@ -256,22 +261,44 @@
                     }, Math.floor(arr.time * 1000) - t);
                     return false;
                 }
-                else if (bh[key-1].type == "GEN") { // Generate Enemy
+                else if (bh[key-1].type == "HIT_H") { // Attack
+                    console.log('HIT_H');
+
+                    progress_bar_hero.data('value', bh[key-1].currentHealth);
+
+                    progress_bar_hero.animate({width: ((bh[key-1].currentHealth * 100) / bh[key-1].health) + '%'}, 200);
+                    $('#hero_' + id + ' .progress-hp').attr('title', "HP : " + bh[key-1].currentHealth + "/" + bh[key-1].health);
+                    $('#hero_' + id + ' .damage')
+                        .html(bh[key-1].damage)
+                        .removeAttr('style')
+                        .animate({opacity: 0, top: "-=100px"}, 1000);
+
                     window.setTimeout(function () {
-                        $('#mob_' + id + ' .progress-bar-hp').animate({width: '100%'}, 200);
-                        animateBattle(id);
-                    }, Math.floor(arr.time * 1000) - (new Date()).getTime());
+                        animateBattle(bh.slice(key), id); // we slice from the current element, because we skip the played element (key-1)
+                    }, Math.floor(arr.time * 1000) - t);
+                    return false;
+                }
+                else if (bh[key-1].type == "GEN") { // Generate Enemy
+                    console.log('GEN');
+
+                    $('#mob_' + id + 'img').attr('src', bh[key-1].image);
+                    progress_bar_mob.data('value', bh[key-1].currentHealth);
+                    progress_bar_mob.animate({width: '100%'}, 200);
+
+                    window.setTimeout(function () {
+                        animateBattle(bh.slice(key), id); // we slice from the current element, because we skip the played element (key-1)
+                    }, Math.floor(arr.time * 1000) - t);
+                    return false;
                 }
             }
-
         });
     }
 
     {#function animateBattle(id) {#}
         {#var hp{{ key }} = $('#mob{{ key }} .progress-bar-hp').data('value');#}
 
-        {#{% if stuff[key]['weapon'].characteristics is defined %}#}
-        {#{% set weapon = stuff[key]['weapon'].characteristics %}#}
+        {#{% if equipments[key]['weapon'].characteristics is defined %}#}
+        {#{% set weapon = equipments[key]['weapon'].characteristics %}#}
         {#{% else %}#}
         {#{% set weapon = hero.characteristics %}#}
         {#{% endif %}#}
@@ -307,8 +334,8 @@
         {#animateBattle({{ key }});#}
     {#var hp{{ key }} = $('#mob{{ key }} .progress-bar-hp').data('value');#}
 
-    {#{% if stuff[key]['weapon'].characteristics is defined %}#}
-    {#{% set weapon = stuff[key]['weapon'].characteristics %}#}
+    {#{% if equipments[key]['weapon'].characteristics is defined %}#}
+    {#{% set weapon = equipments[key]['weapon'].characteristics %}#}
     {#{% else %}#}
     {#{% set weapon = hero.characteristics %}#}
     {#{% endif %}#}

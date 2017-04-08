@@ -307,7 +307,7 @@ a.btn {
 .idle {
     background-color: #4a3c2f;
     color: $font-color;
-    font-family: fontIdle serif;
+    font-family: fontIdle /*serif*/;
     width: 1600px !important;
     height: 800px !important;
 
@@ -340,8 +340,16 @@ a.btn {
 
             .btn-menu {
                 background-color: #584839;
-                color: yellow;
                 font-size: 24px;
+
+                &:hover {
+                    background-color: #675442;
+                }
+            }
+
+            .btn-armory-menu {
+                background-color: #584839;
+                font-size: 14px;
 
                 &:hover {
                     background-color: #675442;
@@ -365,11 +373,24 @@ a.btn {
             display: inline-block;
             border: solid 4px;
             border-image: url("../images/border.png") 4 fill repeat;
+        }
+    }
+
+    .out-menu {
+        text-align: center;
+
+        .menu {
+            background-color: #94795f;
+            max-height: 600px;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+            border: solid 4px;
+            border-image: url("../images/border.png") 4 fill repeat;
 
             .details-hero {
                 padding: $small-space;
                 margin: $small-space;
-                height: 200px;
 
                 .top {
                     text-align: left;
@@ -410,14 +431,6 @@ a.btn {
                     }
                 }
 
-                .hero {
-                    width: 180px;
-                    height: 180px;
-                    border: solid 4px;
-                    border-image: url("../images/border.png") 4 fill repeat;
-                    cursor: pointer;
-                }
-
                 .one {
                     padding-bottom: $small-space;
                 }
@@ -430,43 +443,10 @@ a.btn {
                 }
             }
 
-            .selected {
-                //border: 2px red solid;
-            }
-        }
-    }
-
-    .out-mob-menu {
-        text-align: center;
-
-        .mob-menu {
-            background-color: #94795f;
-            max-height: 600px;
-            margin: 0;
-            padding: 0;
-            display: inline-block;
-            border: solid 4px;
-            border-image: url("../images/border.png") 4 fill repeat;
-
             .details-mob {
                 padding: $small-space;
                 margin: $small-space;
                 height: 200px;
-
-                .monster {
-                    width: 180px;
-                    height: 180px;
-                    border: solid 4px;
-                    border-image: url("../images/border.png") 4 fill repeat;
-                }
-
-                .damage {
-                    position: absolute;
-                    left: 90px;
-                    top: 90px;
-                    font-size: 36px;
-                    opacity: 1;
-                }
 
                 .top {
                     text-align: left;
@@ -486,6 +466,54 @@ a.btn {
                         background-color: #be0000;
                     }
                 }
+            }
+
+            .character img {
+                width: 180px;
+                height: 180px;
+                border: solid 4px;
+                border-image: url("../images/border.png") 4 fill repeat;
+            }
+
+            .damage {
+                color: red;
+                font-weight: bold;
+                position: absolute;
+                left: 110px;
+                top: 70px;
+                font-size: 42px;
+                opacity: 1;
+            }
+
+            .recipe {
+                cursor: pointer;
+            }
+
+            .item, .draw-item {
+                margin: $small-space;
+                padding: 0;
+                float: left;
+                cursor: pointer;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    border: solid 4px;
+                    border-image: url("../images/border.png") 4 fill repeat;
+                }
+            }
+
+            .fixed {
+                width: 120px;
+            }
+
+            .refresh-inventory {
+                float: right;
+                margin: 5px;
+            }
+
+            .btn-craft {
+                margin-left: 5px;
             }
         }
     }

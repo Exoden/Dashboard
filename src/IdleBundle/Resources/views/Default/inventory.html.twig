@@ -1,0 +1,199 @@
+{% extends "IdleBundle:Default:armory.html.twig" %}
+
+{% block page_armory %}
+    <div class="col-md-4 out-menu">
+        <div class="col-md-12 menu">
+            <div class="refresh-inventory">
+                <button class="btn btn-primary" onclick="refresh_inventory()"><span class="fa fa-refresh"></span></button>
+            </div>
+            <h3 style="clear:both">Recipes</h3>
+            <div class="recipes" style="display: block">
+                {% for recipe in recipes %}
+                    <div class="recipe" title="{{ recipe['recipe'].item.name }}" data-value="{{ recipe['recipe'].id }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                    {% for craft in recipe['craft'] %}
+                        {{ craft.itemNeeded.name }} x{{ craft.quantity }}<br />
+                    {% endfor %}
+                    ">{{ recipe['recipe'].item.name }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 out-menu">
+        <div class="col-md-12 menu">
+            <h3>Items</h3>
+            <div class="items" style="display: block">
+            {% for inv in inventory %}
+                <div class="item fixed" title="{{ inv['obj'].item.name }}" data-value="{{ inv['obj'].item.id }}" {#data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                    {% if inv['obj'].item.typeItem.name == "Equipment" %}
+                        {% if inv['obj'].type.name == "Weapon" %}
+                            Damage: {{ inv['obj'].characteristics.damageMinimum }} - {{ inv['obj'].characteristics.damageMaximum }}<br />
+                            Precision: {{ inv['obj'].characteristics.hitPrecision }}%<br />
+                            Critical: {{ inv['obj'].characteristics.criticalChance }}%<br />
+                            Delay: {{ inv['obj'].characteristics.attackDelay }} sec<br />
+                        {% else %}
+                            Health: {{ inv['obj'].characteristics.health }}<br />
+                            Armor: {{ inv['obj'].characteristics.armor }}<br />
+                            Dodge: {{ inv['obj'].characteristics.dodge }}%<br />
+                            Blocking: {{ inv['obj'].characteristics.blocking }}%<br />
+                        {% endif %}
+                    {% endif %}
+                    "#}>
+                    <img src="{% if inv['obj'].item.image is not null %}{{ asset('images/Idle/' ~ inv['obj'].item.typeItem.name ~ 's/' ~ inv['obj'].item.image) }}{% endif %}" alt="{{ inv['obj'].item.name }}">
+                    <p>{{ inv['obj'].item.name }} x<span class="quantity">{{ inv['quantity'] }}</span></p>
+                </div>
+            {% endfor %}
+            </div>
+            <div class="draw-items"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+        $('[data-toggle="popover"]').popover({
+            html: true
+        });
+    });
+
+
+    $('.recipe').click(filter_items);
+
+    $('.item').click(filter_recipes);
+
+    function filter_items() {
+        var elem = $(this);
+        var url = '{{ path("show_recipe_crafts", {'recipe_id': 'RECIPE_ID'}) }}';
+        url = url.replace("RECIPE_ID", elem.data('value'));
+//        console.log(url);
+        var jhrx = $.ajax(url)
+            .done(function (data) {
+                if (data.success) {
+                    console.log('OK');
+
+                    $('.items').css('display', 'none');
+                    $('.draw-items').empty();
+                    clear_select_recipes();
+
+                    elem.css('font-weight', 'bold');
+                    if (data.craftable) {
+                        $('.refresh-inventory').prepend('<button class="btn btn-success btn-craft" data-value="' + elem.data('value') + '">Craft</button>');
+                        $('.btn-craft').click(craft_recipe);
+                    }
+
+                    $.each(data.crafts, function(key, arr) {
+                        $('.draw-items').append(addDrawItem(arr));
+                    });
+                    $('.draw-item').click(filter_recipes);
+                }
+            })
+    }
+
+    function filter_recipes()
+    {
+        var elem = $(this);
+        var url = '{{ path("show_item_recipes", {'item_id': 'ITEM_ID'}) }}';
+        url = url.replace("ITEM_ID", elem.closest('div').data('value'));
+//        console.log(url);
+        var jhrx = $.ajax(url)
+            .done(function (data) {
+                if (data.success) {
+                    console.log('OK');
+
+                    if (data.recipes.length > 0) {
+                        $.each(data.recipes, function (key, arr) {
+                            $('.recipe').each(function () {
+                                var recipe = $(this);
+                                if (recipe.data('value') != arr.id) {
+                                    recipe.css('display', 'none');
+                                }
+                                else {
+                                    recipe.css('display', 'block');
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        $('.recipe').each(function () {
+                            var recipe = $(this);
+                            recipe.css('display', 'none');
+                        });
+                    }
+                }
+            })
+    }
+
+    function craft_recipe(recipe_id) {
+        var elem = $(this);
+        var url = '{{ path("craft_recipe", {'recipe_id': 'RECIPE_ID'}) }}';
+        url = url.replace("RECIPE_ID", elem.data('value'));
+//        console.log(url);
+        var jhrx = $.ajax(url)
+            .done(function (data) {
+                if (data.success) {
+                    console.log('OK');
+
+                    $.each(data.items, function (key, arr) {
+                        if (arr.type == "craft") {
+                            var quantity_selector = $('.draw-item[data-value="' + arr.id + '"] .quantity');
+                            quantity_selector.html(arr.possessed);
+                            if (quantity_selector.text() < arr.needed)
+                                $('.draw-item[data-value="' + arr.id + '"] p').css('color', 'darkred');
+                        }
+
+                        if (arr.possessed == 0) {
+                            $('.item[data-value="' + arr.id + '"]').remove();
+                        }
+                        else if (arr.possessed == 1 && arr.type == "new") {
+                            $('.items').append(addItem(arr));
+                        }
+                        else { // if arr.quantity > 1
+                            $('.item[data-value="' + arr.id + '"] .quantity').html(arr.possessed);
+                        }
+                    });
+                }
+            })
+    }
+
+    function clear_select_recipes()
+    {
+        $('.recipe').each(function() {
+            var recipe = $(this);
+            recipe.css('font-weight', '');
+            $('.btn-craft').remove();
+        });
+    }
+
+    function refresh_inventory()
+    {
+        $('.draw-items').empty();
+        $('.recipe').each(function() {
+            var recipe = $(this);
+            recipe.css('display', 'block');
+        });
+        $('.items').css('display', 'block');
+        clear_select_recipes();
+    }
+
+    function addItem(item)
+    {
+        return '<div class="item" title="' + item.name + '" data-value="' + item.id + '">' +
+            '<img src="' + ((item.image != null) ? item.image : "") + '" alt="' + item.name + '">' +
+            '<p>' + item.name + ' x<span class="quantity">' + item.possessed + '</span></p>' +
+            '</div>';
+    }
+
+    function addDrawItem(item)
+    {
+        return '<div class="draw-item fixed" title="' + item.name + '" data-value="' + item.id + '">' +
+            '<img src="' + ((item.image != null) ? item.image : "") + '" alt="' + item.name + '">' +
+            '<p style="color:' + ((item.possessed >= item.needed) ? "darkgreen" : "darkred") + '">' + item.name + ': <span class="quantity">' + item.possessed + '</span>/' + item.needed + '</p>' +
+            '</div>';
+    }
+
+    function drawRecipe(recipe)
+    {
+        return '';
+    }
+</script>
+{% endblock %}

@@ -70,6 +70,12 @@ class Hero
     private $fieldMaxLevel;
 
     /**
+     * @ORM\OneToOne(targetEntity="Target")
+     * @ORM\JoinColumn(name="target_id", referencedColumnName="id")
+     */
+    private $target;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="is_rested", type="boolean")
@@ -260,6 +266,29 @@ class Hero
     public function getFieldMaxLevel()
     {
         return $this->fieldMaxLevel;
+    }
+
+    /**
+     * Set target
+     *
+     * @param Target $target
+     * @return Hero
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
+     * Get target
+     *
+     * @return Target
+     */
+    public function getTarget()
+    {
+        return $this->target;
     }
 
     /**
