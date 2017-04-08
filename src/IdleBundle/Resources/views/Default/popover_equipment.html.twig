@@ -1,0 +1,11 @@
+{% if type == "weapon" %}
+    Damages: {% if obj is not null %}{{ obj.characteristics.damageMinimum }} - {{ obj.characteristics.damageMaximum }}{% else %}{{ hero.characteristics.damageMinimum }} - {{ hero.characteristics.damageMaximum }}{% endif %}<br />
+    Precision: {% if obj is not null %}{{ obj.characteristics.hitPrecision }}{% else %}{{ hero.characteristics.hitPrecision }}{% endif %}<br />
+    Critical: {% if obj is not null %}{{ obj.characteristics.hitPrecision }}{% else %}{{ hero.characteristics.criticalChance }}{% endif %}%<br />
+    Delay: {% if obj is not null %}{{ obj.characteristics.attackDelay }}{% else %}{{ hero.characteristics.attackDelay }}{% endif %} sec<br />
+{% elseif type == "armor" %}
+    Health: {% if obj is not null %}{{ obj.characteristics.health }}{% else %}0{% endif %}<br />
+    Armor: {% if obj is not null %}{{ obj.characteristics.armor }}{% else %}0{% endif %}<br />
+    Dodge: {% if obj is not null %}{{ obj.characteristics.dodge }}{% else %}0{% endif %}%<br />
+    Blocking: {% if obj is not null %}{{ obj.characteristics.blocking }}{% else %}0{% endif %}%<br />
+{% endif %}

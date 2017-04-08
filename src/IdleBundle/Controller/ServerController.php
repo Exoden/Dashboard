@@ -6,9 +6,11 @@ use AppBundle\Entity\User;
 use IdleBundle\Entity\BattleHistory;
 use IdleBundle\Entity\Craft;
 use IdleBundle\Entity\Enemy;
+use IdleBundle\Entity\Equipment;
 use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\PossessedRecipes;
+use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Target;
 use IdleBundle\Services\BattleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -318,6 +320,76 @@ class ServerController extends Controller
         $tab_items[$i]['possessed'] = $inventory->getQuantity();
 
         return new JsonResponse(array('success' => true, 'items' => $tab_items));
+    }
+
+    /**
+     * @Route("/show-equipment-stats/{equipment_id}", name="show_equipment_stats")
+     */
+    public function ajaxShowEquipmentStats(Request $request, $equipment_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+
+        /** @var Equipment $equipment */
+        $equipment = $em->getRepository('IdleBundle:Equipment')->find($equipment_id);
+        if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        return new JsonResponse(array('success' => true));
+    }
+
+    /**
+     * @Route("/show-stuff-stats/{stuff_id}", name="show_stuff_stats")
+     */
+    public function ajaxShowStuffStats(Request $request, $stuff_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Stuff $stuff */
+        $stuff = $em->getRepository('IdleBundle:Stuff')->find($stuff_id);
+        if (!$stuff) {
+            return new JsonResponse(array('success' => false));
+        }
+        // TODO : Check if possessed item
+
+        return new JsonResponse(array('success' => true));
+    }
+
+    /**
+     * @Route("/drop-equipment/{equipment_id}", name="drop_equipment")
+     */
+    public function ajaxDropEquipment(Request $request, $equipment_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+
+        /** @var Equipment $equipment */
+        $equipment = $em->getRepository('IdleBundle:Equipment')->find($equipment_id);
+        if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        return new JsonResponse(array('success' => true));
+    }
+
+    /**
+     * @Route("/equip-stuff/{stuff_id}", name="equip_stuff")
+     */
+    public function ajaxEquipStuff(Request $request, $stuff_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Stuff $stuff */
+        $stuff = $em->getRepository('IdleBundle:Stuff')->find($stuff_id);
+        if (!$stuff) {
+            return new JsonResponse(array('success' => false));
+        }
+        // TODO : Check if possessed item
+
+        return new JsonResponse(array('success' => true));
     }
 
 //    /**

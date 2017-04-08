@@ -158,10 +158,21 @@ class DefaultController extends Controller
             $equipments[$key]['jewel'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Jewel"))->getId());
         }
 
-        $stuffs = $em->getRepository('IdleBundle:Inventory')->getStuffs($user);
+        $inventory_stuffs = $em->getRepository('IdleBundle:Inventory')->getStuffs($user);
+
+        $tab_stuffs = array();
+        $i = 0;
+        /** @var Inventory $inv */
+        foreach ($inventory_stuffs as $inv) {
+            $tab_stuffs[$i]['obj'] = $em->getRepository('IdleBundle:Stuff')->findOneBy(array('item' => $inv->getItem()));;
+
+            $tab_stuffs[$i]['quantity'] = $inv->getQuantity();
+
+            $i++;
+        }
 
 
-        return $this->render('IdleBundle:Default:equipment.html.twig', array('heroes' => $heroes, 'equipments' => $equipments, 'stuffs' => $stuffs));
+        return $this->render('IdleBundle:Default:equipment.html.twig', array('heroes' => $heroes, 'equipments' => $equipments, 'stuffs' => $tab_stuffs));
     }
 
     /**
