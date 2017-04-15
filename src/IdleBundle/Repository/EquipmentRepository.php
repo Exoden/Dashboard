@@ -12,14 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class EquipmentRepository extends EntityRepository
 {
-    public function getEquipmentTypeFromHero($hero, $type)
+    public function getEquipmentTypeFromHero($hero_id, $type_id)
     {
         return $this->createQueryBuilder('e')
             ->innerJoin('e.stuff', 's')
             ->where('e.hero = :hero')
-            ->setParameter('hero', $hero)
+            ->setParameter('hero', $hero_id)
             ->andWhere('s.type = :type')
-            ->setParameter('type', $type)
+            ->setParameter('type', $type_id)
             ->getQuery()
             ->getOneOrNullResult();
     }

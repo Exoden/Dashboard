@@ -5,12 +5,12 @@ namespace IdleBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * StuffType
+ * TypeStuff
  *
- * @ORM\Table(name="stuff_type")
- * @ORM\Entity(repositoryClass="IdleBundle\Repository\StuffTypeRepository")
+ * @ORM\Table(name="type_stuff")
+ * @ORM\Entity(repositoryClass="IdleBundle\Repository\TypeStuffRepository")
  */
-class StuffType
+class TypeStuff
 {
     /**
      * @var int
@@ -43,7 +43,7 @@ class StuffType
      * Set name
      *
      * @param string $name
-     * @return StuffType
+     * @return TypeStuff
      */
     public function setName($name)
     {

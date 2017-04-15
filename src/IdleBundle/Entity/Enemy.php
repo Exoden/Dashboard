@@ -30,7 +30,7 @@ class Enemy
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Characteristics")
+     * @ORM\OneToOne(targetEntity="Characteristics", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="characteristics_id", referencedColumnName="id")
      */
     private $characteristics;
@@ -43,7 +43,7 @@ class Enemy
     private $image;
 
     /**
-     * @ORM\OneToMany(targetEntity="Loot", mappedBy="enemy")
+     * @ORM\OneToMany(targetEntity="Loot", mappedBy="enemy", cascade={"persist", "remove"})
      */
     private $loot;
 

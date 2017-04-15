@@ -272,11 +272,12 @@ a.btn {
             background-color: #1e82eb; }
         .idle .out-menu .menu .details-hero .one {
           padding-bottom: 10px; }
-        .idle .out-menu .menu .details-hero .equipement {
+        .idle .out-menu .menu .details-hero img {
           width: 60px;
           height: 60px;
           border: solid 4px;
-          border-image: url("../images/border.png") 4 fill repeat; }
+          border-image: url("../images/border.png") 4 fill repeat;
+          cursor: pointer; }
       .idle .out-menu .menu .details-mob {
         padding: 10px;
         margin: 10px;
@@ -317,8 +318,13 @@ a.btn {
         .idle .out-menu .menu .item img, .idle .out-menu .menu .draw-item img {
           width: 60px;
           height: 60px;
+          background-color: #c3c3ba;
           border: solid 4px;
           border-image: url("../images/border.png") 4 fill repeat; }
+      .idle .out-menu .menu .can-select {
+        box-shadow: 0 0 3px 3px whitesmoke; }
+      .idle .out-menu .menu .selected {
+        box-shadow: 0 0 3px 3px yellow; }
       .idle .out-menu .menu .fixed {
         width: 120px; }
       .idle .out-menu .menu .refresh-inventory {

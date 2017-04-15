@@ -25,11 +25,7 @@
                 {% for inv in inventory %}
                     <div class="item fixed" title="{{ inv['obj'].item.name }}" data-value="{{ inv['obj'].item.id }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
                         {% if inv['obj'].item.typeItem.name == "Equipment" %}
-                            {% if inv['obj'].type.name == "Weapon" %}
-                                {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'weapon', 'hero': 0, 'obj': inv['obj']} %}
-                            {% else %}
-                                {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': 0, 'obj': inv['obj']} %}
-                            {% endif %}
+                            {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': inv['obj']} %}
                         {% endif %}
                         ">
                         <img src="{% if inv['obj'].item.image is not null %}{{ asset('images/Idle/' ~ inv['obj'].item.typeItem.name ~ 's/' ~ inv['obj'].item.image) }}{% endif %}" alt="{{ inv['obj'].item.name }}">
@@ -132,7 +128,7 @@
                         $.each(data.items, function (key, arr) {
                             if (arr.type == "craft") {
                                 var quantity_selector = $('.draw-item[data-value="' + arr.id + '"] .quantity');
-                                quantity_selector.html(arr.possessed);
+                                quantity_selector.text(arr.possessed);
                                 if (quantity_selector.text() < arr.needed)
                                     $('.draw-item[data-value="' + arr.id + '"] p').css('color', 'darkred');
                             }
@@ -144,7 +140,7 @@
                                 $('.items').append(addItem(arr));
                             }
                             else { // if arr.quantity > 1
-                                $('.item[data-value="' + arr.id + '"] .quantity').html(arr.possessed);
+                                $('.item[data-value="' + arr.id + '"] .quantity').text(arr.possessed);
                             }
                         });
                     }

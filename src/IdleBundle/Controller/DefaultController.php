@@ -9,6 +9,7 @@ use AppBundle\Entity\User;
 use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\PossessedRecipes;
 use IdleBundle\Entity\Target;
+use IdleBundle\Entity\TypeStuff;
 use IdleBundle\Form\HeroType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -35,13 +36,13 @@ class DefaultController extends Controller
         $equipments = array();
         /** @var Hero $hero */
         foreach ($heroes as $key => $hero) {
-            $equipments[$key]['weapon'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Weapon"))->getId());
-            $equipments[$key]['offhand'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "OffHand"))->getId());
-            $equipments[$key]['artifact'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Artifact"))->getId());
-            $equipments[$key]['armor'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Armor"))->getId());
-            $equipments[$key]['helmet'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Helmet"))->getId());
-            $equipments[$key]['gloves'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Gloves"))->getId());
-            $equipments[$key]['jewel'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Jewel"))->getId());
+            $equipments[$key]['weapon'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Weapon"))->getId());
+            $equipments[$key]['offhand'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "OffHand"))->getId());
+            $equipments[$key]['artifact'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Artifact"))->getId());
+            $equipments[$key]['armor'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Armor"))->getId());
+            $equipments[$key]['helmet'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Helmet"))->getId());
+            $equipments[$key]['gloves'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Gloves"))->getId());
+            $equipments[$key]['jewel'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Jewel"))->getId());
         }
 
         if (count($heroes) == 0) {
@@ -146,16 +147,22 @@ class DefaultController extends Controller
         $user = $this->getUser();
         $heroes = $em->getRepository('IdleBundle:Hero')->findBy(array('user' => $user->getId()));
 
+        $list_type_stuff = $em->getRepository('IdleBundle:TypeStuff')->findAll();
+
         $equipments = array();
         /** @var Hero $hero */
         foreach ($heroes as $key => $hero) {
-            $equipments[$key]['weapon'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Weapon"))->getId());
-            $equipments[$key]['offhand'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "OffHand"))->getId());
-            $equipments[$key]['artifact'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Artifact"))->getId());
-            $equipments[$key]['armor'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Armor"))->getId());
-            $equipments[$key]['helmet'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Helmet"))->getId());
-            $equipments[$key]['gloves'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Gloves"))->getId());
-            $equipments[$key]['jewel'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:StuffType')->findOneBy(array('name' => "Jewel"))->getId());
+            /** @var TypeStuff $lts */
+            foreach ($list_type_stuff as $lts) {
+                $equipments[$key][$lts->getName()] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $lts->getId());
+            }
+//            $equipments[$key]['weapon'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Weapon"))->getId());
+//            $equipments[$key]['offhand'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "OffHand"))->getId());
+//            $equipments[$key]['artifact'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Artifact"))->getId());
+//            $equipments[$key]['armor'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Armor"))->getId());
+//            $equipments[$key]['helmet'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Helmet"))->getId());
+//            $equipments[$key]['gloves'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Gloves"))->getId());
+//            $equipments[$key]['jewel'] = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero, $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Jewel"))->getId());
         }
 
         $inventory_stuffs = $em->getRepository('IdleBundle:Inventory')->getStuffs($user);

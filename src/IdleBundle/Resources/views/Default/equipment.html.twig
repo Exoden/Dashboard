@@ -5,57 +5,17 @@
         <div class="col-md-12 menu">
             <h3>Heroes</h3>
             {% for key, hero in heroes %}
-                <div id="hero_{{ key }}" class="row details-hero">
+                <div id="hero_{{ key }}" class="row details-hero" data-hero="{{ hero.id }}">
                     <p>{{ hero.name }} ({{ hero.age }})</p>
-                    <div class="item equipment weapon"
-                         title="{% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'weapon', 'hero': hero, 'obj': equipments[key]['weapon']} %}">
-                        <img src="" alt="weapon">
-                    </div>
-                    <div class="item equipment offhand"
-                         title="{% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['offhand']} %}">
-                        <img src="" alt="offhand">
-                    </div>
-                    <div class="item equipment artifact"
-                         title="{% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['artifact']} %}">
-                        <img src="" alt="artifact">
-                    </div>
-                    <div class="item equipment armor"
-                         title="{% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['armor']} %}">
-                        <img src="" alt="armor">
-                    </div>
-                    <div class="item equipment helmet"
-                         title="{% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['helmet']} %}">
-                        <img src="" alt="helmet">
-                    </div>
-                    <div class="item equipment gloves"
-                         title="{% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['gloves']} %}">
-                        <img src="" alt="gloves">
-                    </div>
-                    <div class="item equipment jewel"
-                         title="{% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].name }}{% endif %}"
-                         data-value="{% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].id }}{% endif %}"
-                         data-toggle="popover" data-placement="top" data-trigger="hover"
-                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['jewel']} %}">
-                        <img src="" alt="jewel">
-                    </div>
+                    {% for type, equipment in equipments[key] %}
+                        <div class="item equipment {{ type|lower }}"
+                             title="{% if equipment is not null %}{{ equipment.stuff.item.name }}{% endif %}"
+                             data-type="{{ type }}"
+                             data-toggle="popover" data-placement="top" data-trigger="hover"
+                             data-content="{% if equipment is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipment.stuff} %}{% endif %}">
+                            <img src="{% if equipment is not null %}{{ asset('images/Idle/' ~ equipment.stuff.item.typeItem.name ~ 's/' ~ equipment.stuff.item.image) }}{% endif %}" alt="{{ type|lower }}">
+                        </div>
+                    {% endfor %}
                 </div>
             {% endfor %}
         </div>
@@ -72,23 +32,11 @@
                     <th style="text-align: center">Selected</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>Health</td>
-                    <td>+4</td>
-                    <td>+1</td>
-                    <td>+5</td>
-                </tr>
-                <tr>
-                    <td>Dodge</td>
-                    <td>+12</td>
-                    <td>-4</td>
-                    <td>+8</td>
-                </tr>
+                <tbody class="comparison-line">
                 </tbody>
             </table>
-            <button class="btn btn-danger btn-drop" style="display: none; float: left; margin: 5px;">Drop</button>
-            <button class="btn btn-success btn-equip" style="display: none; float: right; margin: 5px;">Equiped</button>
+            <div class="drop" style="float: left; margin: 5px;"></div>
+            <div class="equip" style="float: right; margin: 5px;"></div>
         </div>
     </div>
     <div class="col-md-4 out-menu">
@@ -96,15 +44,12 @@
             <h3>Equipments</h3>
             <div class="stuffs">
                 {% for stuff in stuffs %}
-                    <div class="item stuff fixed" title="{{ stuff['obj'].item.name }}" data-value="{{ stuff['obj'].id }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                        {% if stuff['obj'].item.typeItem.name == "Equipment" %}
-                            {% if stuff['obj'].type.name == "Weapon" %}
-                                {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'weapon', 'hero': 0, 'obj': stuff['obj']} %}
-                            {% else %}
-                                {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': 0, 'obj': stuff['obj']} %}
-                            {% endif %}
-                        {% endif %}
-                        ">
+                    <div class="item stuff fixed"
+                         title="{{ stuff['obj'].item.name }}"
+                         data-stuff="{{ stuff['obj'].id }}"
+                         data-type="{{ stuff['obj'].type.name }}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover"
+                         data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': stuff['obj']} %}">
                         <img src="{% if stuff['obj'].item.image is not null %}{{ asset('images/Idle/' ~ stuff['obj'].item.typeItem.name ~ 's/' ~ stuff['obj'].item.image) }}{% endif %}" alt="{{ stuff['obj'].item.name }}">
                         <p>{{ stuff['obj'].item.name }} x<span class="quantity">{{ stuff['quantity'] }}</span></p>
                     </div>
@@ -126,44 +71,94 @@
 
         $('.stuff').click(show_stuff_stats);
 
-        $('.btn-drop').click(drop_equipment);
-
-        $('.btn-equip').click(equip_stuff);
-
         function show_equipment_stats()
         {
             var elem = $(this);
-            console.log(elem);
-            if (elem.closest('div').data('value')) {
-                var url = '{{ path("show_equipment_stats", {'equipment_id': 'EQUIPMENT_ID'}) }}';
-                url = url.replace("EQUIPMENT_ID", elem.closest('div').data('value'));
-                console.log(url);
-                var jhrx = $.ajax(url)
-                    .done(function (data) {
-                        if (data.success) {
-                            console.log('OK');
-
-                            display_button_drop();
-                        }
-                    })
-            }
-        }
-
-        function show_stuff_stats()
-        {
-            var elem = $(this);
-            console.log(elem);
-            var url = '{{ path("show_stuff_stats", {'stuff_id': 'STUFF_ID'}) }}';
-            url = url.replace("STUFF_ID", elem.closest('div').data('value'));
+//            console.log(elem);
+            var url = '{{ path("show_equipment_stats", {'hero_id': 'HERO_ID', 'type_name': 'TYPE_NAME'}) }}';
+            url = url.replace("HERO_ID", elem.closest('.details-hero').data('hero'));
+            url = url.replace("TYPE_NAME", elem.closest('div').data('type'));
             console.log(url);
             var jhrx = $.ajax(url)
                 .done(function (data) {
                     if (data.success) {
                         console.log('OK');
 
-                        {# TODO : display_button_drop IF hero has equipment #}
-                        display_button_drop();
-                        display_button_equip();
+                        var equipment_selected = $('.equipment.selected');
+                        var stuff_selected = $('.stuff.selected');
+                        var equipment_can_select = $('.equipment.can-select');
+                        var stuff_can_select = $('.stuff.can-select');
+
+                        $.each(data.stats, function (key, arr) {
+                            if (arr > 0) {
+                                draw_comparison_line(key, arr, 'left');
+                            }
+                        });
+
+                        equipment_selected.removeClass('selected'); // Remove previous selected equipment
+                        elem.addClass('selected'); // Select clicked equipment from elem
+
+                        elem.removeClass('can-select'); // Remove can select from elem
+
+                        display_button_drop(elem.closest('.details-hero').data('hero'), elem.closest('div').data('type')); // A selected equipment can be drop
+
+                        if (stuff_selected.length == 1) { // If one stuff is selected
+                            display_button_equip(elem.closest('.details-hero').data('hero'), stuff_selected.closest('div').data('stuff'));
+
+                            if (elem.closest('div').data('type') != stuff_selected.data('type')) { // If selected equipment type is different from selected stuff type
+                                stuff_selected.removeClass('selected'); // Remove selected equipment
+                            }
+                        }
+
+                        stuff_can_select.removeClass('can-select'); // Remove can select stuffs
+                        $('.stuff[data-type="' + elem.closest('div').data('type') + '"]').addClass(function() { // Set can select stuffs to not selected stuffs
+                            return ($(this).closest('div').hasClass('selected')) ? '' : 'can-select';
+                        });
+                    }
+                })
+        }
+
+        function show_stuff_stats()
+        {
+            var elem = $(this);
+//            console.log(elem);
+            var url = '{{ path("show_stuff_stats", {'stuff_id': 'STUFF_ID'}) }}';
+            url = url.replace("STUFF_ID", elem.closest('div').data('stuff'));
+            console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    if (data.success) {
+                        console.log('OK');
+//                        console.log(data.stats);
+
+                        var equipment_selected = $('.equipment.selected');
+                        var stuff_selected = $('.stuff.selected');
+                        var equipment_can_select = $('.equipment.can-select');
+                        var stuff_can_select = $('.stuff.can-select');
+
+                        $.each(data.stats, function (key, arr) {
+                            if (arr > 0) {
+                                draw_comparison_line(key, arr, 'right');
+                            }
+                        });
+
+                        stuff_selected.removeClass('selected'); // Remove previous selected stuff
+                        elem.addClass('selected'); // Select clicked stuff from elem
+
+                        elem.removeClass('can-select'); // Remove can select from elem
+
+                        if (equipment_selected.length == 1) { // If one equipent is selected
+                            display_button_equip(equipment_selected.closest('.details-hero').data('hero'), elem.closest('div').data('stuff')); // Can equip
+
+                            if (elem.closest('div').data('type') != equipment_selected.data('type')) { // If selected stuff type is different from selected equipment type
+                                equipment_selected.removeClass('selected'); // Remove selected equipment
+                            }
+                        }
+
+                        equipment_can_select.removeClass('can-select'); // Remove can select equipments
+                        $('.equipment[data-type="' + elem.closest('div').data('type') + '"]').addClass(function() { // Set can select equipments to not selected equipments
+                            return ($(this).closest('div').hasClass('selected')) ? '' : 'can-select';
+                        });
                     }
                 })
         }
@@ -171,14 +166,19 @@
         function drop_equipment()
         {
             var elem = $(this);
-            console.log(elem);
-            var url = '{{ path("drop_equipment", {'equipment_id': 'EQUIPMENT_ID'}) }}';
-            url = url.replace("EQUIPMENT_ID", elem.closest('div').data('value'));
+//            console.log(elem);
+            var url = '{{ path("drop_equipment", {'hero_id': 'HERO_ID', 'type_name': 'TYPE_NAME'}) }}';
+            url = url.replace("HERO_ID", elem.closest('button').data('hero'));
+            url = url.replace("TYPE_NAME", elem.closest('button').data('type'));
             console.log(url);
             var jhrx = $.ajax(url)
                 .done(function (data) {
                     if (data.success) {
                         console.log('OK');
+
+                        var hero = $('.details-hero[data-hero="' + elem.closest('button').data('hero') + '"] .equipment[data-type="' + elem.closest('button').data('type') + '"]');
+
+                        hero.find('img').attr('src', '');
                     }
                 })
         }
@@ -186,25 +186,80 @@
         function equip_stuff()
         {
             var elem = $(this);
-            console.log(elem);
-            var url = '{{ path("equip_stuff", {'stuff_id': 'STUFF_ID'}) }}';
-            url = url.replace("STUFF_ID", elem.closest('div').data('value'));
+//            console.log(elem);
+            var url = '{{ path("equip_stuff", {'hero_id': 'HERO_ID', 'stuff_id': 'STUFF_ID'}) }}';
+            url = url.replace("HERO_ID", elem.closest('button').data('hero'));
+            url = url.replace("STUFF_ID", elem.closest('button').data('stuff'));
             console.log(url);
             var jhrx = $.ajax(url)
                 .done(function (data) {
                     if (data.success) {
                         console.log('OK');
+
+                        var stuff = $('.stuff[data-stuff="' + elem.closest('button').data('stuff') + '"]');
+                        var hero = $('.details-hero[data-hero="' + elem.closest('button').data('hero') + '"] .equipment[data-type="' + stuff.data('type') + '"]');
+
+                        hero.find('img').attr('src', stuff.find('img').attr('src'));
                     }
                 })
         }
 
-        function display_button_drop()
+        function draw_comparison_line(key, value, side)
         {
-            $('.btn-drop').css('display', 'block');
+            var negative = false;
+            if (key == "attackDelay") {
+                negative = true;
+            }
+
+            var line = $('.comparison-line .' + key);
+
+            if (line.length == 0) {
+                $('.comparison-line').append('<tr class="' + key + '">' +
+                '<td>' + formatType(key) + '</td>' +
+                '<td class="left">0</td>' +
+                '<td class="compare">0</td>' +
+                '<td class="right">0</td>' +
+                '</tr>');
+            }
+
+            line = $('.comparison-line .' + key + ' .' + side);
+            line.text(value);
+
+            var compareLine = $('.comparison-line .' + key + ' .compare');
+            var rightLine = $('.comparison-line .' + key + ' .right');
+            var leftLine = $('.comparison-line .' + key + ' .left');
+            var res = rightLine.text() - leftLine.text();
+            if ((!negative && res > 0) || (negative && res < 0)) {
+                compareLine.text("+" + Math.abs(res));
+                compareLine.css('color', 'darkgreen');
+            }
+            else if ((!negative && res < 0) || (negative && res > 0)) {
+                compareLine.text("+" + Math.abs(res));
+                compareLine.css('color', 'darkred');
+            }
+            else {
+                compareLine.text(res);
+            }
         }
-        function display_button_equip()
+
+        function display_button_drop(hero_id, type_name)
         {
-            $('.btn-equip').css('display', 'block');
+            if ($('.drop .btn-drop').length == 0) {
+                $('.drop').append('<button class="btn btn-danger btn-drop" data-hero="' + hero_id + '" data-type="' + type_name + '">Drop</button>');
+                $('.btn-drop').click(drop_equipment);
+            }
+        }
+        function display_button_equip(hero_id, stuff_id)
+        {
+            if ($('.equip .btn-equip').length == 0) {
+                $('.equip').append('<button class="btn btn-success btn-equip" data-hero="' + hero_id + '" data-stuff="' + stuff_id + '">Equip</button>');
+                $('.btn-equip').click(equip_stuff);
+            }
+        }
+        function formatType(string)
+        {
+            var result = string.replace( /([A-Z])/g, " $1" );
+            return result.charAt(0).toUpperCase() + result.slice(1);
         }
     </script>
 {% endblock %}

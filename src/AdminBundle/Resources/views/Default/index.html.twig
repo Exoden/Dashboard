@@ -10,7 +10,8 @@
                 {% include 'AdminBundle:Default:menu.html.twig' %}
             </div>
             <div class="col-md-9">
-                {% block page %}{% endblock %}
+                <div class="row">{% block sub_menu %}{% endblock %}</div>
+                <div class="row">{% block page %}{% endblock %}</div>
             </div>
         </div>
     </div>

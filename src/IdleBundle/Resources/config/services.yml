@@ -5,3 +5,7 @@ services:
     idle.battle_manager:
         class: IdleBundle\Services\BattleManager
         arguments: ["@doctrine.orm.entity_manager"]
+
+    app.file_uploader:
+            class: IdleBundle\Services\FileUploader
+            arguments: ['%idle_images_directory%']

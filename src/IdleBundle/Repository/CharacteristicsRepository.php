@@ -3,6 +3,7 @@
 namespace IdleBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use IdleBundle\Entity\Characteristics;
 
 /**
  * CharacteristicsRepository
@@ -12,4 +13,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class CharacteristicsRepository extends EntityRepository
 {
+    public function getStatsInArray(Characteristics $characteristics)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->setParameter('id', $characteristics->getId())
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

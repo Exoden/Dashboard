@@ -29,13 +29,13 @@ class Recipe
     private $itemCreated;
 
     /**
-     * @ORM\OneToOne(targetEntity="Item")
+     * @ORM\OneToOne(targetEntity="Item", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      */
     private $item;
 
     /**
-     * @ORM\OneToMany(targetEntity="Craft", mappedBy="recipe")
+     * @ORM\OneToMany(targetEntity="Craft", mappedBy="recipe", cascade={"persist", "remove"})
      */
     private $crafts;
 

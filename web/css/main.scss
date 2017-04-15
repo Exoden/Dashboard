@@ -304,8 +304,15 @@ a.btn {
 /*****************/
 /* IDLE STYLE */
 /*****************/
+// darker to brighter
+$idle_color_0: #4a3c2f;
+$idle_color_1: #584839;
+$idle_color_2: #675442;
+$idle_color_3: #776655;
+$idle_color_4: #94795f;
+$idle_color_img: #c3c3ba;
 .idle {
-    background-color: #4a3c2f;
+    background-color: $idle_color_0;
     color: $font-color;
     font-family: fontIdle /*serif*/;
     width: 1600px !important;
@@ -320,7 +327,7 @@ a.btn {
         text-align: center;
 
         .top-menu {
-            background-color: #94795f;
+            background-color: $idle_color_4;
             margin: $small-space;
             padding: $small-space;
             display: inline-block;
@@ -339,25 +346,25 @@ a.btn {
             }
 
             .btn-menu {
-                background-color: #584839;
+                background-color: $idle_color_1;
                 font-size: 24px;
 
                 &:hover {
-                    background-color: #675442;
+                    background-color: $idle_color_2;
                 }
             }
 
             .btn-armory-menu {
-                background-color: #584839;
+                background-color: $idle_color_1;
                 font-size: 14px;
 
                 &:hover {
-                    background-color: #675442;
+                    background-color: $idle_color_2;
                 }
             }
 
             .active {
-                background-color: #776655;
+                background-color: $idle_color_3;
             }
         }
     }
@@ -366,7 +373,7 @@ a.btn {
         text-align: center;
 
         .hero-menu {
-            background-color: #94795f;
+            background-color: $idle_color_4;
             max-height: 600px;
             margin: 0;
             padding: 0;
@@ -380,7 +387,7 @@ a.btn {
         text-align: center;
 
         .menu {
-            background-color: #94795f;
+            background-color: $idle_color_4;
             max-height: 600px;
             margin: 0;
             padding: 0;
@@ -435,11 +442,12 @@ a.btn {
                     padding-bottom: $small-space;
                 }
 
-                .equipement {
+                img {
                     width: 60px;
                     height: 60px;
                     border: solid 4px;
                     border-image: url("../images/border.png") 4 fill repeat;
+                    cursor: pointer;
                 }
             }
 
@@ -498,9 +506,24 @@ a.btn {
                 img {
                     width: 60px;
                     height: 60px;
+                    background-color: $idle_color_img;
                     border: solid 4px;
                     border-image: url("../images/border.png") 4 fill repeat;
                 }
+            }
+            //.equipment {
+            //    img {
+            //        width: 60px; // mettre .item, .draw-item img 120px
+            //        height: 60px; // mettre .item, .draw-item img 120px
+            //    }
+            //}
+
+            .can-select {
+                box-shadow: 0 0 $shadow-size $shadow-size whitesmoke;
+            }
+
+            .selected {
+                box-shadow: 0 0 $shadow-size $shadow-size yellow;
             }
 
             .fixed {

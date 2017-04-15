@@ -12,6 +12,7 @@ use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\PossessedRecipes;
 use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Target;
+use IdleBundle\Entity\TypeStuff;
 use IdleBundle\Services\BattleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -202,7 +203,6 @@ class ServerController extends Controller
             return new JsonResponse(array('success' => false));
         }
 
-//        $crafts = $em->getRepository('IdleBundle:Craft')->getCraftsInArray($recipe);
         $crafts = $em->getRepository('IdleBundle:Craft')->findBy(array('recipe' => $possessed_recipe->getRecipe()));
 
         $craftable = true;
@@ -212,7 +212,7 @@ class ServerController extends Controller
         foreach ($crafts as $craft) {
             $tab_crafts[$i]['id'] = $craft->getItemNeeded()->getId();
             $tab_crafts[$i]['name'] = $craft->getItemNeeded()->getName();
-            $tab_crafts[$i]['image'] = $craft->getItemNeeded()->getImage();
+            $tab_crafts[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $craft->getItemNeeded()->getTypeItem()->getName() . 's/' . $craft->getItemNeeded()->getImage());
             /** @var Inventory $inv */
             $inv = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('item' => $craft->getItemNeeded()));
             $tab_crafts[$i]['possessed'] = $inv->getQuantity();
@@ -288,7 +288,7 @@ class ServerController extends Controller
                 // Used item
                 $tab_items[$i]['id'] = $inv->getItem()->getId();
                 $tab_items[$i]['name'] = $inv->getItem()->getName();
-                $tab_items[$i]['image'] = $inv->getItem()->getImage();
+                $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inv->getItem()->getTypeItem()->getName() . 's/' . $inv->getItem()->getImage());
                 $tab_items[$i]['possessed'] = $inv->getQuantity();
                 $tab_items[$i]['needed'] = $craft->getQuantity();
                 $tab_items[$i]['type'] = "craft";
@@ -312,32 +312,52 @@ class ServerController extends Controller
         else {
             $inventory->setQuantity($inventory->getQuantity() + 1);
         }
+        $em->persist($inventory);
 
         // Added item
         $tab_items[$i]['id'] = $inventory->getItem()->getId();
         $tab_items[$i]['name'] = $inventory->getItem()->getName();
-        $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/Equipments/' . $inventory->getItem()->getImage());
+        $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inventory->getItem()->getTypeItem()->getName() . 's/' . $inventory->getItem()->getImage());
         $tab_items[$i]['possessed'] = $inventory->getQuantity();
+
+//        $em->flush();
 
         return new JsonResponse(array('success' => true, 'items' => $tab_items));
     }
 
     /**
-     * @Route("/show-equipment-stats/{equipment_id}", name="show_equipment_stats")
+     * @Route("/show-equipment-stats/{hero_id}/{type_name}", name="show_equipment_stats")
      */
-    public function ajaxShowEquipmentStats(Request $request, $equipment_id)
+    public function ajaxShowEquipmentStats(Request $request, $hero_id, $type_name)
     {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
 
+        /** @var TypeStuff $type */
+        $type = $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => $type_name));
+
         /** @var Equipment $equipment */
-        $equipment = $em->getRepository('IdleBundle:Equipment')->find($equipment_id);
-        if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
+        $equipment = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero_id, $type);
+        if (!$equipment && $type->getName() == "Weapon") {
+            /** @var Hero $hero */
+            $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('user' => $user, 'id' => $hero_id));
+            if (!$hero) {
+                return new JsonResponse(array('success' => false));
+            }
+            $stats = $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($hero->getCharacteristics())[0];
+            unset($stats['health']);
+        }
+        else if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
             return new JsonResponse(array('success' => false));
         }
+        else {
+            $stats = $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($equipment->getStuff()->getCharacteristics())[0];
+        }
 
-        return new JsonResponse(array('success' => true));
+        unset($stats['id']);
+
+        return new JsonResponse(array('success' => true, 'stats' => $stats));
     }
 
     /**
@@ -347,47 +367,130 @@ class ServerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $user = $this->getUser();
+
         /** @var Stuff $stuff */
         $stuff = $em->getRepository('IdleBundle:Stuff')->find($stuff_id);
         if (!$stuff) {
             return new JsonResponse(array('success' => false));
         }
-        // TODO : Check if possessed item
 
-        return new JsonResponse(array('success' => true));
+        $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $stuff->getItem()));
+        if (!$inventory) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        $stats = $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($stuff->getCharacteristics())[0];
+        unset($stats['id']);
+
+        return new JsonResponse(array('success' => true, 'stats' => $stats));
     }
 
     /**
-     * @Route("/drop-equipment/{equipment_id}", name="drop_equipment")
+     * @Route("/drop-equipment/{hero_id}/{type_name}", name="drop_equipment")
      */
-    public function ajaxDropEquipment(Request $request, $equipment_id)
+    public function ajaxDropEquipment(Request $request, $hero_id, $type_name)
     {
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
 
+        /** @var TypeStuff $type */
+        $type = $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => $type_name));
+
         /** @var Equipment $equipment */
-        $equipment = $em->getRepository('IdleBundle:Equipment')->find($equipment_id);
+        $equipment = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero_id, $type->getId());
         if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
             return new JsonResponse(array('success' => false));
         }
 
-        return new JsonResponse(array('success' => true));
+        /** @var Inventory $inventory */
+        $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $equipment->getStuff()->getItem()));
+        if (!$inventory) {
+            $inventory = new Inventory();
+            $inventory->setUser($user);
+            $inventory->setItem($equipment->getStuff()->getItem());
+            $inventory->setQuantity(1);
+        }
+        else {
+            $inventory->setQuantity($inventory->getQuantity() + 1);
+        }
+        $em->persist($inventory);
+
+        $em->remove($equipment);
+
+//        $em->flush();
+
+        return new JsonResponse(array('success' => true, 'inventory' => ''));
     }
 
     /**
-     * @Route("/equip-stuff/{stuff_id}", name="equip_stuff")
+     * @Route("/equip-stuff/{hero_id}/{stuff_id}", name="equip_stuff")
      */
-    public function ajaxEquipStuff(Request $request, $stuff_id)
+    public function ajaxEquipStuff(Request $request, $hero_id, $stuff_id)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
 
         /** @var Stuff $stuff */
         $stuff = $em->getRepository('IdleBundle:Stuff')->find($stuff_id);
         if (!$stuff) {
             return new JsonResponse(array('success' => false));
         }
-        // TODO : Check if possessed item
+
+        /** @var Inventory $inventory */
+        $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $stuff->getItem()));
+        if (!$inventory) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        /** @var Hero $hero */
+        $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('user' => $user, 'id' => $hero_id));
+        if (!$hero) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        /** @var Equipment $equipment */
+        $equipment = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero_id, $stuff->getType()->getId());
+        if ($equipment && $equipment->getHero()->getUser() != $user) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        // Remove quantity of the stuff in the inventory
+        if ($inventory->getQuantity() == 1) {
+            $em->remove($inventory);
+        }
+        else {
+            $inventory->setQuantity($inventory->getQuantity() - 1);
+            $em->persist($inventory);
+        }
+
+        // Move the previous stuff to the inventory
+        if ($equipment) {
+            /** @var Inventory $inventory */
+            $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $equipment->getStuff()->getItem()));
+            if (!$inventory) {
+                $inventory = new Inventory();
+                $inventory->setUser($user);
+                $inventory->setItem($equipment->getStuff()->getItem());
+                $inventory->setQuantity(1);
+            }
+            else {
+                $inventory->setQuantity($inventory->getQuantity() + 1);
+            }
+            $em->persist($inventory);
+
+            $equipment->setStuff($stuff);
+        }
+        else {
+            $equipment = new Equipment();
+            $equipment->setStuff($stuff);
+            $equipment->setHero($hero);
+        }
+        $em->persist($equipment);
+
+//        $em->flush();
 
         return new JsonResponse(array('success' => true));
     }

@@ -44,35 +44,42 @@
                                 </div>
                             </div>
                             <div class="row one">
-                                <span title="{% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'weapon', 'hero': hero, 'obj': equipments[key]['weapon']} %}">
-                                    <img src="" alt="weapon" class="equipement">
+                                <span title="{% if equipments[key]['weapon'] is not null %}{{ equipments[key]['weapon'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['weapon'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['weapon'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['weapon'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="weapon" class="equipement">
                                 </span>
-                                <span title="{% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['offhand']} %}">
-                                    <img src="" alt="offhand" class="equipement">
+                                <span title="{% if equipments[key]['offhand'] is not null %}{{ equipments[key]['offhand'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['offhand'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['offhand'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['offhand'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="offhand" class="equipement">
                                 </span>
-                                <span title="{% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['artifact']} %}">
-                                    <img src="" alt="artifact" class="equipement">
+                                <span title="{% if equipments[key]['artifact'] is not null %}{{ equipments[key]['artifact'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['artifact'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['artifact'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['artifact'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="artifact" class="equipement">
                                 </span>
                             </div>
                             <div class="row two">
-                                <span title="{% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['armor']} %}">
-                                    <img src="" alt="armor" class="equipement">
+                                <span title="{% if equipments[key]['armor'] is not null %}{{ equipments[key]['armor'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['armor'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['armor'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['armor'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="armor" class="equipement">
                                 </span>
-                                <span title="{% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['helmet']} %}">
-                                    <img src="" alt="helmet" class="equipement">
+                                <span title="{% if equipments[key]['helmet'] is not null %}{{ equipments[key]['helmet'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['helmet'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['helmet'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['helmet'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="helmet" class="equipement">
                                 </span>
-                                <span title="{% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['gloves']} %}">
-                                    <img src="" alt="gloves" class="equipement">
+                                <span title="{% if equipments[key]['gloves'] is not null %}{{ equipments[key]['gloves'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['gloves'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['gloves'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['gloves'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="gloves" class="equipement">
                                 </span>
-                                <span title="{% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].name }}{% endif %}" data-toggle="popover" data-placement="top" data-trigger="hover"
-                                      data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'type': 'armor', 'hero': hero, 'obj': equipments[key]['jewel']} %}">
-                                    <img src="" alt="jewel" class="equipement">
+                                <span title="{% if equipments[key]['jewel'] is not null %}{{ equipments[key]['jewel'].stuff.item.name }}{% endif %}"
+                                      data-toggle="popover" data-placement="top" data-trigger="hover"
+                                      data-content="{% if equipments[key]['jewel'] is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipments[key]['jewel'].stuff} %}{% endif %}">
+                                    <img src="{% if equipments[key]['jewel'] is not null %}{{ asset('images/Idle/' ~ equipments[key]['weapon'].stuff.item.typeItem.name ~ 's/' ~ equipments[key]['weapon'].stuff.item.image) }}{% endif %}" alt="jewel" class="equipement">
                                 </span>
                             </div>
                             <div class="row bottom">

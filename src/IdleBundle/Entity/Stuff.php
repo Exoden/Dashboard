@@ -22,19 +22,19 @@ class Stuff
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Characteristics")
+     * @ORM\OneToOne(targetEntity="Characteristics", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="characteristics_id", referencedColumnName="id")
      */
     private $characteristics;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StuffType")
+     * @ORM\ManyToOne(targetEntity="TypeStuff")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
      */
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity="Item")
+     * @ORM\OneToOne(targetEntity="Item", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      */
     private $item;
@@ -76,7 +76,7 @@ class Stuff
     /**
      * Set type
      *
-     * @param StuffType $type
+     * @param TypeStuff $type
      * @return Stuff
      */
     public function setType($type)
@@ -89,7 +89,7 @@ class Stuff
     /**
      * Get type
      *
-     * @return StuffType
+     * @return TypeStuff
      */
     public function getType()
     {

@@ -1,0 +1,45 @@
+{% extends "AdminBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Idle Generator"|trans }}{% endblock %}
+
+{% block sub_menu %}
+    <a href="#" class="btn btn-primary">Create Resource</a>
+    <a href="{{ path('create_stuff') }}" class="btn btn-primary">Create Stuff</a>
+    <a href="#" class="btn btn-primary">Create Recipe</a>
+    <a href="#" class="btn btn-primary">Create Potion</a>
+    <a href="#" class="btn btn-primary">Create Enhancer</a>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12 border-menu">
+        <div class="table-responsive">
+            <table id="stories-table" class="table">
+                <thead>
+                    <tr>
+                        <th>{{ "Name"|trans }}</th>
+                        <th>{{ "Type"|trans }}</th>
+                        <th>{{ "Action"|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>
+                            <a href="#">
+                                {{ item.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ item.typeItem.name }}
+                        </td>
+                        <td style="text-align: right">
+                            <a href="{{ path('edit_stuff', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
+                            <a href="{{ path('remove_stuff', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

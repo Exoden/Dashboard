@@ -2,22 +2,25 @@
 
 {% block title %}{{ parent() }}{{ "News List"|trans }}{% endblock %}
 
+{% block sub_menu %}
+    <a href="{{ path('create_news') }}" class="btn btn-primary">Create News</a>
+{% endblock %}
+
 {% block page %}
-    <div class="col-md-12">
-        <a href="{{ path('create_news') }}" class="btn btn-primary">
-            Create News
-        </a>
+    <div class="col-md-12 border-menu">
         <div class="table-responsive">
             <table id="stories-table" class="table">
                 <thead>
-                    <th>{{ "Title"|trans }}</th>
-                    <th>{{ "isPublished"|trans }}</th>
-                    <th>{{ "createdAt"|trans }}</th>
-                    <th>{{ "updatedAt"|trans }}</th>
-                    <th>{{ "publishedAt"|trans }}</th>
+                    <tr>
+                        <th>{{ "Title"|trans }}</th>
+                        <th>{{ "isPublished"|trans }}</th>
+                        <th>{{ "createdAt"|trans }}</th>
+                        <th>{{ "updatedAt"|trans }}</th>
+                        <th>{{ "publishedAt"|trans }}</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {% for news in news_list%}
+                {% for news in news_list %}
                     <tr>
                         <td>
                             <a href="{{ path('edit_news', {'news_id': news.id}) }}">

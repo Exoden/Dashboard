@@ -50,7 +50,7 @@ class Hero
     private $currentHealth;
 
     /**
-     * @ORM\OneToOne(targetEntity="Characteristics")
+     * @ORM\OneToOne(targetEntity="Characteristics", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="characteristics_id", referencedColumnName="id")
      */
     private $characteristics;
@@ -70,7 +70,7 @@ class Hero
     private $fieldMaxLevel;
 
     /**
-     * @ORM\OneToOne(targetEntity="Target")
+     * @ORM\OneToOne(targetEntity="Target", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="target_id", referencedColumnName="id")
      */
     private $target;

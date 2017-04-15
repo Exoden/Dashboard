@@ -23,7 +23,7 @@ class Resource
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Item")
+     * @ORM\OneToOne(targetEntity="Item", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      */
     private $item;
