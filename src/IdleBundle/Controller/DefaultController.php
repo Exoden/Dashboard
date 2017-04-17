@@ -58,8 +58,9 @@ class DefaultController extends Controller
                 $charac->setDamageMaximum(1);
                 $charac->setDodge(0);
                 $charac->setHealth(100);
-                $charac->setHitPrecision(75);
-                $charac->setSpeed(1);
+                $charac->setHitPrecision(100);
+                $charac->setCriticalChance(0);
+                $charac->setBlocking(0);
                 $em->persist($charac);
 
                 /** @var Enemy $enemy */

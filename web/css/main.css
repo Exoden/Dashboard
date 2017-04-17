@@ -140,6 +140,9 @@ a.btn {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto; }
+  .block-form .form-style img {
+    width: 100px;
+    height: 100px; }
   .block-form .form-style .form-control {
     height: auto;
     padding: 10px;

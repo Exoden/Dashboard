@@ -1,0 +1,102 @@
+{% extends "AdminBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Create Recipe"|trans }}{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <div class="block-form border-menu">
+            <div class="form-heading"><h2>{{ "Create Recipe"|trans }}</h2></div>
+
+            {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            {% if form.itemCreated.vars.data.image is defined %}
+                <img src="{{ asset('images/Idle/' ~ form.itemCreated.vars.data.typeItem.name ~ 's/' ~ form.itemCreated.vars.data.image) }}" alt="No Image">
+            {% endif %}
+            <div class="bg-danger">
+                {{ form_errors(form.itemCreated) }}
+            </div>
+            {{ form_widget(form.itemCreated, {'attr': {'class': 'form-control'}}) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form.crafts) }}
+            </div>
+            {{ form_label(form.crafts) }}
+            {#{{ form_widget(form.crafts) }}#}
+            <ul class="crafts" data-prototype="{{ form_widget(form.crafts.vars.prototype)|e('html_attr') }}">
+            </ul>
+
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+            {{ form_end(form) }}
+        </div>
+        <a href="{{ path('idle_generator') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var $collectionHolder;
+
+        // setup an "add a craft" link
+        var $addCraftLink = $('<a href="#" class="btn btn-success add_craft_link"><span class="fa fa-plus"></span> Add a craft</a>');
+        var $newLinkLi = $('<li></li>').prepend($addCraftLink);
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of crafts
+            $collectionHolder = $('ul.crafts');
+
+            // add the "add a craft" anchor and li to the crafts ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addCraftLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new craft form (see next code block)
+                addCraftForm($collectionHolder, $newLinkLi);
+            });
+        });
+
+        function addCraftForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '$$name$$' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a craft" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+
+            // also add a remove button, just for this example
+            $newFormLi.append('<a href="#" class="btn btn-danger btn-block input-button remove-craft"><span class="fa fa-remove"></span> Remove from crafts</a>');
+
+            $newLinkLi.before($newFormLi);
+
+            // handle the removal, just for this example
+            $('.remove-craft').click(function (e) {
+                e.preventDefault();
+
+                $(this).parent().remove();
+
+                return false;
+            });
+        }
+    </script>
+{% endblock %}

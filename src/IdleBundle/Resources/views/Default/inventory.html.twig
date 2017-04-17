@@ -9,11 +9,16 @@
             <h3 style="clear:both">Recipes</h3>
             <div class="recipes" style="display: block">
                 {% for recipe in recipes %}
-                    <div class="recipe" title="{{ recipe['recipe'].item.name }}" data-value="{{ recipe['recipe'].id }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                    {% for craft in recipe['craft'] %}
-                        {{ craft.itemNeeded.name }} x{{ craft.quantity }}<br />
-                    {% endfor %}
-                    ">{{ recipe['recipe'].item.name }}</div>
+                    <div class="recipe"
+                         title="{{ recipe['recipe'].item.name }}"
+                         data-value="{{ recipe['recipe'].id }}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            {% for craft in recipe['craft'] %}
+                                {{ craft.itemNeeded.name }} x{{ craft.quantity }}<br />
+                            {% endfor %}
+                    ">
+                        {{ recipe['recipe'].item.name }}
+                    </div>
                 {% endfor %}
             </div>
         </div>
@@ -23,11 +28,14 @@
             <h3>Items</h3>
             <div class="items" style="display: block">
                 {% for inv in inventory %}
-                    <div class="item fixed" title="{{ inv['obj'].item.name }}" data-value="{{ inv['obj'].item.id }}" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                        {% if inv['obj'].item.typeItem.name == "Equipment" %}
-                            {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': inv['obj']} %}
-                        {% endif %}
-                        ">
+                    <div class="item fixed"
+                         title="{{ inv['obj'].item.name }}"
+                         data-value="{{ inv['obj'].item.id }}"
+                         data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
+                            {% if inv['obj'].item.typeItem.name == "Equipment" %}
+                                {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': inv['obj']} %}
+                            {% endif %}
+                    ">
                         <img src="{% if inv['obj'].item.image is not null %}{{ asset('images/Idle/' ~ inv['obj'].item.typeItem.name ~ 's/' ~ inv['obj'].item.image) }}{% endif %}" alt="{{ inv['obj'].item.name }}">
                         <p>{{ inv['obj'].item.name }} x<span class="quantity">{{ inv['quantity'] }}</span></p>
                     </div>

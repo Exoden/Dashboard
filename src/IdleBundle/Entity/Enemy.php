@@ -134,12 +134,13 @@ class Enemy
     }
     
     
-    public function addLoot(Loot $loot)
+    public function addLoot(Loot $l)
     {
-        $this->loot[] = $loot;
+        if (!$this->loot->contains($l)) {
+            $this->loot[] = $l;
 
-        $loot->setEnemy($this);
-
+            $l->setEnemy($this);
+        }
         return $this;
     }
 

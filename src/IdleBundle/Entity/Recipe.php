@@ -105,10 +105,11 @@ class Recipe
 
     public function addCraft(Craft $craft)
     {
-        $this->crafts[] = $craft;
+        if (!$this->crafts->contains($craft)) {
+            $this->crafts[] = $craft;
 
-        $craft->setRecipe($this);
-
+            $craft->setRecipe($this);
+        }
         return $this;
     }
 

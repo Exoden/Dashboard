@@ -42,6 +42,10 @@ class Item
     private $image;
 
 
+    function __toString() {
+        return sprintf("%s - %s", $this->getTypeItem()->getName(), $this->getName());
+    }
+
     /**
      * Get id
      *

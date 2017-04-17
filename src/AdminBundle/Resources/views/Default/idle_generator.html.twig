@@ -3,10 +3,10 @@
 {% block title %}{{ parent() }}{{ "Idle Generator"|trans }}{% endblock %}
 
 {% block sub_menu %}
-    <a href="#" class="btn btn-primary">Create Resource</a>
+    <a href="{{ path('create_resource') }}" class="btn btn-primary">Create Resource</a>
     <a href="{{ path('create_stuff') }}" class="btn btn-primary">Create Stuff</a>
-    <a href="#" class="btn btn-primary">Create Recipe</a>
-    <a href="#" class="btn btn-primary">Create Potion</a>
+    <a href="{{ path('create_recipe') }}" class="btn btn-primary">Create Recipe</a>
+    <a href="#" class="btn btn-primary">Create Food</a>
     <a href="#" class="btn btn-primary">Create Enhancer</a>
 {% endblock %}
 
@@ -25,7 +25,7 @@
                 {% for item in items %}
                     <tr>
                         <td>
-                            <a href="#">
+                            <a href="{{ path('edit_item', {'item_id': item.id}) }}">
                                 {{ item.name }}
                             </a>
                         </td>
@@ -33,8 +33,16 @@
                             {{ item.typeItem.name }}
                         </td>
                         <td style="text-align: right">
-                            <a href="{{ path('edit_stuff', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
-                            <a href="{{ path('remove_stuff', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
+                            {% if item.typeItem.name == 'Equipment' %}
+                                <a href="{{ path('edit_stuff', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
+                                <a href="{{ path('remove_stuff', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
+                            {% elseif item.typeItem.name == 'Resource' %}
+                                <a href="{{ path('edit_resource', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
+                                <a href="{{ path('remove_resource', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
+                            {% elseif item.typeItem.name == 'Recipe' %}
+                                <a href="{{ path('edit_recipe', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
+                                <a href="{{ path('remove_recipe', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

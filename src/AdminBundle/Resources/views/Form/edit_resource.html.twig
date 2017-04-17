@@ -1,6 +1,6 @@
 {% extends "AdminBundle:Default:index.html.twig" %}
 
-{% block title %}{{ parent() }}{{ "Edit Stuff"|trans }}{% endblock %}
+{% block title %}{{ parent() }}{{ "Edit Resource"|trans }}{% endblock %}
 
 {% block page %}
     <div class="col-md-12">
@@ -8,7 +8,7 @@
         {{ include('AppBundle::flash_messages.html.twig') }}
 
         <div class="block-form border-menu">
-            <div class="form-heading"><h2>{{ "Edit Stuff"|trans }}</h2></div>
+            <div class="form-heading"><h2>{{ "Edit Resource"|trans }}</h2></div>
 
             {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
 
@@ -21,30 +21,13 @@
             </div>
             {{ form_widget(form.item.name, {'attr': {'class': 'form-control'}}) }}
 
-            <div class="bg-danger">
-                {{ form_errors(form.type) }}
-            </div>
-            {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-
-            {#{{ dump(form.item.image.vars.data) }}#}
             {% if form.item.image.vars.data.filename is defined %}
-                <img src="{{ asset('images/Idle/Equipments/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
+                <img src="{{ asset('images/Idle/Resources/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
             {% endif %}
             <div class="bg-danger">
                 {{ form_errors(form.item.image) }}
             </div>
             {{ form_widget(form.item.image, {'attr': {'class': 'form-control'}}) }}
-
-            <div class="bg-danger">
-                {{ form_errors(form.characteristics) }}
-            </div>
-            <h3>Characteristics</h3>
-            {% for charac in form.characteristics %}
-                <div class="bg-danger">
-                    {{ form_errors(charac) }}
-                </div>
-                {{ form_widget(charac, {'attr': {'class': 'form-control'}}) }}
-            {% endfor %}
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}

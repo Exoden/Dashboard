@@ -2,6 +2,7 @@
 
 namespace StoryTellBundle\Form;
 
+use AppBundle\Entity\Language;
 use Doctrine\ORM\EntityRepository;
 use StoryTellBundle\Entity\StoryGenre;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -37,7 +38,7 @@ class StoryCreateType extends AbstractType
                 'choice_translation_domain' => 'messages',
             ))
             ->add('language', EntityType::class, array(
-                    'class' => 'AppBundle:Language',
+                    'class' => Language::class,
                     'choice_label' => 'name',
                     'placeholder' => "Choose the language",
                     'query_builder' => function (EntityRepository $er) {

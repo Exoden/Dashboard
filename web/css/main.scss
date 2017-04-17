@@ -235,6 +235,11 @@ a.btn {
         padding: 15px;
         margin: 0 auto;
 
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
         .form-control {
             height: auto;
             padding: $small-space;

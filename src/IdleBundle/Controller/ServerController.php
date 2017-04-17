@@ -31,7 +31,7 @@ class ServerController extends Controller
         return 0;
     }
 
-    public function build_sorter($key) {
+    public function time_sorter($key) {
         return function ($a, $b) use ($key) {
             return $this->timecmp($a[$key], $b[$key]);
         };
@@ -179,7 +179,7 @@ class ServerController extends Controller
             $time += $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
         }
 
-        usort($battle_history, $this->build_sorter('time'));
+        usort($battle_history, $this->time_sorter('time'));
 
         $last_battle->setHistoric(json_encode($battle_history));
         $em->persist($last_battle);
@@ -203,7 +203,7 @@ class ServerController extends Controller
             return new JsonResponse(array('success' => false));
         }
 
-        $crafts = $em->getRepository('IdleBundle:Craft')->findBy(array('recipe' => $possessed_recipe->getRecipe()));
+        $crafts = $possessed_recipe->getRecipe()->getCrafts();
 
         $craftable = true;
         $tab_crafts = array();
@@ -273,7 +273,7 @@ class ServerController extends Controller
 
         $tab_items = array();
         $i = 0;
-        $crafts = $em->getRepository('IdleBundle:Craft')->findBy(array('recipe' => $possessed_recipe->getRecipe()));
+        $crafts = $possessed_recipe->getRecipe()->getCrafts();
         /** @var Craft $craft */
         foreach ($crafts as $craft) {
             /** @var Inventory $inv */

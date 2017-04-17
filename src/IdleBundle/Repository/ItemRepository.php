@@ -12,4 +12,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class ItemRepository extends EntityRepository
 {
+    function getAllSortedItems()
+    {
+        return $this->createQueryBuilder('i')
+            ->orderBy('i.typeItem', 'ASC')
+            ->addOrderBy('i.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
