@@ -10,6 +10,7 @@ use IdleBundle\Entity\Equipment;
 use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\PossessedRecipes;
+use IdleBundle\Entity\Recipe;
 use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Target;
 use IdleBundle\Entity\TypeStuff;
@@ -40,7 +41,7 @@ class ServerController extends Controller
     /**
      * @Route("/battle-history/{hero_id}", name="battle_history")
      */
-    public function ajaxChangeSelectedCharacter(Request $request, $hero_id)
+    public function ajaxBattleHistory(Request $request, $hero_id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -271,6 +272,7 @@ class ServerController extends Controller
             return new JsonResponse(array('success' => false));
         }
 
+        $craftable = true;
         $tab_items = array();
         $i = 0;
         $crafts = $possessed_recipe->getRecipe()->getCrafts();
@@ -283,6 +285,9 @@ class ServerController extends Controller
                 return new JsonResponse(array('success' => false));
             }
             else {
+                if ($inv->getQuantity() < ($craft->getQuantity() * 2))
+                    $craftable = false;
+
                 $inv->setQuantity($inv->getQuantity() - $craft->getQuantity());
 
                 // Used item
@@ -322,7 +327,54 @@ class ServerController extends Controller
 
 //        $em->flush();
 
-        return new JsonResponse(array('success' => true, 'items' => $tab_items));
+        return new JsonResponse(array('success' => true, 'items' => $tab_items, 'craftable' => $craftable));
+    }
+    /**
+     * @Route("/learn-recipe/{item_id}", name="learn_recipe")
+     */
+    public function ajaxLearnRecipe(Request $request, $item_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+
+        /** @var Recipe $recipe */
+        $recipe = $em->getRepository('IdleBundle:Recipe')->findOneBy(array('item' => $item_id));
+        if (!$recipe) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        /** @var Inventory $inv */
+        $inv = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $recipe->getItem()));
+        if (!$inv) {
+            return new JsonResponse(array('success' => false));
+        }
+
+        /** @var PossessedRecipes $possessed_recipe */
+        $possessed_recipe = $em->getRepository('IdleBundle:PossessedRecipes')->findOneBy(array('user' => $user, 'recipe' => $recipe));
+        if ($possessed_recipe) { // already has it
+            return new JsonResponse(array('success' => false));
+        }
+        else {
+            $possessed_recipe = new PossessedRecipes();
+            $possessed_recipe->setUser($user);
+            $possessed_recipe->setRecipe($recipe);
+            $em->persist($possessed_recipe);
+            $em->flush();
+        }
+
+        $inv->setQuantity($inv->getQuantity() - 1);
+        if ($inv->getQuantity() == 0) {
+            $em->remove($inv);
+        }
+        $em->flush();
+
+        $tab_recipe = array();
+        $tab_recipe['id'] = $recipe->getId();
+        $tab_recipe['name'] = $recipe->getItemCreated()->getName();
+        $tab_recipe['quantity'] = $inv->getQuantity();
+
+        return new JsonResponse(array('success' => true, 'recipe' => $tab_recipe));
     }
 
     /**

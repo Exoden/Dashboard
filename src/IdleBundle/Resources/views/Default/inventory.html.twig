@@ -17,7 +17,7 @@
                                 {{ craft.itemNeeded.name }} x{{ craft.quantity }}<br />
                             {% endfor %}
                     ">
-                        {{ recipe['recipe'].item.name }}
+                        <p>{{ recipe['recipe'].item.name }}</p>
                     </div>
                 {% endfor %}
             </div>
@@ -31,6 +31,7 @@
                     <div class="item fixed"
                          title="{{ inv['obj'].item.name }}"
                          data-value="{{ inv['obj'].item.id }}"
+                         data-type="{{ inv['obj'].item.typeItem.name }}"
                          data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
                             {% if inv['obj'].item.typeItem.name == "Equipment" %}
                                 {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': inv['obj']} %}
@@ -57,7 +58,9 @@
 
         $('.recipe').click(filter_items);
 
-        $('.item').click(filter_recipes);
+        $('.item[data-type!="Recipe"]').click(filter_recipes);
+
+        $('.item[data-type="Recipe"]').click(addLearnButton);
 
         $('.btn-refresh').click(refresh_inventory);
 
@@ -127,11 +130,15 @@
             var elem = $(this);
             var url = '{{ path("craft_recipe", {'recipe_id': 'RECIPE_ID'}) }}';
             url = url.replace("RECIPE_ID", elem.data('value'));
-    //        console.log(url);
+            //        console.log(url);
             var jhrx = $.ajax(url)
                 .done(function (data) {
                     if (data.success) {
                         console.log('OK');
+
+                        if (data.craftable == false) {
+                            $('.btn-craft').remove();
+                        }
 
                         $.each(data.items, function (key, arr) {
                             if (arr.type == "craft") {
@@ -155,12 +162,39 @@
                 })
         }
 
+        function learn_recipe() {
+            var elem = $(this);
+            var url = '{{ path("learn_recipe", {'item_id': 'ITEM_ID'}) }}';
+            url = url.replace("ITEM_ID", elem.data('value'));
+            //        console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    if (data.success) {
+                        console.log('OK');
+
+                        $('.recipes').append(addRecipe(data.recipe));
+                        $('.recipe').click(filter_items);
+
+                        var recipe_item = $('.item[data-value="' + elem.data('value') + '"]');
+                        if (data.recipe.quantity != 0) {
+                            recipe_item.find('.quantity').text(data.recipe.quantity);
+                        }
+                        else {
+                            recipe_item.remove();
+                        }
+
+                        $('.btn-learn').remove();
+                    }
+                })
+        }
+
         function clear_select_recipes()
         {
             $('.recipe').each(function() {
                 var recipe = $(this);
                 recipe.css('font-weight', '');
                 $('.btn-craft').remove();
+                $('.btn-learn').remove();
             });
         }
 
@@ -191,9 +225,20 @@
                 '</div>';
         }
 
-        function drawRecipe(recipe)
+        function addRecipe(recipe)
         {
-            return '';
+            return '<div class="recipe" title="' + recipe.name + '" data-value="' + recipe.id + '">' +
+                '<p>' + recipe.name + '</p>' +
+                '</div>';
+        }
+
+        function addLearnButton()
+        {
+            var elem = $(this);
+
+            $('.btn-learn').remove();
+            $('.refresh-inventory').prepend('<button class="btn btn-success btn-learn" data-value="' + elem.data('value') + '">Learn recipe</button>');
+            $('.btn-learn').click(learn_recipe);
         }
     </script>
 {% endblock %}
