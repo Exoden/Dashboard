@@ -16,15 +16,9 @@
                 {{ form_errors(form) }}
             </div>
 
-            <div class="bg-danger">
-                {{ form_errors(form.item.name) }}
-            </div>
-            {{ form_widget(form.item.name, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.item.name} %}
 
-            <div class="bg-danger">
-                {{ form_errors(form.item.image) }}
-            </div>
-            {{ form_widget(form.item.image, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.item.image} %}
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}

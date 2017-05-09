@@ -36,7 +36,7 @@ class Loot
     /**
      * @var int
      *
-     * @ORM\Column(name="percent", type="integer")
+     * @ORM\Column(name="percent", type="float")
      */
     private $percent;
 

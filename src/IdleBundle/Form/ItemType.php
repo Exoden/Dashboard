@@ -17,7 +17,10 @@ class ItemType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-                'attr' => array('placeholder' => "Name")))
+                'attr' => array(
+                    'placeholder' => "Name",
+                    'title' => "Name")
+            ))
             ->add('image', FileType::class, array(
                 'label' => 'Image (PNG file)',
                 'required' => false))

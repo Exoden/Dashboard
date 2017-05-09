@@ -17,8 +17,10 @@ class HeroType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-                'attr' => array('placeholder' => "Name"))
-            )
+                'attr' => array(
+                    'placeholder' => "Name",
+                    'title' => "Name")
+            ))
             ->add('save', SubmitType::class, array('label' => 'Create Hero'));
     }
     

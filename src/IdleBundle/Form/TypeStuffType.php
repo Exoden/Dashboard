@@ -15,8 +15,10 @@ class TypeStuffType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class, array(
-            'attr' => array('placeholder' => "Name"))
-        );
+            'attr' => array(
+                'placeholder' => "Name",
+                'title' => "Name")
+        ));
     }
     
     /**

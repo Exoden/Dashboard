@@ -5,6 +5,7 @@ namespace IdleBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +21,15 @@ class EnemyType extends AbstractType
         $builder
             ->add('name', TextType::class, array(
                 'attr' => array('placeholder' => "Name")))
+            ->add('minFieldLevel', NumberType::class, array(
+                'attr' => array('placeholder' => "Minimum Field Level",
+                    'title' => "Minimum Field Level")
+            ))
+            ->add('maxFieldLevel', NumberType::class, array(
+                'attr' => array(
+                    'placeholder' => "Maximum Field Level",
+                    'title' => "Maximum Field Level")
+            ))
             ->add('image', FileType::class, array(
                 'label' => 'Image (PNG file)',
                 'required' => false))

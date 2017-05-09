@@ -16,33 +16,18 @@
                 {{ form_errors(form) }}
             </div>
 
-            <div class="bg-danger">
-                {{ form_errors(form.name) }}
-            </div>
-            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.name} %}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.minFieldLevel} %}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.maxFieldLevel} %}
 
-            <div class="bg-danger">
-                {{ form_errors(form.image) }}
-            </div>
-            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-
-            {#{% if form.vars.data.image is defined %}#}
-                {#<img src="{{ asset('images/Idle/' ~ form.vars.data.typeItem.name ~ '/' ~ form.vars.data.image) }}" alt="No Image">#}
-            {#{% endif %}#}
-            {#<div class="bg-danger">#}
-                {#{{ form_errors(form.item) }}#}
-            {#</div>#}
-            {#{{ form_widget(form.item, {'attr': {'class': 'form-control'}}) }}#}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.image} %}
 
             <div class="bg-danger">
                 {{ form_errors(form.characteristics) }}
             </div>
             <h3>Characteristics</h3>
             {% for charac in form.characteristics %}
-                <div class="bg-danger">
-                    {{ form_errors(charac) }}
-                </div>
-                {{ form_widget(charac, {'attr': {'class': 'form-control'}}) }}
+                {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': charac} %}
             {% endfor %}
 
             <div class="bg-danger">

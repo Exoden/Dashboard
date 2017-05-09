@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use IdleBundle\Entity\Item;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,10 +31,11 @@ class LootType extends AbstractType
                         ->orderBy('ti.name', 'ASC')
                         ->addOrderBy('i.name', 'ASC');
                 }))
-            ->add('percent', IntegerType::class, array(
+            ->add('percent', NumberType::class, array(
                 'attr' => array(
                     'class' => 'form-control',
-                    'placeholder' => "Percent")
+                    'placeholder' => "Percent",
+                    'title' => "Percent")
             ));
     }
     

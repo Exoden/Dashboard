@@ -16,15 +16,9 @@
                 {{ form_errors(form) }}
             </div>
 
-            <div class="bg-danger">
-                {{ form_errors(form.title) }}
-            </div>
-            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.title} %}
 
-            <div class="bg-danger">
-                {{ form_errors(form.content) }}
-            </div>
-            {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.content} %}
 
             <div class="bg-danger">
                 {{ form_errors(form.isPublished) }}

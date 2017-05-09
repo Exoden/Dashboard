@@ -19,16 +19,12 @@
             {% if form.itemCreated.vars.data.image is defined %}
                 <img src="{{ asset('images/Idle/' ~ form.itemCreated.vars.data.typeItem.name ~ 's/' ~ form.itemCreated.vars.data.image) }}" alt="No Image">
             {% endif %}
-            <div class="bg-danger">
-                {{ form_errors(form.itemCreated) }}
-            </div>
-            {{ form_widget(form.itemCreated, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.itemCreated} %}
 
             <div class="bg-danger">
                 {{ form_errors(form.crafts) }}
             </div>
             {{ form_label(form.crafts) }}
-            {#{{ form_widget(form.crafts) }}#}
             <ul class="crafts" data-prototype="{{ form_widget(form.crafts.vars.prototype)|e('html_attr') }}">
             </ul>
 

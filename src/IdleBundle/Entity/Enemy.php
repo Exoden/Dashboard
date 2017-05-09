@@ -36,6 +36,20 @@ class Enemy
     private $characteristics;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="min_field_level", type="integer")
+     */
+    private $minFieldLevel;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="max_field_level", type="integer")
+     */
+    private $maxFieldLevel;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
@@ -108,6 +122,52 @@ class Enemy
     public function getCharacteristics()
     {
         return $this->characteristics;
+    }
+
+    /**
+     * Set minFieldLevel
+     *
+     * @param integer $minFieldLevel
+     * @return Enemy
+     */
+    public function setMinFieldLevel($minFieldLevel)
+    {
+        $this->minFieldLevel = $minFieldLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get minFieldLevel
+     *
+     * @return integer
+     */
+    public function getMinFieldLevel()
+    {
+        return $this->minFieldLevel;
+    }
+
+    /**
+     * Set maxFieldLevel
+     *
+     * @param integer $maxFieldLevel
+     * @return Enemy
+     */
+    public function setMaxFieldLevel($maxFieldLevel)
+    {
+        $this->maxFieldLevel = $maxFieldLevel;
+
+        return $this;
+    }
+
+    /**
+     * Get maxFieldLevel
+     *
+     * @return integer
+     */
+    public function getMaxFieldLevel()
+    {
+        return $this->maxFieldLevel;
     }
 
     /**

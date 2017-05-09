@@ -19,10 +19,7 @@
             {% if form.itemCreated.vars.data.image is defined %}
                 <img src="{{ asset('images/Idle/' ~ form.itemCreated.vars.data.typeItem.name ~ '/' ~ form.itemCreated.vars.data.image) }}" alt="No Image">
             {% endif %}
-            <div class="bg-danger">
-                {{ form_errors(form.itemCreated) }}
-            </div>
-            {{ form_widget(form.itemCreated, {'attr': {'class': 'form-control'}}) }}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.itemCreated} %}
 
             {{ form_label(form.crafts) }}
             <div class="bg-danger">
@@ -37,14 +34,8 @@
                         <div class="bg-danger">
                             {{ form_errors(craft) }}
                         </div>
-                        <div class="bg-danger">
-                            {{ form_errors(craft.itemNeeded) }}
-                        </div>
-                        {{ "Item needed"|trans }} : {{ form_widget(craft.itemNeeded, {'attr': {'class': 'form-control'}}) }}
-                        <div class="bg-danger">
-                            {{ form_errors(craft.quantity) }}
-                        </div>
-                        {{ form_widget(craft.quantity, {'attr': {'class': 'form-control'}}) }}
+                        {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': craft.itemNeeded} %}
+                        {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': craft.quantity} %}
                     </li>
                 {% endfor %}
             </ul>

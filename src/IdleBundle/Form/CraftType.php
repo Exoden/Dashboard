@@ -35,7 +35,8 @@ class CraftType extends AbstractType
             ->add('quantity', IntegerType::class, array(
                 'attr' => array(
                     'class' => 'form-control',
-                    'placeholder' => "Quantity")
+                    'placeholder' => "Quantity",
+                    'title' => "Quantity")
             ));
     }
     
