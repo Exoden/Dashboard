@@ -2,6 +2,8 @@
 
 namespace IdleBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use IdleBundle\Entity\Item;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -17,8 +19,23 @@ class LootType extends AbstractType
     {
         $builder
 //            ->add('enemy')
-            ->add('item', EntityType::class)
-            ->add('percent', IntegerType::class);
+            ->add('item', EntityType::class, array(
+                'class' => Item::class,
+//                'choice_label' => 'name',
+                'placeholder' => "Choose the item",
+                'attr' => array(
+                    'class' => 'form-control'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('i')
+                        ->innerJoin('i.typeItem', 'ti')
+                        ->orderBy('ti.name', 'ASC')
+                        ->addOrderBy('i.name', 'ASC');
+                }))
+            ->add('percent', IntegerType::class, array(
+                'attr' => array(
+                    'class' => 'form-control',
+                    'placeholder' => "Percent")
+            ));
     }
     
     /**

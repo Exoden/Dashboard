@@ -1,6 +1,7 @@
 {% extends "IdleBundle:Default:armory.html.twig" %}
 
 {% block page_armory %}
+    {{ include('AppBundle::flash_messages.html.twig') }}
     <div class="col-md-4 out-menu">
         <div class="col-md-12 menu">
             <div class="refresh-inventory">
@@ -37,7 +38,7 @@
                                 {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': inv['obj']} %}
                             {% endif %}
                     ">
-                        <img src="{% if inv['obj'].item.image is not null %}{{ asset('images/Idle/' ~ inv['obj'].item.typeItem.name ~ 's/' ~ inv['obj'].item.image) }}{% endif %}" alt="{{ inv['obj'].item.name }}">
+                        <img src="{% if inv['obj'].item.image is not null %}{{ asset('images/Idle/' ~ inv['obj'].item.typeItem.name ~ '/' ~ inv['obj'].item.image) }}{% endif %}" alt="{{ inv['obj'].item.name }}">
                         <p>{{ inv['obj'].item.name }} x<span class="quantity">{{ inv['quantity'] }}</span></p>
                     </div>
                 {% endfor %}
@@ -158,6 +159,7 @@
                                 $('.item[data-value="' + arr.id + '"] .quantity').text(arr.possessed);
                             }
                         });
+                        $('#flash-messages').flashNotification('addSuccess', "Craft succeed !");
                     }
                 })
         }
@@ -185,6 +187,7 @@
 
                         $('.btn-learn').remove();
                     }
+                    $('#flash-messages').flashNotification('addSuccess', "New recipe learned !");
                 })
         }
 

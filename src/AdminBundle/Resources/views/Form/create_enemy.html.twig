@@ -1,0 +1,122 @@
+{% extends "AdminBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Create Enemy"|trans }}{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <div class="block-form border-menu">
+            <div class="form-heading"><h2>{{ "Create Enemy"|trans }}</h2></div>
+
+            {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="bg-danger">
+                {{ form_errors(form.name) }}
+            </div>
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form.image) }}
+            </div>
+            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+
+            {#{% if form.vars.data.image is defined %}#}
+                {#<img src="{{ asset('images/Idle/' ~ form.vars.data.typeItem.name ~ '/' ~ form.vars.data.image) }}" alt="No Image">#}
+            {#{% endif %}#}
+            {#<div class="bg-danger">#}
+                {#{{ form_errors(form.item) }}#}
+            {#</div>#}
+            {#{{ form_widget(form.item, {'attr': {'class': 'form-control'}}) }}#}
+
+            <div class="bg-danger">
+                {{ form_errors(form.characteristics) }}
+            </div>
+            <h3>Characteristics</h3>
+            {% for charac in form.characteristics %}
+                <div class="bg-danger">
+                    {{ form_errors(charac) }}
+                </div>
+                {{ form_widget(charac, {'attr': {'class': 'form-control'}}) }}
+            {% endfor %}
+
+            <div class="bg-danger">
+                {{ form_errors(form.loots) }}
+            </div>
+            {{ form_label(form.loots) }}
+            <ul class="loots" data-prototype="{{ form_widget(form.loots.vars.prototype)|e('html_attr') }}">
+            </ul>
+
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+            {{ form_end(form) }}
+        </div>
+        <a href="{{ path('idle_generator') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var collectionHolder;
+
+        // setup an "add a loot" link
+        var addLootLink = $('<a href="#" class="btn btn-success add_loot_link"><span class="fa fa-plus"></span> Add a loot</a>');
+        var newLinkLi = $('<li></li>').prepend(addLootLink);
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of loots
+            collectionHolder = $('ul.loots');
+
+            // add the "add a loot" anchor and li to the loots ul
+            collectionHolder.append(newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            collectionHolder.data('index', collectionHolder.find(':input').length);
+
+            addLootLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new loot form (see next code block)
+                addLootForm(collectionHolder, newLinkLi);
+            });
+        });
+
+        function addLootForm(collectionHolder, newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = collectionHolder.data('prototype');
+
+            // get the new index
+            var index = collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a loot" link li
+            var newFormLi = $('<li></li>').append(newForm);
+
+            // also add a remove button, just for this example
+            newFormLi.append('<a href="#" class="btn btn-danger btn-block input-button remove-loot"><span class="fa fa-remove"></span> Remove from loots</a>');
+
+            newLinkLi.before(newFormLi);
+
+            // handle the removal, just for this example
+            $('.remove-loot').click(function (e) {
+                e.preventDefault();
+
+                $(this).parent().remove();
+
+                return false;
+            });
+        }
+    </script>
+{% endblock %}

@@ -9,11 +9,12 @@
                     <p>{{ hero.name }} ({{ hero.age }})</p>
                     {% for type, equipment in equipments[key] %}
                         <div class="item equipment {{ type|lower }}"
-                             title="{% if equipment is not null %}{{ equipment.stuff.item.name }}{% endif %}"
+                             title="{% if equipment is not null %}{{ equipment.item.name }}{% endif %}"
+                             data-stuff="{% if equipment is not null %}{{ equipment.id }}{% endif %}"
                              data-type="{{ type }}"
                              data-toggle="popover" data-placement="top" data-trigger="hover"
-                             data-content="{% if equipment is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipment.stuff} %}{% endif %}">
-                            <img src="{% if equipment is not null %}{{ asset('images/Idle/' ~ equipment.stuff.item.typeItem.name ~ 's/' ~ equipment.stuff.item.image) }}{% endif %}" alt="{{ type|lower }}">
+                             data-content="{% if equipment is not null %}{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': equipment} %}{% endif %}">
+                            <img src="{% if equipment is not null %}{{ asset('images/Idle/' ~ equipment.item.typeItem.name ~ '/' ~ equipment.item.image) }}{% endif %}" alt="{{ type|lower }}">
                         </div>
                     {% endfor %}
                 </div>
@@ -50,7 +51,7 @@
                          data-type="{{ stuff['obj'].type.name }}"
                          data-toggle="popover" data-placement="top" data-trigger="hover"
                          data-content="{% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': stuff['obj']} %}">
-                        <img src="{% if stuff['obj'].item.image is not null %}{{ asset('images/Idle/' ~ stuff['obj'].item.typeItem.name ~ 's/' ~ stuff['obj'].item.image) }}{% endif %}" alt="{{ stuff['obj'].item.name }}">
+                        <img src="{% if stuff['obj'].item.image is not null %}{{ asset('images/Idle/' ~ stuff['obj'].item.typeItem.name ~ '/' ~ stuff['obj'].item.image) }}{% endif %}" alt="{{ stuff['obj'].item.name }}">
                         <p>{{ stuff['obj'].item.name }} x<span class="quantity">{{ stuff['quantity'] }}</span></p>
                     </div>
                 {% endfor %}
@@ -89,18 +90,28 @@
                         var equipment_can_select = $('.equipment.can-select');
                         var stuff_can_select = $('.stuff.can-select');
 
-                        $.each(data.stats, function (key, arr) {
-                            if (arr > 0) {
-                                draw_comparison_line(key, arr, 'left');
-                            }
-                        });
+                        if (!elem.hasClass('can-select')) {
+                            remove_comparison_lines();
+                            remove_buttons();
+                            remove_selected("stuff");
+                            stuff_selected = $('.stuff.selected');
+                        }
+
+                        reset_comparison_lines_side('left');
+
+                        draw_comparison_lines_side(data.stats, 'left');
+
+                        remove_empty_comparison_lines();
+
+                        equipment_can_select.removeClass('can-select'); // Remove previous can select equipments
 
                         equipment_selected.removeClass('selected'); // Remove previous selected equipment
                         elem.addClass('selected'); // Select clicked equipment from elem
 
                         elem.removeClass('can-select'); // Remove can select from elem
 
-                        display_button_drop(elem.closest('.details-hero').data('hero'), elem.closest('div').data('type')); // A selected equipment can be drop
+                        if (Object.keys(data.stats).length > 0)
+                            display_button_drop(elem.closest('.details-hero').data('hero'), elem.closest('div').data('type')); // A selected equipment can be drop
 
                         if (stuff_selected.length == 1) { // If one stuff is selected
                             display_button_equip(elem.closest('.details-hero').data('hero'), stuff_selected.closest('div').data('stuff'));
@@ -129,18 +140,26 @@
                 .done(function (data) {
                     if (data.success) {
                         console.log('OK');
-//                        console.log(data.stats);
 
                         var equipment_selected = $('.equipment.selected');
                         var stuff_selected = $('.stuff.selected');
                         var equipment_can_select = $('.equipment.can-select');
                         var stuff_can_select = $('.stuff.can-select');
 
-                        $.each(data.stats, function (key, arr) {
-                            if (arr > 0) {
-                                draw_comparison_line(key, arr, 'right');
-                            }
-                        });
+                        if (!elem.hasClass('can-select')) { // If change type selection
+                            remove_comparison_lines();
+                            remove_buttons();
+                            remove_selected("equipment");
+                            equipment_selected = $('.equipment.selected');
+                        }
+
+                        reset_comparison_lines_side('right');
+
+                        draw_comparison_lines_side(data.stats, 'right');
+
+                        remove_empty_comparison_lines();
+
+                        stuff_can_select.removeClass('can-select'); // Remove can select stuffs
 
                         stuff_selected.removeClass('selected'); // Remove previous selected stuff
                         elem.addClass('selected'); // Select clicked stuff from elem
@@ -179,6 +198,20 @@
                         var hero = $('.details-hero[data-hero="' + elem.closest('button').data('hero') + '"] .equipment[data-type="' + elem.closest('button').data('type') + '"]');
 
                         hero.find('img').attr('src', '');
+
+                        if (data.inventory.quantity == 1) {
+                            $('.stuffs').append(addStuff(data.inventory));
+                            $('.stuff').click(show_stuff_stats);
+                        }
+                        else {
+                            console.log(data.inventory.id);
+                            $('.stuff[data-stuff="' + data.inventory.id + '"] .quantity').text(data.inventory.quantity);
+                        }
+
+                        remove_buttons();
+                        remove_selected("stuff");
+                        remove_selected("equipment");
+                        remove_comparison_lines();
                     }
                 })
         }
@@ -200,6 +233,24 @@
                         var hero = $('.details-hero[data-hero="' + elem.closest('button').data('hero') + '"] .equipment[data-type="' + stuff.data('type') + '"]');
 
                         hero.find('img').attr('src', stuff.find('img').attr('src'));
+
+                        $.each(data.inventory, function (key, arr) {
+                            if (arr.quantity == 0) {
+                                $('.stuff[data-stuff="' + arr.id + '"]').remove();
+                            }
+                            else if (arr.quantity == 1 && arr.msg == "new") {
+                                $('.stuffs').append(addStuff(arr));
+                                $('.stuff').click(show_stuff_stats);
+                            }
+                            else { // if arr.quantity > 1
+                                $('.stuff[data-stuff="' + arr.id + '"] .quantity').text(arr.quantity);
+                            }
+                        });
+
+                        remove_buttons();
+                        remove_selected("stuff");
+                        remove_selected("equipment");
+                        remove_comparison_lines();
                     }
                 })
         }
@@ -256,6 +307,60 @@
                 $('.btn-equip').click(equip_stuff);
             }
         }
+        function remove_buttons()
+        {
+            var equip_btn = $('.equip .btn-equip');
+            var drop_btn = $('.drop .btn-drop');
+
+            if (equip_btn.length == 1)
+                equip_btn.remove();
+            if (drop_btn.length == 1)
+                drop_btn.remove();
+        }
+        function remove_comparison_lines()
+        {
+            var comparison_lines = $('.comparison-line tr');
+            comparison_lines.remove();
+        }
+        function remove_selected(type)
+        {
+            var elem_selected = $('.' + type + '.selected');
+            elem_selected.removeClass('selected');
+        }
+        function reset_comparison_lines_side(side)
+        {
+            var comparison_lines = $('.comparison-line tr');
+
+            comparison_lines.each(function () {
+                $(this).children('.' + side).text(0);
+            });
+        }
+        function draw_comparison_lines_side(stats, side)
+        {
+            $.each(stats, function (key, arr) {
+                if (arr > 0) {
+                    draw_comparison_line(key, arr, side);
+                }
+            });
+        }
+        function remove_empty_comparison_lines()
+        {
+            var comparison_lines = $('.comparison-line tr');
+
+            comparison_lines.each(function () {
+                if ($(this).children('.left').text() == 0 && $(this).children('.right').text() == 0)
+                    $(this).remove();
+            });
+        }
+
+        function addStuff(stuff)
+        {
+            return '<div class="item stuff fixed" data-stuff="' + stuff.id + '" data-type="' + stuff.type + '">' +
+                '<img src="' + ((stuff.image != null) ? stuff.image : "") + '" alt="' + stuff.name + '">' +
+                '<p>' + stuff.name + ' x<span class="quantity">' + stuff.quantity + '</span></p>' +
+                '</div>';
+        }
+
         function formatType(string)
         {
             var result = string.replace( /([A-Z])/g, " $1" );

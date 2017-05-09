@@ -3,6 +3,7 @@
 {% block title %}{{ parent() }}{{ "Idle Generator"|trans }}{% endblock %}
 
 {% block sub_menu %}
+    <a href="{{ path('create_enemy') }}" class="btn btn-primary">Create Enemy</a>
     <a href="{{ path('create_resource') }}" class="btn btn-primary">Create Resource</a>
     <a href="{{ path('create_stuff') }}" class="btn btn-primary">Create Stuff</a>
     <a href="{{ path('create_recipe') }}" class="btn btn-primary">Create Recipe</a>
@@ -11,7 +12,7 @@
 {% endblock %}
 
 {% block page %}
-    <div class="col-md-12 border-menu">
+    <div class="row border-menu">
         <div class="table-responsive">
             <table id="stories-table" class="table">
                 <thead>
@@ -43,6 +44,38 @@
                                 <a href="{{ path('edit_recipe', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
                                 <a href="{{ path('remove_recipe', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
                             {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row border-menu">
+        <div class="table-responsive">
+            <table id="stories-table" class="table">
+                <thead>
+                    <tr>
+                        <th>{{ "Name"|trans }}</th>
+                        <th>{{ "Field Type"|trans }}</th>
+                        <th>{{ "Action"|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for enemy in enemies %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('edit_enemy', {'enemy_id': enemy.id}) }}">
+                                {{ enemy.name }}
+                            </a>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td style="text-align: right">
+                            <a href="{{ path('edit_enemy', {'enemy_id': enemy.id}) }}"><span class="fa fa-edit"></span></a>
+                            <a href="{{ path('remove_enemy', {'enemy_id': enemy.id}) }}"><span class="fa fa-remove"></span></a>
                         </td>
                     </tr>
                 {% endfor %}

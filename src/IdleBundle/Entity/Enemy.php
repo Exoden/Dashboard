@@ -45,12 +45,12 @@ class Enemy
     /**
      * @ORM\OneToMany(targetEntity="Loot", mappedBy="enemy", cascade={"persist", "remove"})
      */
-    private $loot;
+    private $loots;
 
 
     public function __construct()
     {
-        $this->loot = new ArrayCollection();
+        $this->loots = new ArrayCollection();
     }
 
 
@@ -136,8 +136,8 @@ class Enemy
     
     public function addLoot(Loot $l)
     {
-        if (!$this->loot->contains($l)) {
-            $this->loot[] = $l;
+        if (!$this->loots->contains($l)) {
+            $this->loots[] = $l;
 
             $l->setEnemy($this);
         }
@@ -146,11 +146,11 @@ class Enemy
 
     public function removeLoot(Loot $loot)
     {
-        $this->loot->removeElement($loot);
+        $this->loots->removeElement($loot);
     }
 
     public function getLoots()
     {
-        return $this->loot;
+        return $this->loots;
     }
 }

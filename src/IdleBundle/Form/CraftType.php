@@ -24,8 +24,7 @@ class CraftType extends AbstractType
 //                'choice_label' => 'name',
                 'placeholder' => "Choose an item",
                 'attr' => array(
-                    'class' => 'form-control',
-                    'placeholder' => "Quantity"),
+                    'class' => 'form-control'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
                         ->innerJoin('i.typeItem', 'ti')

@@ -28,8 +28,8 @@ class Craft
     private $recipe;
 
     /**
-     * @ORM\OneToOne(targetEntity="Item")
-     * @ORM\JoinColumn(name="item_needed_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Item")
+     * @ORM\JoinColumn(name="item_needed_id", referencedColumnName="id", nullable=false)
      */
     private $itemNeeded;
 

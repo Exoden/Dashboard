@@ -6,9 +6,10 @@ use AppBundle\Entity\User;
 use IdleBundle\Entity\BattleHistory;
 use IdleBundle\Entity\Craft;
 use IdleBundle\Entity\Enemy;
-use IdleBundle\Entity\Equipment;
 use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
+use IdleBundle\Entity\Item;
+use IdleBundle\Entity\Loot;
 use IdleBundle\Entity\PossessedRecipes;
 use IdleBundle\Entity\Recipe;
 use IdleBundle\Entity\Stuff;
@@ -45,8 +46,8 @@ class ServerController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-//        /** @var BattleManager $battle_manager */
-//        $battle_manager = $this->container->get('idle.battle_manager');
+        /** @var BattleManager $battle_manager */
+        $battle_manager = $this->container->get('idle.battle_manager');
 
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -56,6 +57,8 @@ class ServerController extends Controller
             $this->addFlash('error', "Hero not found.");
             return new JsonResponse(array('success' => false));
         }
+
+//        $battle_manager->cumulStatsHero($hero_id); // TODO : Cumul stats + skill tree
 
         $last_battle = $em->getRepository('IdleBundle:BattleHistory')->findOneBy(array('hero' => $hero));
         if (!$last_battle) {
@@ -71,38 +74,35 @@ class ServerController extends Controller
 
         // Get a piece of the previous historic
         if ($historic) {
-            $target = $hero->getTarget();
-            $em->persist($target);
-            if (end($historic)['time'] > $now) { // We play the past events
-                foreach ($historic as $key => $histo) {
-//                    $battle_manager->applyOneLine($histo, $hero, $target);
-                    if ($histo['type'] == "HIT_E") {
-                        $target->setCurrentHealth($target->getCurrentHealth() - $histo['damage']);
-                    } else if ($histo['type'] == "HIT_H") {
-                        $hero->setCurrentHealth($hero->getCurrentHealth() - $histo['damage']);
-                    } else if ($histo['type'] == "GEN") {
-
-                    }
-
-                    if ($histo['time'] < $now) {
-                        $battle_history = array_splice($historic, $key);
-                        $start_time = ((count($battle_history) + 1) * $hero->getCharacteristics()->getAttackDelay()); // +1 to skip the current cell, because we keep it and want to generate the following
-                        break;
-                    }
+            echo("now : " . $now . "\n");
+            echo("end : " . end($historic)['time'] . "\n");
+//            if (end($historic)['time'] > $now) { // We play the past events
+            $break = false;
+            echo("histo_size : " . count($historic) . "\n");
+            foreach ($historic as $key => $histo) {
+                if ($histo['time'] > $now) { // Stop playing
+//                    $battle_history = array_splice($historic, $key);
+//                    $start_time = ((count($battle_history) + 1) * $hero->getCharacteristics()->getAttackDelay()); // +1 to skip the current cell, because we keep it and want to generate the following
+                    echo("time : " . $histo['time'] . "\n");
+                    echo("end : " . end($historic)['time'] . "\n");
+                    echo("calc : " . (end($historic)['time'] - $histo['time']) . "\n");
+                    $start_time = $until - (end($historic)['time'] - $histo['time']);
+                    echo("start : " . $start_time . "\n");
+                    $battle_history = array_splice($historic, $key);
+                    $break = true;
+                    break;
                 }
+                else { // Play one event
+                    echo("play " . $histo['type'] . " : " . $histo['time'] . "\n");
+                    $battle_manager->playOneAction($histo, $hero);
+                }
+            }
+            $em->persist($hero);
+            $em->flush();
+
+            if (!$break) {
                 $now = end($historic)['time']; // now generate historic from the end of the historic
-                $em->flush();
-            } else if (end($historic)['time'] < $now) { // We play all the events
-                foreach ($historic as $key => $histo) {
-//                    $battle_manager->applyOneLine($histo, $hero, $target);
-                    if ($histo['type'] == "HIT_E") {
-                        $target->setCurrentHealth($target->getCurrentHealth() - $histo['damage']);
-                    } else if ($histo['type'] == "HIT_H") {
-                        $hero->setCurrentHealth($hero->getCurrentHealth() - $histo['damage']);
-                    } else if ($histo['type'] == "GEN") {
-
-                    }
-                }
+                $now = $battle_manager->playAverageBattleFrom($now);
                 // TODO : Generate average battle and execute until now
             }
         }
@@ -111,8 +111,11 @@ class ServerController extends Controller
         // Fill the historic //
         ///////////////////////
         // Enemy
-        $cumul_damage = 0;
+        $cumul_damage = 0; // TODO : Why not doing it based on (CURRENT_ENEMY_HP - damage done) instead of decreasing (MAX_ENEMY_HP - cumul_damage) each time ?????
         $time = $start_time;
+        $weapon = $hero->getTypeStuff($em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Weapon")))->getCharacteristics();
+        if (!$weapon)
+            $weapon = $hero->getCharacteristics();
         while ($time <= $until) {
             if ($time == 0) { // first generate an enemy
                 /** @var Enemy $enemy */
@@ -121,15 +124,17 @@ class ServerController extends Controller
                 $hero->getTarget()->setEnemy($enemy);
                 $em->flush();
 
-                $battle_history[] = array(
+                $battle_history[] = array( // TODO : Get image
                     'type' => "GEN",
                     'time' => $now + $time,
+                    'enemy' => $enemy->getId(),
+                    'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $hero->getTarget()->getEnemy()->getImage()),
                     'currentHealth' => $hero->getTarget()->getCurrentHealth(),
                     'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth(),
-                    'characteristics' => array());
+                    'characteristics' => array()); // TODO : Send Characs
             }
             else {
-                $damage = rand($hero->getCharacteristics()->getDamageMinimum(), $hero->getCharacteristics()->getDamageMaximum());
+                $damage = rand($weapon->getDamageMinimum(), $weapon->getDamageMaximum());
                 $cumul_damage += $damage;
 
                 $battle_history[] = array(
@@ -139,20 +144,34 @@ class ServerController extends Controller
                     'currentHealth' => $hero->getTarget()->getCurrentHealth() - $cumul_damage,
                     'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth());
 
-                // TODO : If currentHealth <= 0, Generate new enemy and kill the previous one, get Loot
                 if (end($battle_history)['currentHealth'] <= 0) {
-                    // TODO : Loot line
+                    $flash_msg = "";
+                    $loots = $hero->getTarget()->getEnemy()->getLoots();
+                    $arr_loot = array();
+                    /** @var Loot $loot */
+                    foreach ($loots as $loot) {
+                        $rate = rand(1, 100000); // Precision 0.001
+                        if ($rate < ($loot->getPercent() * 1000)) {
+                            array_push($arr_loot, $loot->getItem()->getId());
+
+                            $flash_msg .= "+1 " . $loot->getItem()->getName() . "\n";
+                        }
+                    }
+
                     $cumul_damage = 0;
                     $time += 1;
                     /** @var Enemy $enemy */
-                    $enemy = $em->getRepository('IdleBundle:Enemy')->find(1); // TODO : Randomise
+                    $enemy = $em->getRepository('IdleBundle:Enemy')->find(1); // TODO : Randomise, based on field level and type
                     $hero->getTarget()->setCurrentHealth($enemy->getCharacteristics()->getHealth());
                     $hero->getTarget()->setEnemy($enemy);
                     $em->flush();
 
-                    $battle_history[] = array( // TODO : Get image
+                    $battle_history[] = array(
                         'type' => "GEN",
                         'time' => $now + $time,
+                        'enemy' => $enemy->getId(),
+                        'loot_msg' => (($flash_msg != "") ? $flash_msg : "No loots"),
+                        'loots' => $arr_loot,
                         'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $hero->getTarget()->getEnemy()->getImage()),
                         'currentHealth' => $hero->getTarget()->getCurrentHealth(),
                         'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth(),
@@ -213,7 +232,7 @@ class ServerController extends Controller
         foreach ($crafts as $craft) {
             $tab_crafts[$i]['id'] = $craft->getItemNeeded()->getId();
             $tab_crafts[$i]['name'] = $craft->getItemNeeded()->getName();
-            $tab_crafts[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $craft->getItemNeeded()->getTypeItem()->getName() . 's/' . $craft->getItemNeeded()->getImage());
+            $tab_crafts[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $craft->getItemNeeded()->getTypeItem()->getName() . '/' . $craft->getItemNeeded()->getImage());
             /** @var Inventory $inv */
             $inv = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('item' => $craft->getItemNeeded()));
             $tab_crafts[$i]['possessed'] = $inv->getQuantity();
@@ -293,7 +312,7 @@ class ServerController extends Controller
                 // Used item
                 $tab_items[$i]['id'] = $inv->getItem()->getId();
                 $tab_items[$i]['name'] = $inv->getItem()->getName();
-                $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inv->getItem()->getTypeItem()->getName() . 's/' . $inv->getItem()->getImage());
+                $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inv->getItem()->getTypeItem()->getName() . '/' . $inv->getItem()->getImage());
                 $tab_items[$i]['possessed'] = $inv->getQuantity();
                 $tab_items[$i]['needed'] = $craft->getQuantity();
                 $tab_items[$i]['type'] = "craft";
@@ -322,10 +341,10 @@ class ServerController extends Controller
         // Added item
         $tab_items[$i]['id'] = $inventory->getItem()->getId();
         $tab_items[$i]['name'] = $inventory->getItem()->getName();
-        $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inventory->getItem()->getTypeItem()->getName() . 's/' . $inventory->getItem()->getImage());
+        $tab_items[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inventory->getItem()->getTypeItem()->getName() . '/' . $inventory->getItem()->getImage());
         $tab_items[$i]['possessed'] = $inventory->getQuantity();
 
-//        $em->flush();
+        $em->flush();
 
         return new JsonResponse(array('success' => true, 'items' => $tab_items, 'craftable' => $craftable));
     }
@@ -386,11 +405,16 @@ class ServerController extends Controller
 
         $user = $this->getUser();
 
+        /** @var Hero $hero */
+        $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('user' => $user, 'id' => $hero_id));
+        if (!$hero) {
+            return new JsonResponse(array('success' => false));
+        }
+
         /** @var TypeStuff $type */
         $type = $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => $type_name));
 
-        /** @var Equipment $equipment */
-        $equipment = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero_id, $type);
+        $equipment = $hero->getTypeStuff($type);
         if (!$equipment && $type->getName() == "Weapon") {
             /** @var Hero $hero */
             $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('user' => $user, 'id' => $hero_id));
@@ -400,11 +424,11 @@ class ServerController extends Controller
             $stats = $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($hero->getCharacteristics())[0];
             unset($stats['health']);
         }
-        else if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
-            return new JsonResponse(array('success' => false));
+        else if (!$equipment) {
+            return new JsonResponse(array('success' => true, 'stats' => array()));
         }
         else {
-            $stats = $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($equipment->getStuff()->getCharacteristics())[0];
+            $stats = $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($equipment->getCharacteristics())[0];
         }
 
         unset($stats['id']);
@@ -447,33 +471,45 @@ class ServerController extends Controller
 
         $user = $this->getUser();
 
+        /** @var Hero $hero */
+        $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('user' => $user, 'id' => $hero_id));
+        if (!$hero) {
+            return new JsonResponse(array('success' => false));
+        }
+
         /** @var TypeStuff $type */
         $type = $em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => $type_name));
 
-        /** @var Equipment $equipment */
-        $equipment = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero_id, $type->getId());
-        if (!$equipment || ($equipment && $equipment->getHero()->getUser() != $user)) {
+        $equipment = $hero->getTypeStuff($type);
+        if (!$equipment) {
             return new JsonResponse(array('success' => false));
         }
 
         /** @var Inventory $inventory */
-        $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $equipment->getStuff()->getItem()));
+        $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $equipment->getItem()));
         if (!$inventory) {
             $inventory = new Inventory();
             $inventory->setUser($user);
-            $inventory->setItem($equipment->getStuff()->getItem());
+            $inventory->setItem($equipment->getItem());
             $inventory->setQuantity(1);
         }
         else {
             $inventory->setQuantity($inventory->getQuantity() + 1);
         }
+
+        $arr_inv = array(
+            'id' => $equipment->getId(),
+            'name' => $inventory->getItem()->getName(),
+            'type' => $equipment->getType()->getName(),
+            'quantity' => $inventory->getQuantity(),
+            'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inventory->getItem()->getTypeItem()->getName() . '/' . $inventory->getItem()->getImage()));
+
         $em->persist($inventory);
+        $hero->removeStuff($equipment);
+        $em->flush();
 
-        $em->remove($equipment);
 
-//        $em->flush();
-
-        return new JsonResponse(array('success' => true, 'inventory' => ''));
+        return new JsonResponse(array('success' => true, 'inventory' => $arr_inv));
     }
 
     /**
@@ -503,48 +539,63 @@ class ServerController extends Controller
             return new JsonResponse(array('success' => false));
         }
 
-        /** @var Equipment $equipment */
-        $equipment = $em->getRepository('IdleBundle:Equipment')->getEquipmentTypeFromHero($hero_id, $stuff->getType()->getId());
-        if ($equipment && $equipment->getHero()->getUser() != $user) {
+        $equipment = $hero->getTypeStuff($stuff->getType());
+        if ($equipment && $hero->getUser() != $user) {
             return new JsonResponse(array('success' => false));
+        }
+
+        $arr_inv = array();
+
+        // Move the previous stuff to the inventory
+        if ($equipment) {
+            $hero->removeStuff($equipment); // Remove the previous equipment
+            /** @var Inventory $inventory */
+            $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $equipment->getItem()));
+            if (!$inventory) { // Add and Create previous equipment to inventory
+                $inventory = new Inventory();
+                $inventory->setUser($user);
+                $inventory->setItem($equipment->getItem());
+                $inventory->setQuantity(1);
+                array_push($arr_inv, array(
+                    'msg' => "new",
+                    'id' => $equipment->getId(),
+                    'name' => $inventory->getItem()->getName(),
+                    'type' => $equipment->getType()->getName(),
+                    'quantity' => $inventory->getQuantity(),
+                    'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $inventory->getItem()->getTypeItem()->getName() . '/' . $inventory->getItem()->getImage())));
+            }
+            else { // Add +1 previous equipment to inventory
+                $inventory->setQuantity($inventory->getQuantity() + 1);
+                array_push($arr_inv, array(
+                    'msg' => "edit",
+                    'id' => $equipment->getId(),
+                    'quantity' => $inventory->getQuantity()));
+            }
+            $em->persist($inventory);
         }
 
         // Remove quantity of the stuff in the inventory
         if ($inventory->getQuantity() == 1) {
             $em->remove($inventory);
+            array_push($arr_inv, array(
+                'msg' => "edit",
+                'id' => $stuff->getId(),
+                'quantity' => 0));
         }
         else {
             $inventory->setQuantity($inventory->getQuantity() - 1);
             $em->persist($inventory);
+            array_push($arr_inv, array(
+                'msg' => "edit",
+                'id' => $stuff->getId(),
+                'quantity' => $inventory->getQuantity()));
         }
 
-        // Move the previous stuff to the inventory
-        if ($equipment) {
-            /** @var Inventory $inventory */
-            $inventory = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $equipment->getStuff()->getItem()));
-            if (!$inventory) {
-                $inventory = new Inventory();
-                $inventory->setUser($user);
-                $inventory->setItem($equipment->getStuff()->getItem());
-                $inventory->setQuantity(1);
-            }
-            else {
-                $inventory->setQuantity($inventory->getQuantity() + 1);
-            }
-            $em->persist($inventory);
+        $hero->addStuff($stuff); // Equip the stuff
+        $em->persist($hero);
+        $em->flush();
 
-            $equipment->setStuff($stuff);
-        }
-        else {
-            $equipment = new Equipment();
-            $equipment->setStuff($stuff);
-            $equipment->setHero($hero);
-        }
-        $em->persist($equipment);
-
-//        $em->flush();
-
-        return new JsonResponse(array('success' => true));
+        return new JsonResponse(array('success' => true, 'inventory' => $arr_inv));
     }
 
 //    /**

@@ -28,7 +28,7 @@
 
             {#{{ dump(form.item.image.vars.data) }}#}
             {% if form.item.image.vars.data.filename is defined %}
-                <img src="{{ asset('images/Idle/Equipments/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
+                <img src="{{ asset('images/Idle/Equipment/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
             {% endif %}
             <div class="bg-danger">
                 {{ form_errors(form.item.image) }}

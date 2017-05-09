@@ -6,11 +6,14 @@ use AppBundle\Entity\News;
 use AppBundle\Form\NewsType;
 use Doctrine\Common\Collections\ArrayCollection;
 use IdleBundle\Entity\Craft;
+use IdleBundle\Entity\Enemy;
 use IdleBundle\Entity\Item;
+use IdleBundle\Entity\Loot;
 use IdleBundle\Entity\Recipe;
 use IdleBundle\Entity\Resource;
 use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Utils;
+use IdleBundle\Form\EnemyType;
 use IdleBundle\Form\RecipeType;
 use IdleBundle\Form\ResourceType;
 use IdleBundle\Form\StuffType;
@@ -106,7 +109,9 @@ class DefaultController extends Controller
 
         $items = $em->getRepository('IdleBundle:Item')->getAllSortedItems();
 
-        return $this->render('AdminBundle:Default:idle_generator.html.twig', array('items' => $items));
+        $enemies = $em->getRepository('IdleBundle:Enemy')->findAll();
+
+        return $this->render('AdminBundle:Default:idle_generator.html.twig', array('items' => $items, 'enemies' => $enemies));
     }
 
     /**
@@ -129,7 +134,7 @@ class DefaultController extends Controller
 
         return $this->render('AdminBundle:Form:idle_generator.html.twig');
     }
-    
+
     /**
      * @Route("/create-stuff", name="create_stuff")
      * @Security("has_role('ROLE_ADMIN')")
@@ -174,7 +179,7 @@ class DefaultController extends Controller
 
         $saved_image = $stuff->getItem()->getImage();
         if ($saved_image != null)
-            $stuff->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Equipments/' . $saved_image));
+            $stuff->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Equipment/' . $saved_image));
 
         $form = $this->createForm(StuffType::class, $stuff);
         $form->handleRequest($request);
@@ -212,8 +217,8 @@ class DefaultController extends Controller
         $stuff = $em->getRepository('IdleBundle:Stuff')->findOneBy(array('item' => $item_id));
 
         if ($stuff->getItem()->getImage() != null) {
-            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Equipments/' . $stuff->getItem()->getImage()))
-                unlink($this->get('app.file_uploader')->getTargetDir() . '/Equipments/' . $stuff->getItem()->getImage());
+            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Equipment/' . $stuff->getItem()->getImage()))
+                unlink($this->get('app.file_uploader')->getTargetDir() . '/Equipment/' . $stuff->getItem()->getImage());
         }
 
         $em->remove($stuff);
@@ -267,8 +272,8 @@ class DefaultController extends Controller
 
         $saved_image = $resource->getItem()->getImage();
         if ($saved_image != null)
-            $resource->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Resources/' . $saved_image));
-        
+            $resource->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Resource/' . $saved_image));
+
         $form = $this->createForm(ResourceType::class, $resource);
         $form->handleRequest($request);
 
@@ -305,8 +310,8 @@ class DefaultController extends Controller
         $resource = $em->getRepository('IdleBundle:Resource')->findOneBy(array('item' => $item_id));
 
         if ($resource->getItem()->getImage() != null) {
-            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Resources/' . $resource->getItem()->getImage()))
-                unlink($this->get('app.file_uploader')->getTargetDir() . '/Resources/' . $resource->getItem()->getImage());
+            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Resource/' . $resource->getItem()->getImage()))
+                unlink($this->get('app.file_uploader')->getTargetDir() . '/Resource/' . $resource->getItem()->getImage());
         }
 
         $em->remove($resource);
@@ -396,14 +401,13 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $recipe = $em->getRepository('IdleBundle:Recipe')->findOneBy(array('item' => $item_id));
-
-        $originalCrafts = new ArrayCollection();
-
+        
         // Create an ArrayCollection of the current Craft objects in the database
+        $originalCrafts = new ArrayCollection();
         foreach ($recipe->getCrafts() as $craft) {
             $originalCrafts->add($craft);
         }
-        
+
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
@@ -443,6 +447,106 @@ class DefaultController extends Controller
         $recipe = $em->getRepository('IdleBundle:Recipe')->findOneBy(array('item' => $item_id));
 
         $em->remove($recipe);
+        $em->flush();
+
+        $this->addFlash('success', "Item removed");
+
+        return $this->redirectToRoute('idle_generator');
+    }
+
+    /**
+     * @Route("/create-enemy", name="create_enemy")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function createEnemyAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $enemy = new Enemy();
+        $form = $this->createForm(EnemyType::class, $enemy);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->addFlash('success', "New enemy saved");
+
+                return $this->redirectToRoute('edit_enemy', array('enemy_id' => $enemy->getId()));
+            }
+        }
+
+        return $this->render('AdminBundle:Form:create_enemy.html.twig', array('form' => $form->createView()));
+    }
+    /**
+     * @Route("/edit-enemy/{enemy_id}", name="edit_enemy")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function editEnemyAction(Request $request, $enemy_id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $enemy = $em->getRepository('IdleBundle:Enemy')->find($enemy_id);
+
+        // Create an ArrayCollection of the current Loot objects in the database
+        $originalLoots = new ArrayCollection();
+        foreach ($enemy->getLoots() as $loot) {
+            $originalLoots->add($loot);
+        }
+
+        $saved_image = $enemy->getImage();
+        if ($saved_image != null)
+            $enemy->setImage(new File($this->getParameter('idle_images_directory') . '/Enemy/' . $saved_image));
+
+        $form = $this->createForm(EnemyType::class, $enemy);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $filename = $saved_image;
+                $item = $form->getData();
+                if ($item->getImage()) {
+                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Equipments', $item->getImage());
+                }
+                $item->setImage($filename);
+
+                // remove the relationship between the loot and the Recipe
+                /** @var Loot $loot */
+                foreach ($originalLoots as $loot) {
+                    if ($enemy->getLoots()->contains($loot) === false) {
+                        // remove the Task from the Loot
+                        $enemy->removeLoot($loot);
+
+                        // if you wanted to delete the Loot entirely, you can also do that
+                        $em->remove($loot);
+                    }
+                }
+
+                $em->persist($enemy);
+                $em->flush();
+                
+                $this->addFlash('success', "Changes saved");
+
+                return $this->redirectToRoute('edit_enemy', array('enemy_id' => $enemy->getId()));
+            }
+        }
+
+        return $this->render('AdminBundle:Form:edit_enemy.html.twig', array('form' => $form->createView()));
+    }
+    /**
+     * @Route("/remove-enemy/{enemy_id}", name="remove_enemy")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function removeEnemyAction(Request $request, $enemy_id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $enemy = $em->getRepository('IdleBundle:Enemy')->find($enemy_id);
+
+        if ($enemy->getImage() != null) {
+            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Enemy/' . $enemy->getImage()))
+                unlink($this->get('app.file_uploader')->getTargetDir() . '/Enemy/' . $enemy->getImage());
+        }
+
+        $em->remove($enemy);
         $em->flush();
 
         $this->addFlash('success', "Item removed");

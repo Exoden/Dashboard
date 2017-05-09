@@ -22,7 +22,7 @@
             {{ form_widget(form.item.name, {'attr': {'class': 'form-control'}}) }}
 
             {% if form.item.image.vars.data.filename is defined %}
-                <img src="{{ asset('images/Idle/Resources/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
+                <img src="{{ asset('images/Idle/Resource/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
             {% endif %}
             <div class="bg-danger">
                 {{ form_errors(form.item.image) }}

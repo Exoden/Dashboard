@@ -41,53 +41,53 @@
 
 {% block javascripts %}
     <script>
-        var $collectionHolder;
+        var collectionHolder;
 
         // setup an "add a craft" link
-        var $addCraftLink = $('<a href="#" class="btn btn-success add_craft_link"><span class="fa fa-plus"></span> Add a craft</a>');
-        var $newLinkLi = $('<li></li>').prepend($addCraftLink);
+        var addCraftLink = $('<a href="#" class="btn btn-success add_craft_link"><span class="fa fa-plus"></span> Add a craft</a>');
+        var newLinkLi = $('<li></li>').prepend(addCraftLink);
 
         $(document).ready(function() {
             // Get the ul that holds the collection of crafts
-            $collectionHolder = $('ul.crafts');
+            collectionHolder = $('ul.crafts');
 
             // add the "add a craft" anchor and li to the crafts ul
-            $collectionHolder.append($newLinkLi);
+            collectionHolder.append(newLinkLi);
 
             // count the current form inputs we have (e.g. 2), use that as the new
             // index when inserting a new item (e.g. 2)
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            collectionHolder.data('index', collectionHolder.find(':input').length);
 
-            $addCraftLink.on('click', function(e) {
+            addCraftLink.on('click', function(e) {
                 // prevent the link from creating a "#" on the URL
                 e.preventDefault();
 
                 // add a new craft form (see next code block)
-                addCraftForm($collectionHolder, $newLinkLi);
+                addCraftForm(collectionHolder, newLinkLi);
             });
         });
 
-        function addCraftForm($collectionHolder, $newLinkLi) {
+        function addCraftForm(collectionHolder, newLinkLi) {
             // Get the data-prototype explained earlier
-            var prototype = $collectionHolder.data('prototype');
+            var prototype = collectionHolder.data('prototype');
 
             // get the new index
-            var index = $collectionHolder.data('index');
+            var index = collectionHolder.data('index');
 
-            // Replace '$$name$$' in the prototype's HTML to
+            // Replace '__name__' in the prototype's HTML to
             // instead be a number based on how many items we have
             var newForm = prototype.replace(/__name__/g, index);
 
             // increase the index with one for the next item
-            $collectionHolder.data('index', index + 1);
+            collectionHolder.data('index', index + 1);
 
             // Display the form in the page in an li, before the "Add a craft" link li
-            var $newFormLi = $('<li></li>').append(newForm);
+            var newFormLi = $('<li></li>').append(newForm);
 
             // also add a remove button, just for this example
-            $newFormLi.append('<a href="#" class="btn btn-danger btn-block input-button remove-craft"><span class="fa fa-remove"></span> Remove from crafts</a>');
+            newFormLi.append('<a href="#" class="btn btn-danger btn-block input-button remove-craft"><span class="fa fa-remove"></span> Remove from crafts</a>');
 
-            $newLinkLi.before($newFormLi);
+            newLinkLi.before(newFormLi);
 
             // handle the removal, just for this example
             $('.remove-craft').click(function (e) {

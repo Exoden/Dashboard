@@ -3,6 +3,7 @@
 namespace IdleBundle\Entity;
 
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -95,6 +96,20 @@ class Hero
      * @ORM\Column(name="rest_end_time", type="datetime", nullable=true)
      */
     private $restEndTime;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="IdleBundle\Entity\Stuff")
+     * @ORM\JoinTable(name="link_hero_stuff",
+     *      joinColumns={@ORM\JoinColumn(name="hero_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="stuff_id", referencedColumnName="id")}
+     *      )
+     */
+    private $stuffs;
+
+
+    public function __construct() {
+        $this->stuffs = new ArrayCollection();
+    }
 
 
     /**
@@ -358,5 +373,33 @@ class Hero
     public function getRestEndTime()
     {
         return $this->restEndTime;
+    }
+    
+    
+    public function addStuff(Stuff $stuff)
+    {
+        $this->stuffs[] = $stuff;
+
+        return $this;
+    }
+
+    public function removeStuff(Stuff $stuff)
+    {
+        $this->stuffs->removeElement($stuff);
+    }
+
+    public function getStuffs()
+    {
+        return $this->stuffs;
+    }
+
+    public function getTypeStuff($type)
+    {
+        /** @var Stuff $stuff */
+        foreach ($this->stuffs as $stuff) {
+            if ($stuff->getType() == $type)
+            return $stuff;
+        }
+        return null;
     }
 }
