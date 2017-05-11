@@ -36,6 +36,12 @@ class Enemy
     private $characteristics;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Area", inversedBy="enemies")
+     * @ORM\JoinColumn(name="area_id", referencedColumnName="id")
+     */
+    private $area;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="min_field_level", type="integer")
@@ -122,6 +128,29 @@ class Enemy
     public function getCharacteristics()
     {
         return $this->characteristics;
+    }
+
+    /**
+     * Set area
+     *
+     * @param Area $area
+     * @return Enemy
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    /**
+     * Get area
+     *
+     * @return Area
+     */
+    public function getArea()
+    {
+        return $this->area;
     }
 
     /**

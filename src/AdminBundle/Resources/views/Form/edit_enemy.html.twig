@@ -19,6 +19,7 @@
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.name} %}
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.minFieldLevel} %}
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.maxFieldLevel} %}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.area} %}
 
             {% if form.image.vars.data.filename is defined %}
                 <img src="{{ asset('images/Idle/Enemy/' ~ form.image.vars.data.filename) }}" alt="No Image">

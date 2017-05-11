@@ -98,6 +98,12 @@ class Hero
     private $restEndTime;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Area")
+     * @ORM\JoinColumn(name="area_id", referencedColumnName="id")
+     */
+    private $area;
+
+    /**
      * @ORM\ManyToMany(targetEntity="IdleBundle\Entity\Stuff")
      * @ORM\JoinTable(name="link_hero_stuff",
      *      joinColumns={@ORM\JoinColumn(name="hero_id", referencedColumnName="id")},
@@ -373,6 +379,29 @@ class Hero
     public function getRestEndTime()
     {
         return $this->restEndTime;
+    }
+
+    /**
+     * Set area
+     *
+     * @param Area $area
+     * @return Hero
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    /**
+     * Get area
+     *
+     * @return Area
+     */
+    public function getArea()
+    {
+        return $this->area;
     }
     
     

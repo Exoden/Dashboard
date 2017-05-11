@@ -2,6 +2,8 @@
 
 namespace IdleBundle\Form;
 
+use IdleBundle\Entity\Area;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -29,6 +31,11 @@ class EnemyType extends AbstractType
                 'attr' => array(
                     'placeholder' => "Maximum Field Level",
                     'title' => "Maximum Field Level")
+            ))
+            ->add('area', EntityType::class, array(
+                'class' => Area::class,
+                'choice_label' => 'name',
+                'placeholder' => "Choose the Area"
             ))
             ->add('image', FileType::class, array(
                 'label' => 'Image (PNG file)',

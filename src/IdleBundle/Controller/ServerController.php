@@ -119,7 +119,7 @@ class ServerController extends Controller
         while ($time <= $until) {
             if ($time == 0) { // first generate an enemy
                 /** @var Enemy $enemy */
-                $enemy = $em->getRepository('IdleBundle:Enemy')->find(1); // TODO : Randomise
+                $enemy = $em->getRepository('IdleBundle:Enemy')->find(1); // TODO : Randomise + based on hero's area
                 $hero->getTarget()->setCurrentHealth($enemy->getCharacteristics()->getHealth());
                 $hero->getTarget()->setEnemy($enemy);
                 $em->flush();

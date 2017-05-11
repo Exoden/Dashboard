@@ -98,6 +98,14 @@
                         <div class="col-md-8">
                             <div class="row top">
                                 <div class="row">
+                                    <div class="btn-group" role="group"> {# TODO : buttons Ajax => change area, regenerate battleHistory #}
+                                        <a href="#" class="btn btn-primary btn-xs{% if hero.area.id == 1 %} active{% endif %}">Plain</a>
+                                        <a href="#" class="btn btn-primary btn-xs{% if hero.area.id == 2 %} active{% endif %}">Forest</a>
+                                        <a href="#" class="btn btn-primary btn-xs{% if hero.area.id == 3 %} active{% endif %}">Mountain</a>
+                                        <a href="#" class="btn btn-primary btn-xs{% if hero.area.id == 4 %} active{% endif %}">Volcano</a>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-9">
                                         <p>Field {{ hero.fieldLevel }}</p>
                                     </div>
