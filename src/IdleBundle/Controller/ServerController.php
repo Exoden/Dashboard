@@ -4,6 +4,7 @@ namespace IdleBundle\Controller;
 
 use AppBundle\Entity\User;
 use IdleBundle\Entity\BattleHistory;
+use IdleBundle\Entity\Characteristics;
 use IdleBundle\Entity\Craft;
 use IdleBundle\Entity\Enemy;
 use IdleBundle\Entity\Hero;
@@ -15,6 +16,8 @@ use IdleBundle\Entity\Recipe;
 use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Target;
 use IdleBundle\Entity\TypeStuff;
+use IdleBundle\Entity\Zone;
+use IdleBundle\Form\HeroType;
 use IdleBundle\Services\BattleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -74,26 +77,24 @@ class ServerController extends Controller
 
         // Get a piece of the previous historic
         if ($historic) {
-            echo("now : " . $now . "\n");
-            echo("end : " . end($historic)['time'] . "\n");
-//            if (end($historic)['time'] > $now) { // We play the past events
+//            echo("now : " . $now . "\n");
+//            echo("end : " . end($historic)['time'] . "\n");
             $break = false;
-            echo("histo_size : " . count($historic) . "\n");
+//            echo("histo_size : " . count($historic) . "\n");
             foreach ($historic as $key => $histo) {
                 if ($histo['time'] > $now) { // Stop playing
-//                    $battle_history = array_splice($historic, $key);
-//                    $start_time = ((count($battle_history) + 1) * $hero->getCharacteristics()->getAttackDelay()); // +1 to skip the current cell, because we keep it and want to generate the following
-                    echo("time : " . $histo['time'] . "\n");
-                    echo("end : " . end($historic)['time'] . "\n");
-                    echo("calc : " . (end($historic)['time'] - $histo['time']) . "\n");
-                    $start_time = $until - (end($historic)['time'] - $histo['time']);
-                    echo("start : " . $start_time . "\n");
+//                    echo("time : " . $histo['time'] . "\n");
+//                    echo("end : " . end($historic)['time'] . "\n");
+//                    echo("calc : " . (end($historic)['time'] - $histo['time']) . "\n");
+                    $start_time = (end($historic)['time'] - $historic[$key + 1]['time']); // TODO : Check time, after refreshing, generating too much lines !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//                    echo("start : " . $start_time . "\n");
+//                    echo("until : " . $until . "\n");
                     $battle_history = array_splice($historic, $key);
                     $break = true;
                     break;
                 }
                 else { // Play one event
-                    echo("play " . $histo['type'] . " : " . $histo['time'] . "\n");
+//                    echo("play " . $histo['type'] . " : " . $histo['time'] . "\n");
                     $battle_manager->playOneAction($histo, $hero);
                 }
             }
@@ -111,71 +112,36 @@ class ServerController extends Controller
         // Fill the historic //
         ///////////////////////
         // Enemy
-        $cumul_damage = 0; // TODO : Why not doing it based on (CURRENT_ENEMY_HP - damage done) instead of decreasing (MAX_ENEMY_HP - cumul_damage) each time ?????
+        $enemy_id = $hero->getTarget()->getEnemy()->getId();
+        $enemy_current_life = $hero->getTarget()->getCurrentHealth();
         $time = $start_time;
         $weapon = $hero->getTypeStuff($em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Weapon")))->getCharacteristics();
         if (!$weapon)
             $weapon = $hero->getCharacteristics();
+//        echo("starting loop 1 time : " . $time . " : " . ($time + $now) . "\n");
+
+//        echo("while : " . $time . " <= " . $until . "\n");
         while ($time <= $until) {
             if ($time == 0) { // first generate an enemy
-                /** @var Enemy $enemy */
-                $enemy = $em->getRepository('IdleBundle:Enemy')->find(1); // TODO : Randomise + based on hero's area
-                $hero->getTarget()->setCurrentHealth($enemy->getCharacteristics()->getHealth());
-                $hero->getTarget()->setEnemy($enemy);
-                $em->flush();
-
-                $battle_history[] = array( // TODO : Get image
-                    'type' => "GEN",
-                    'time' => $now + $time,
-                    'enemy' => $enemy->getId(),
-                    'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $hero->getTarget()->getEnemy()->getImage()),
-                    'currentHealth' => $hero->getTarget()->getCurrentHealth(),
-                    'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth(),
-                    'characteristics' => array()); // TODO : Send Characs
+                $battle_history[] = $battle_manager->createGenAction($hero, $now + $time);
             }
             else {
                 $damage = rand($weapon->getDamageMinimum(), $weapon->getDamageMaximum());
-                $cumul_damage += $damage;
+                $enemy_current_life -= $damage;
 
                 $battle_history[] = array(
                     'type' => "HIT_E",
                     'time' => $now + $time,
                     'damage' => $damage,
-                    'currentHealth' => $hero->getTarget()->getCurrentHealth() - $cumul_damage,
+                    'currentHealth' => $enemy_current_life,
                     'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth());
 
-                if (end($battle_history)['currentHealth'] <= 0) {
-                    $flash_msg = "";
-                    $loots = $hero->getTarget()->getEnemy()->getLoots();
-                    $arr_loot = array();
-                    /** @var Loot $loot */
-                    foreach ($loots as $loot) {
-                        $rate = rand(1, 100000); // Precision 0.001
-                        if ($rate < ($loot->getPercent() * 1000)) {
-                            array_push($arr_loot, $loot->getItem()->getId());
+                if ($enemy_current_life <= 0) {
+                    $time += 1; // Reload life bar
 
-                            $flash_msg .= "+1 " . $loot->getItem()->getName() . "\n";
-                        }
-                    }
-
-                    $cumul_damage = 0;
-                    $time += 1;
-                    /** @var Enemy $enemy */
-                    $enemy = $em->getRepository('IdleBundle:Enemy')->find(1); // TODO : Randomise, based on field level and type
-                    $hero->getTarget()->setCurrentHealth($enemy->getCharacteristics()->getHealth());
-                    $hero->getTarget()->setEnemy($enemy);
-                    $em->flush();
-
-                    $battle_history[] = array(
-                        'type' => "GEN",
-                        'time' => $now + $time,
-                        'enemy' => $enemy->getId(),
-                        'loot_msg' => (($flash_msg != "") ? $flash_msg : "No loots"),
-                        'loots' => $arr_loot,
-                        'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $hero->getTarget()->getEnemy()->getImage()),
-                        'currentHealth' => $hero->getTarget()->getCurrentHealth(),
-                        'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth(),
-                        'characteristics' => array()); // TODO : Send Characs
+                    $battle_history[] = $battle_manager->createGenAction($hero, $now + $time, $enemy_id, true);
+                    $enemy_current_life = end($battle_history)['currentHealth'];
+                    $enemy_id = end($battle_history)['enemy'];
                 }
             }
 
@@ -183,17 +149,18 @@ class ServerController extends Controller
         }
 
         // Hero
-        $cumul_damage = 0;
-        $time = $start_time + $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
+        $hero_current_life = $hero->getCurrentHealth();
+        $time = $start_time + $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay(); // TODO : If start_time != 0, time = last_hit_hero + attackDelay
+//        echo("starting loop 2 time : " . $time . " : " . ($time + $now) . "\n");
         while ($time <= $until) {
             $damage = rand($hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMinimum(), $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMaximum());
-            $cumul_damage += $damage;
+            $hero_current_life -= $damage;
 
             $battle_history[] = array(
                 'type' => "HIT_H",
                 'time' => $now + $time,
                 'damage' => $damage,
-                'currentHealth' => $hero->getCurrentHealth() - $cumul_damage,
+                'currentHealth' => $hero_current_life,
                 'health' => $hero->getCharacteristics()->getHealth());
 
             $time += $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
@@ -205,8 +172,102 @@ class ServerController extends Controller
         $em->persist($last_battle);
         $em->flush();
 
+//        echo 'now : ' . microtime(true) . "\n"; // TODO : now is previous to battle_history, must be posterior
+//        echo 'first : ' . $battle_history[0]['time'] . "\n";
+//        echo 'seconde : ' . $battle_history[1]['time'] . "\n";
+
         return new JsonResponse(array('success' => true, 'battle_history' => $battle_history));
     }
+
+    /**
+     * @Route("/create-hero", name="create_hero")
+     */
+    public function ajaxCreateHero(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $hero = new Hero();
+
+        $form = $this->createForm(HeroType::class, $hero);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Characteristics $charac */
+            $charac = new Characteristics();
+            $charac->setArmor(0);
+            $charac->setAttackDelay(2.5);
+            $charac->setDamageMinimum(1);
+            $charac->setDamageMaximum(1);
+            $charac->setDodge(0);
+            $charac->setHealth(100);
+            $charac->setHitPrecision(100);
+            $charac->setCriticalChance(0);
+            $charac->setBlocking(0);
+            $em->persist($charac);
+
+            /** @var Enemy $enemy */
+            $enemy = $em->getRepository('IdleBundle:Enemy')->find(1);
+            $target = new Target();
+            $target->setCurrentHealth($enemy->getCharacteristics()->getHealth());
+            $target->setEnemy($enemy);
+            $em->persist($target);
+
+            $hero->setCharacteristics($charac);
+            $hero->setAge(15);
+            $hero->setCurrentHealth(100);
+            $hero->setIsRested(true);
+            $hero->setRestStartTime(null);
+            $hero->setRestEndTime(null);
+            $hero->setUser($user);
+            $hero->setTarget($target);
+            $em->persist($hero);
+
+            $zone = new Zone();
+            $zone->setHero($hero);
+            $zone->setArea($em->getRepository('IdleBundle:Area')->find(1));
+            $zone->setActivated(true);
+            $zone->setCurrentField(1);
+            $zone->setMaxField(1);
+            $em->persist($zone);
+
+            $em->flush();
+
+            return $this->redirect('homepage');
+        }
+        return new JsonResponse(array('success' => true, 'html' => $this->renderView('IdleBundle:Modal:create_hero.html.twig', array('form' => $form->createView()))));
+    }
+
+    /**
+     * @Route("/hero-skill-tree/{hero_id}", name="hero_skill_tree")
+     */
+    public function ajaxHeroSkillTree(Request $request, $hero_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('id' => $hero_id, 'user' => $user));
+        if (!$hero)
+            return false;
+
+        // TODO : Make skill tree form
+//        $form = $this->createForm(HeroType::class, $hero);
+//
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $em->persist($hero);
+//
+//            $em->flush();
+//
+//            return $this->redirect('homepage');
+//        }
+//        return new JsonResponse(array('success' => true, $this->render('IdleBundle:Modal:skill_tree.html.twig', array('form' => $form->createView(), 'hero' => $hero))));
+    }
+
 
     /**
      * @Route("/show-recipe-crafts/{recipe_id}", name="show_recipe_crafts")
@@ -235,7 +296,10 @@ class ServerController extends Controller
             $tab_crafts[$i]['image'] = $this->container->get('templating.helper.assets')->getUrl('images/Idle/' . $craft->getItemNeeded()->getTypeItem()->getName() . '/' . $craft->getItemNeeded()->getImage());
             /** @var Inventory $inv */
             $inv = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('item' => $craft->getItemNeeded()));
-            $tab_crafts[$i]['possessed'] = $inv->getQuantity();
+            if ($inv)
+                $tab_crafts[$i]['possessed'] = $inv->getQuantity();
+            else
+                $tab_crafts[$i]['possessed'] = 0;
             $tab_crafts[$i]['needed'] = $craft->getQuantity();
 
             if ($tab_crafts[$i]['possessed'] < $tab_crafts[$i]['needed'])

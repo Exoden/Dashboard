@@ -468,6 +468,13 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                $item = $form->getData();
+                $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Enemy', $item->getImage());
+                $enemy->setImage($filename);
+
+                $em->persist($enemy);
+                $em->flush();
+
                 $this->addFlash('success', "New enemy saved");
 
                 return $this->redirectToRoute('edit_enemy', array('enemy_id' => $enemy->getId()));
@@ -504,7 +511,7 @@ class DefaultController extends Controller
                 $filename = $saved_image;
                 $item = $form->getData();
                 if ($item->getImage()) {
-                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Equipments', $item->getImage());
+                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Enemy', $item->getImage());
                 }
                 $item->setImage($filename);
 

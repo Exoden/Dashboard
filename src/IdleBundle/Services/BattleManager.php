@@ -9,15 +9,17 @@ use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\Item;
 use IdleBundle\Entity\Loot;
-use IdleBundle\Entity\Target;
+use Symfony\Component\DependencyInjection\Container;
 
 class BattleManager
 {
     private $em;
+    private $container;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Container $container)
     {
         $this->em = $em;
+        $this->container = $container;
     }
 
     public function cumulStatsHero($hero_id)
@@ -39,6 +41,7 @@ class BattleManager
             $enemy = $this->em->getRepository('IdleBundle:Enemy')->find($histo['enemy']);
             $hero->getTarget()->setEnemy($enemy);
             $hero->getTarget()->setCurrentHealth($enemy->getCharacteristics()->getHealth());
+            $this->em->flush();
 
             // Get the loots
             if (isset($histo['loots'])) {
@@ -62,10 +65,70 @@ class BattleManager
         $this->em->flush();
     }
 
-    public function playAverageBattleFrom($now)
+    public function playAverageBattleFrom($now) // TODO !!!
     {
         $now = microtime(true);
 
         return $now;
+    }
+
+    public function generateEnemy(Hero $hero)
+    {
+        /** @var Enemy $enemy */
+        $enemies = $this->em->getRepository('IdleBundle:Enemy')->getFromAreaAndFieldLevel($hero->getActivatedZone()->getArea(), $hero->getActivatedZone()->getCurrentField());
+
+        $enemy = $enemies[0]; // Todo : Randomize
+        // TODO : If no results random all enemies from Area
+
+        return $enemy;
+    }
+
+    public function createGenAction(Hero $hero, $time, $dead_enemy_id = 0, $with_loot = false)
+    {
+        /** @var Enemy $new_enemy */
+        $new_enemy = $this->generateEnemy($hero); // TODO : Randomise in the service
+
+        if ($with_loot) {
+            /** @var Enemy $old_enemy */
+            $old_enemy = $this->em->getRepository('IdleBundle:Enemy')->find($dead_enemy_id);
+
+            $flash_msg = "";
+            $loots = $old_enemy->getLoots();
+            $arr_loot = array();
+            /** @var Loot $loot */
+            foreach ($loots as $loot) {
+                $rate = rand(1, 100000); // Precision 0.001
+                if ($rate < ($loot->getPercent() * 1000)) {
+                    array_push($arr_loot, $loot->getItem()->getId());
+
+                    $flash_msg .= "+1 " . $loot->getItem()->getName() . "\n";
+                }
+            }
+
+            $res = array(
+                'type' => "GEN",
+                'time' => $time,
+                'enemy' => $new_enemy->getId(),
+                'name' => $new_enemy->getName(),
+                'loot_msg' => (($flash_msg != "") ? $flash_msg : "No loots"),
+                'loots' => $arr_loot,
+                'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $new_enemy->getImage()),
+                'currentHealth' => $new_enemy->getCharacteristics()->getHealth(),
+                'health' => $new_enemy->getCharacteristics()->getHealth(),
+                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()));
+        }
+        else {
+            $res = array(
+                'type' => "GEN",
+                'time' => $time,
+                'enemy' => $new_enemy->getId(),
+                'name' => $new_enemy->getName(),
+                'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $new_enemy->getImage()),
+                'currentHealth' => $new_enemy->getCharacteristics()->getHealth(),
+                'health' => $new_enemy->getCharacteristics()->getHealth(),
+                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()));
+        }
+
+        return $res;
     }
 }

@@ -43,54 +43,15 @@ class DefaultController extends Controller
             }
         }
 
-        if (count($heroes) == 0) {
-            $hero = new Hero();
-            $form = $this->createForm(HeroType::class, $hero);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var Characteristics $charac */
-                $charac = new Characteristics();
-                $charac->setArmor(0);
-                $charac->setAttackDelay(2.5);
-                $charac->setDamageMinimum(1);
-                $charac->setDamageMaximum(1);
-                $charac->setDodge(0);
-                $charac->setHealth(100);
-                $charac->setHitPrecision(100);
-                $charac->setCriticalChance(0);
-                $charac->setBlocking(0);
-                $em->persist($charac);
-
-                /** @var Enemy $enemy */
-                $enemy = $em->getRepository('IdleBundle:Enemy')->find(1);
-                $target = new Target();
-                $target->setCurrentHealth($enemy->getCharacteristics()->getHealth());
-                $target->setEnemy($enemy);
-                $em->persist($target);
-
-                $hero->setCharacteristics($charac);
-                $hero->setAge(15);
-                $hero->setCurrentHealth(100);
-                $hero->setFieldLevel(1);
-                $hero->setFieldMaxLevel(1);
-                $hero->setIsRested(true);
-                $hero->setRestStartTime(null);
-                $hero->setRestEndTime(null);
-                $hero->setUser($user);
-                $hero->setTarget($target);
-                $em->persist($hero);
-
-                $em->flush();
-
-                return $this->redirect($this->generateUrl($request->attributes->get('_route')));
-            }
-            return $this->render('IdleBundle:Default:homepage.html.twig', array('heroes' => $heroes, 'form' => $form->createView()));
+        $canCreateHero = false;
+        if (count($heroes) >= 0) {
+            $canCreateHero = true;
         }
         else {
             // TODO : apply past battle historic
         }
 
-        return $this->render('IdleBundle:Default:homepage.html.twig', array('heroes' => $heroes, 'equipments' => $equipments));
+        return $this->render('IdleBundle:Default:homepage.html.twig', array('heroes' => $heroes, 'equipments' => $equipments, 'canCreateHero' => $canCreateHero));
     }
 
     /**

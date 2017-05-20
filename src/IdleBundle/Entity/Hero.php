@@ -57,20 +57,6 @@ class Hero
     private $characteristics;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="field_level", type="integer")
-     */
-    private $fieldLevel;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="field_max_level", type="integer")
-     */
-    private $fieldMaxLevel;
-
-    /**
      * @ORM\OneToOne(targetEntity="Target", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="target_id", referencedColumnName="id")
      */
@@ -98,10 +84,9 @@ class Hero
     private $restEndTime;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Area")
-     * @ORM\JoinColumn(name="area_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Zone", mappedBy="hero")
      */
-    private $area;
+    private $zones;
 
     /**
      * @ORM\ManyToMany(targetEntity="IdleBundle\Entity\Stuff")
@@ -115,6 +100,7 @@ class Hero
 
     public function __construct() {
         $this->stuffs = new ArrayCollection();
+        $this->zones = new ArrayCollection();
     }
 
 
@@ -244,52 +230,6 @@ class Hero
     }
 
     /**
-     * Set fieldLevel
-     *
-     * @param integer $fieldLevel
-     * @return Hero
-     */
-    public function setFieldLevel($fieldLevel)
-    {
-        $this->fieldLevel = $fieldLevel;
-
-        return $this;
-    }
-
-    /**
-     * Get fieldLevel
-     *
-     * @return integer 
-     */
-    public function getFieldLevel()
-    {
-        return $this->fieldLevel;
-    }
-
-    /**
-     * Set fieldMaxLevel
-     *
-     * @param integer $fieldMaxLevel
-     * @return Hero
-     */
-    public function setFieldMaxLevel($fieldMaxLevel)
-    {
-        $this->fieldMaxLevel = $fieldMaxLevel;
-
-        return $this;
-    }
-
-    /**
-     * Get fieldMaxLevel
-     *
-     * @return integer 
-     */
-    public function getFieldMaxLevel()
-    {
-        return $this->fieldMaxLevel;
-    }
-
-    /**
      * Set target
      *
      * @param Target $target
@@ -380,29 +320,6 @@ class Hero
     {
         return $this->restEndTime;
     }
-
-    /**
-     * Set area
-     *
-     * @param Area $area
-     * @return Hero
-     */
-    public function setArea($area)
-    {
-        $this->area = $area;
-
-        return $this;
-    }
-
-    /**
-     * Get area
-     *
-     * @return Area
-     */
-    public function getArea()
-    {
-        return $this->area;
-    }
     
     
     public function addStuff(Stuff $stuff)
@@ -429,6 +346,38 @@ class Hero
             if ($stuff->getType() == $type)
             return $stuff;
         }
+        return null;
+    }
+
+
+    public function addZone(Zone $zone)
+    {
+        if (!$this->zones->contains($zone)) {
+            $this->zones[] = $zone;
+
+            $zone->setHero($this);
+        }
+        return $this;
+    }
+
+    public function removeZone(Zone $zone)
+    {
+        $this->zones->removeElement($zone);
+    }
+
+    public function getZones()
+    {
+        return $this->zones;
+    }
+
+    public function getActivatedZone()
+    {
+        /** @var Zone $zone */
+        foreach ($this->zones as $zone) {
+            if ($zone->getActivated() == true)
+                return $zone;
+        }
+
         return null;
     }
 }

@@ -87,6 +87,15 @@ a.btn {
 .starter-template {
   padding: 50px; }
 
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.42;
+  border-radius: 15px; }
+
 /*************/
 /* DASHBOARD */
 /*************/
@@ -275,7 +284,7 @@ a.btn {
             background-color: #1e82eb; }
         .idle .out-menu .menu .details-hero .one {
           padding-bottom: 10px; }
-        .idle .out-menu .menu .details-hero img {
+        .idle .out-menu .menu .details-hero img.bordered {
           width: 60px;
           height: 60px;
           border: solid 4px;

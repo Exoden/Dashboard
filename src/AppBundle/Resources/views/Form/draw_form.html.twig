@@ -1,0 +1,7 @@
+<div class="bg-danger">
+    {{ form_errors(item) }}
+</div>
+{% for item in form %}
+    {{ dump(item) }}
+    {% include 'AppBundle:Form:draw_form_item.html.twig' %}
+{% endif %}
