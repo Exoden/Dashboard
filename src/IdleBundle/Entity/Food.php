@@ -5,12 +5,12 @@ namespace IdleBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Resource
+ * Food
  *
- * @ORM\Table(name="resource")
- * @ORM\Entity(repositoryClass="IdleBundle\Repository\ResourceRepository")
+ * @ORM\Table(name="food")
+ * @ORM\Entity(repositoryClass="IdleBundle\Repository\FoodRepository")
  */
-class Resource
+class Food
 {
     /**
      * @var int
@@ -27,6 +27,13 @@ class Resource
      */
     private $item;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="health_regen", type="integer")
+     */
+    private $healthRegen;
+
 
     /**
      * Get id
@@ -42,7 +49,7 @@ class Resource
      * Set item
      *
      * @param Item $item
-     * @return Resource
+     * @return Food
      */
     public function setItem($item)
     {
@@ -59,5 +66,28 @@ class Resource
     public function getItem()
     {
         return $this->item;
+    }
+
+    /**
+     * Set healthRegen
+     *
+     * @param integer $healthRegen
+     * @return Food
+     */
+    public function setHealthRegen($healthRegen)
+    {
+        $this->healthRegen = $healthRegen;
+
+        return $this;
+    }
+
+    /**
+     * Get healthRegen
+     *
+     * @return integer 
+     */
+    public function getHealthRegen()
+    {
+        return $this->healthRegen;
     }
 }

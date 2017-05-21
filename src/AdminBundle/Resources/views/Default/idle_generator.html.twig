@@ -7,59 +7,57 @@
     <a href="{{ path('create_resource') }}" class="btn btn-primary">Create Resource</a>
     <a href="{{ path('create_stuff') }}" class="btn btn-primary">Create Stuff</a>
     <a href="{{ path('create_recipe') }}" class="btn btn-primary">Create Recipe</a>
-    <a href="#" class="btn btn-primary">Create Food</a>
+    <a href="{{ path('create_food') }}" class="btn btn-primary">Create Food</a>
     <a href="#" class="btn btn-primary">Create Enhancer</a>
 {% endblock %}
 
 {% block page %}
-    <div class="row border-menu">
-        <div class="table-responsive">
-            <table id="stories-table" class="table">
-                <thead>
-                    <tr>
-                        <th>{{ "Name"|trans }}</th>
-                        <th>{{ "Type"|trans }}</th>
-                        <th>{{ "Action"|trans }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for item in items %}
-                    <tr>
-                        <td>
-                            <a href="{{ path('edit_item', {'item_id': item.id}) }}">
-                                {{ item.name }}
-                            </a>
-                        </td>
-                        <td>
-                            {{ item.typeItem.name }}
-                        </td>
-                        <td style="text-align: right">
-                            {% if item.typeItem.name == 'Equipment' %}
-                                <a href="{{ path('edit_stuff', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
-                                <a href="{{ path('remove_stuff', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
-                            {% elseif item.typeItem.name == 'Resource' %}
-                                <a href="{{ path('edit_resource', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
-                                <a href="{{ path('remove_resource', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
-                            {% elseif item.typeItem.name == 'Recipe' %}
-                                <a href="{{ path('edit_recipe', {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
-                                <a href="{{ path('remove_recipe', {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+    {% set types = ['Resource', 'Stuff', 'Recipe', 'Food'] %}
+    {% for type in types %}
+        <div class="row border-menu">
+            <h2>{{ type }}</h2>
+            <div class="table-responsive">
+                <table id="stories-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ "Name"|trans }}</th>
+                            <th style="width:20%">{{ "Type"|trans }}</th>
+                            <th style="width:10%">{{ "Action"|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in items
+                        if item.typeItem.name == type %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('edit_item', {'item_id': item.id}) }}">
+                                    {{ item.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ item.typeItem.name }}
+                            </td>
+                            <td style="text-align: right">
+                                <a href="{{ path('edit_' ~ type|lower, {'item_id': item.id}) }}"><span class="fa fa-edit"></span></a>
+                                <a href="{{ path('remove_' ~ type|lower, {'item_id': item.id}) }}"><span class="fa fa-remove"></span></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    {% endfor %}
 
     <div class="row border-menu">
+        <h2>Enemy</h2>
         <div class="table-responsive">
             <table id="stories-table" class="table">
                 <thead>
                     <tr>
                         <th>{{ "Name"|trans }}</th>
-                        <th>{{ "Field Type"|trans }}</th>
-                        <th>{{ "Action"|trans }}</th>
+                        <th style="width:20%">{{ "Field Type"|trans }}</th>
+                        <th style="width:10%">{{ "Action"|trans }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,7 +69,7 @@
                             </a>
                         </td>
                         <td>
-
+                            {{ enemy.area.name }}
                         </td>
                         <td style="text-align: right">
                             <a href="{{ path('edit_enemy', {'enemy_id': enemy.id}) }}"><span class="fa fa-edit"></span></a>

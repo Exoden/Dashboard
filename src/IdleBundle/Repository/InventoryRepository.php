@@ -20,7 +20,7 @@ class InventoryRepository extends EntityRepository
                     ->innerJoin('i.typeItem', 'ti', 'WITH', 'i.typeItem = ti.id')
                     ->where('inv.user = :user')
                     ->setParameter('user', $user)
-                    ->andWhere('ti.name = \'Equipment\'')
+                    ->andWhere('ti.name = \'Stuff\'')
                     ->getQuery()
                     ->getResult();
     }

@@ -34,7 +34,7 @@
                          data-value="{{ inv['obj'].item.id }}"
                          data-type="{{ inv['obj'].item.typeItem.name }}"
                          data-toggle="popover" data-placement="top" data-trigger="hover" data-content="
-                            {% if inv['obj'].item.typeItem.name == "Equipment" %}
+                            {% if inv['obj'].item.typeItem.name == "Stuff" %}
                                 {% include 'IdleBundle:Default:popover_equipment.html.twig' with {'stuff': inv['obj']} %}
                             {% endif %}
                     ">

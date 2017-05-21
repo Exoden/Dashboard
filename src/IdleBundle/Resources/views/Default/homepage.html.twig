@@ -26,7 +26,7 @@
                                     {#Level: {{ hero.level }}<br />#}
                                     {#Experience: {{ hero.experience }}<br />#}
                                     {#State: {% if hero.isRested %}OK{% else %}KO{% endif %}">#}
-                            <img src="" alt="hero" class="hero">
+                            <img src="{{ asset('images/Idle/Character/HumanF.png') }}" alt="hero" class="hero">
                             {#</span>#}
                             <h2 class="damage"></h2>
                         </div>
@@ -37,7 +37,11 @@
                                         {{ hero.name }} ({{ hero.age }})
                                         {# TODO : Barre d'hp #}
                                         {# TODO : Icone etat #}
-                                        {% if hero.isRested %}OK{% else %}KO{% endif %}
+                                        {#{% if hero.isRested %}OK{% else %}KO{% endif %}#}
+                                        <img src="{{ asset('images/Idle/Icon/state_good.png') }}">
+                                        <img src="{{ asset('images/Idle/Icon/state_bad.png') }}">
+                                        <img src="{{ asset('images/Idle/Icon/state_rest.png') }}">
+                                        <img src="{{ asset('images/Idle/Icon/state_poison.png') }}">
                                         {#Level: {{ hero.level }}#}
                                         {#Experience: {{ hero.experience }}#}
                                         {#State: {% if hero.isRested %}OK{% else %}KO{% endif %}#}
@@ -49,7 +53,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3" style="text-align: right">
-                                    <a class="btn btn-default btn-circle skill_tree" data-value="{{ hero.id }}"><img src="{{ asset('images/Idle/Icon/skills.png') }}" title="Skills"></a>
+                                    <a class="btn btn-default btn-circle potions" data-value="{{ hero.id }}" title="Potions"><img src="{{ asset('images/Idle/Icon/potion.png') }}"></a>
+                                    <a class="btn btn-default btn-circle skill_tree" data-value="{{ hero.id }}" title="Skills"><img src="{{ asset('images/Idle/Icon/skills.png') }}"></a>
                                 </div>
                             </div>
                             <div class="row one">
@@ -169,6 +174,28 @@
 //            content: function() { return '<img src="' + $(this).data('img') + '" />'; }
 //        });
 
+
+        {#$('.potions').click(function () {#}
+            {#var url = '{{ path("hero_skill_tree", {'hero_id': 'HERO_ID'}) }}';#}
+            {#url = url.replace("HERO_ID", $(this).data('value'));#}
+            {#console.log(url);#}
+
+            {#$.ajax({#}
+                {#method: "POST",#}
+                {#url: url#}
+            {#})#}
+                {#.done(function (data) {#}
+                    {#$('#my_modal').html(data).modal();#}
+
+                    {#$('#modal_submit').submit(function () {#}
+                        {#console.log('submit');#}
+                        {#$.ajax({#}
+                            {#method: "POST",#}
+                            {#url: url#}
+                        {#})#}
+                    {#});#}
+                {#});#}
+        {#});#}
 
         $('.skill_tree').click(function () {
             var url = '{{ path("hero_skill_tree", {'hero_id': 'HERO_ID'}) }}';

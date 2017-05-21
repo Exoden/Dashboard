@@ -412,6 +412,7 @@ class ServerController extends Controller
 
         return new JsonResponse(array('success' => true, 'items' => $tab_items, 'craftable' => $craftable));
     }
+
     /**
      * @Route("/learn-recipe/{item_id}", name="learn_recipe")
      */

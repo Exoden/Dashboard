@@ -82,7 +82,7 @@ class DefaultController extends Controller
         $i = 0;
         /** @var Inventory $inv */
         foreach ($inventory as $inv) {
-            if ($inv->getItem()->getTypeItem()->getName() == "Equipment")
+            if ($inv->getItem()->getTypeItem()->getName() == "Stuff")
                 $tab_inv[$i]['obj'] = $em->getRepository('IdleBundle:Stuff')->findOneBy(array('item' => $inv->getItem()));
             else if ($inv->getItem()->getTypeItem()->getName() == "Resource")
                 $tab_inv[$i]['obj'] = $em->getRepository('IdleBundle:Resource')->findOneBy(array('item' => $inv->getItem()));

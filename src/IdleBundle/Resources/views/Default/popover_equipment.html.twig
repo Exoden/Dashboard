@@ -3,7 +3,7 @@
     Precision: {% if stuff is not null %}{{ stuff.characteristics.hitPrecision }}{% else %}{{ hero.characteristics.hitPrecision }}{% endif %}<br />
     Critical: {% if stuff is not null %}{{ stuff.characteristics.criticalChance }}{% else %}{{ hero.characteristics.criticalChance }}{% endif %}%<br />
     Delay: {% if stuff is not null %}{{ stuff.characteristics.attackDelay }}{% else %}{{ hero.characteristics.attackDelay }}{% endif %} sec<br />
-{% elseif stuff is not null and stuff.item.typeItem.name == "Equipment" %}
+{% elseif stuff is not null and stuff.item.typeItem.name == "Stuff" %}
     Health: {% if stuff is not null %}{{ stuff.characteristics.health }}{% else %}0{% endif %}<br />
     Armor: {% if stuff is not null %}{{ stuff.characteristics.armor }}{% else %}0{% endif %}<br />
     Dodge: {% if stuff is not null %}{{ stuff.characteristics.dodge }}{% else %}0{% endif %}%<br />

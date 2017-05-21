@@ -7,6 +7,7 @@ use AppBundle\Form\NewsType;
 use Doctrine\Common\Collections\ArrayCollection;
 use IdleBundle\Entity\Craft;
 use IdleBundle\Entity\Enemy;
+use IdleBundle\Entity\Food;
 use IdleBundle\Entity\Item;
 use IdleBundle\Entity\Loot;
 use IdleBundle\Entity\Recipe;
@@ -14,6 +15,7 @@ use IdleBundle\Entity\Resource;
 use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Utils;
 use IdleBundle\Form\EnemyType;
+use IdleBundle\Form\FoodType;
 use IdleBundle\Form\RecipeType;
 use IdleBundle\Form\ResourceType;
 use IdleBundle\Form\StuffType;
@@ -125,12 +127,16 @@ class DefaultController extends Controller
         /** @var Item $item */
         $item = $em->getRepository('IdleBundle:Item')->find($item_id);
 
-        if ($item->getTypeItem()->getName() == "Equipment")
+        if ($item->getTypeItem()->getName() == "Stuff")
             return $this->redirectToRoute('edit_stuff', array('item_id' => $item->getId()));
         else if ($item->getTypeItem()->getName() == "Resource")
             return $this->redirectToRoute('edit_resource', array('item_id' => $item->getId()));
         else if ($item->getTypeItem()->getName() == "Recipe")
             return $this->redirectToRoute('edit_recipe', array('item_id' => $item->getId()));
+        else if ($item->getTypeItem()->getName() == "Food")
+            return $this->redirectToRoute('edit_food', array('item_id' => $item->getId()));
+//        else if ($item->getTypeItem()->getName() == "Enhancer")
+//            return $this->redirectToRoute('edit_enhancer', array('item_id' => $item->getId()));
 
         return $this->render('AdminBundle:Form:idle_generator.html.twig');
     }
@@ -149,10 +155,10 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $stuff->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Equipment")));
+                $stuff->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Stuff")));
 
                 $item = $form['item']->getData();
-                $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Equipments', $item->getImage());
+                $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Stuff', $item->getImage());
                 $item->setImage($filename);
 
                 $em->persist($stuff);
@@ -179,19 +185,19 @@ class DefaultController extends Controller
 
         $saved_image = $stuff->getItem()->getImage();
         if ($saved_image != null)
-            $stuff->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Equipment/' . $saved_image));
+            $stuff->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Stuff/' . $saved_image));
 
         $form = $this->createForm(StuffType::class, $stuff);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $stuff->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Equipment")));
+                $stuff->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Stuff")));
 
                 $filename = $saved_image;
                 $item = $form['item']->getData();
                 if ($item->getImage()) {
-                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Equipments', $item->getImage());
+                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Stuff', $item->getImage());
                 }
                 $item->setImage($filename);
 
@@ -217,8 +223,8 @@ class DefaultController extends Controller
         $stuff = $em->getRepository('IdleBundle:Stuff')->findOneBy(array('item' => $item_id));
 
         if ($stuff->getItem()->getImage() != null) {
-            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Equipment/' . $stuff->getItem()->getImage()))
-                unlink($this->get('app.file_uploader')->getTargetDir() . '/Equipment/' . $stuff->getItem()->getImage());
+            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Stuff/' . $stuff->getItem()->getImage()))
+                unlink($this->get('app.file_uploader')->getTargetDir() . '/Stuff/' . $stuff->getItem()->getImage());
         }
 
         $em->remove($stuff);
@@ -246,7 +252,7 @@ class DefaultController extends Controller
                 $resource->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Resource")));
 
                 $item = $form['item']->getData();
-                $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Resources', $item->getImage());
+                $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Resource', $item->getImage());
                 $item->setImage($filename);
 
                 $em->persist($resource);
@@ -279,12 +285,12 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $resource->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Equipment")));
+                $resource->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Resource")));
 
                 $filename = $saved_image;
                 $item = $form['item']->getData();
                 if ($item->getImage()) {
-                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Equipments', $item->getImage());
+                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Resource', $item->getImage());
                 }
                 $item->setImage($filename);
 
@@ -554,6 +560,99 @@ class DefaultController extends Controller
         }
 
         $em->remove($enemy);
+        $em->flush();
+
+        $this->addFlash('success', "Item removed");
+
+        return $this->redirectToRoute('idle_generator');
+    }
+
+    /**
+     * @Route("/create-food", name="create_food")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function createFoodAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $food = new Food();
+        $form = $this->createForm(FoodType::class, $food);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $food->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Food")));
+
+                $item = $form['item']->getData();
+                $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Food', $item->getImage());
+                $item->setImage($filename);
+
+                $em->persist($food);
+                $em->flush();
+
+                $this->addFlash('success', "New food saved");
+
+                return $this->redirectToRoute('edit_food', array('item_id' => $food->getItem()->getId()));
+            }
+        }
+
+        return $this->render('AdminBundle:Form:create_food.html.twig', array('form' => $form->createView()));
+    }
+    /**
+     * @Route("/edit-food/{item_id}", name="edit_food")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function editFoodAction(Request $request, $item_id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $food = $em->getRepository('IdleBundle:Food')->findOneBy(array('item' => $item_id));
+
+        $saved_image = $food->getItem()->getImage();
+        if ($saved_image != null)
+            $food->getItem()->setImage(new File($this->getParameter('idle_images_directory') . '/Food/' . $saved_image));
+
+        $form = $this->createForm(FoodType::class, $food);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $food->getItem()->setTypeItem($em->getRepository('IdleBundle:TypeItem')->findOneBy(array('name' => "Food")));
+
+                $filename = $saved_image;
+                $item = $form['item']->getData();
+                if ($item->getImage()) {
+                    $filename = $this->get('app.file_uploader')->upload(Utils::slugify($item->getName()), 'Food', $item->getImage());
+                }
+                $item->setImage($filename);
+
+                $em->persist($food);
+                $em->flush();
+
+                $this->addFlash('success', "Changes saved");
+
+                return $this->redirectToRoute('edit_food', array('item_id' => $food->getItem()->getId()));
+            }
+        }
+
+        return $this->render('AdminBundle:Form:edit_food.html.twig', array('form' => $form->createView()));
+    }
+    /**
+     * @Route("/remove-food/{item_id}", name="remove_food")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function removeFoodAction(Request $request, $item_id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $food = $em->getRepository('IdleBundle:Food')->findOneBy(array('item' => $item_id));
+
+        if ($food->getItem()->getImage() != null) {
+            if (file_exists($this->get('app.file_uploader')->getTargetDir() . '/Food/' . $food->getItem()->getImage()))
+                unlink($this->get('app.file_uploader')->getTargetDir() . '/Food/' . $food->getItem()->getImage());
+        }
+
+        $em->remove($food);
         $em->flush();
 
         $this->addFlash('success', "Item removed");

@@ -77,7 +77,7 @@ class BattleManager
         /** @var Enemy $enemy */
         $enemies = $this->em->getRepository('IdleBundle:Enemy')->getFromAreaAndFieldLevel($hero->getActivatedZone()->getArea(), $hero->getActivatedZone()->getCurrentField());
 
-        $enemy = $enemies[0]; // Todo : Randomize
+        $enemy = $enemies[rand(0, count($enemies) - 1)];
         // TODO : If no results random all enemies from Area
 
         return $enemy;

@@ -1,6 +1,6 @@
 {% extends "AdminBundle:Default:index.html.twig" %}
 
-{% block title %}{{ parent() }}{{ "Edit Stuff"|trans }}{% endblock %}
+{% block title %}{{ parent() }}{{ "Edit Resource"|trans }}{% endblock %}
 
 {% block page %}
     <div class="col-md-12">
@@ -8,7 +8,7 @@
         {{ include('AppBundle::flash_messages.html.twig') }}
 
         <div class="block-form border-menu">
-            <div class="form-heading"><h2>{{ "Edit Stuff"|trans }}</h2></div>
+            <div class="form-heading"><h2>{{ "Edit Resource"|trans }}</h2></div>
 
             {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
 
@@ -18,20 +18,12 @@
 
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.item.name} %}
 
-            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.type} %}
+            {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.healthRegen} %}
 
             {% if form.item.image.vars.data.filename is defined %}
-                <img src="{{ asset('images/Idle/Stuff/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
+                <img src="{{ asset('images/Idle/Food/' ~ form.item.image.vars.data.filename) }}" alt="No Image">
             {% endif %}
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.item.image} %}
-
-            <div class="bg-danger">
-                {{ form_errors(form.characteristics) }}
-            </div>
-            <h3>Characteristics</h3>
-            {% for charac in form.characteristics %}
-                {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': charac} %}
-            {% endfor %}
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
             {{ form_end(form) }}

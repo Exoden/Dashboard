@@ -17,7 +17,7 @@
             </div>
 
             {% if form.itemCreated.vars.data.image is defined %}
-                <img src="{{ asset('images/Idle/' ~ form.itemCreated.vars.data.typeItem.name ~ 's/' ~ form.itemCreated.vars.data.image) }}" alt="No Image">
+                <img src="{{ asset('images/Idle/' ~ form.itemCreated.vars.data.typeItem.name ~ '/' ~ form.itemCreated.vars.data.image) }}" alt="No Image">
             {% endif %}
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.itemCreated} %}
 
