@@ -74,6 +74,9 @@ class ServerController extends Controller
         $battle_history = array();
         $start_time = 0;
         $until = (60 * 5); // 5 minutes
+        $last_time_hit_e = 0;
+        $last_time_hit_h = 0;
+        $last_time_gen = 0;
 
         // Get a piece of the previous historic
         if ($historic) {
@@ -86,7 +89,7 @@ class ServerController extends Controller
 //                    echo("time : " . $histo['time'] . "\n");
 //                    echo("end : " . end($historic)['time'] . "\n");
 //                    echo("calc : " . (end($historic)['time'] - $histo['time']) . "\n");
-                    $start_time = (end($historic)['time'] - $historic[$key + 1]['time']); // TODO : Check time, after refreshing, generating too much lines !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    $start_time = (end($historic)['time'] - $historic[$key + 1]['time']); // TODO : Check time, after refreshing, generating not enough lines !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //                    echo("start : " . $start_time . "\n");
 //                    echo("until : " . $until . "\n");
                     $battle_history = array_splice($historic, $key);
@@ -96,6 +99,12 @@ class ServerController extends Controller
                 else { // Play one event
 //                    echo("play " . $histo['type'] . " : " . $histo['time'] . "\n");
                     $battle_manager->playOneAction($histo, $hero);
+                    if ($histo['type'] == "HIT_E")
+                        $last_time_hit_e = $histo['time'];
+                    else if ($histo['type'] == "HIT_H")
+                        $last_time_hit_h = $histo['time'];
+                    else if ($histo['type'] == "GEN")
+                        $last_time_gen = $histo['time'];
                 }
             }
             $em->persist($hero);
@@ -108,18 +117,28 @@ class ServerController extends Controller
             }
         }
 
+
         ///////////////////////
         // Fill the historic //
         ///////////////////////
         // Enemy
         $enemy_id = $hero->getTarget()->getEnemy()->getId();
         $enemy_current_life = $hero->getTarget()->getCurrentHealth();
-        $time = $start_time;
+        $enemy_max_life = $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth();
         $weapon = $hero->getTypeStuff($em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Weapon")))->getCharacteristics();
         if (!$weapon)
             $weapon = $hero->getCharacteristics();
-//        echo("starting loop 1 time : " . $time . " : " . ($time + $now) . "\n");
 
+        if ($start_time == 0)
+            $time = $start_time;
+        else
+            $time = $start_time + ($hero->getCharacteristics()->getAttackDelay() - ($start_time - (($last_time_hit_e < $last_time_gen) ? $last_time_gen : $last_time_hit_e)));
+
+        $arr_time_change_enemy = array();
+        array_push($arr_time_change_enemy, array(
+            'time' => $now + $time,
+            'stats' => $hero->getTarget()->getEnemy()->getCharacteristics()));
+//        echo("starting loop 1 time : " . $time . " : " . ($time + $now) . "\n");
 //        echo("while : " . $time . " <= " . $until . "\n");
         while ($time <= $until) {
             if ($time == 0) { // first generate an enemy
@@ -134,14 +153,18 @@ class ServerController extends Controller
                     'time' => $now + $time,
                     'damage' => $damage,
                     'currentHealth' => $enemy_current_life,
-                    'health' => $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth());
+                    'health' => $enemy_max_life);
 
                 if ($enemy_current_life <= 0) {
                     $time += 1; // Reload life bar
 
                     $battle_history[] = $battle_manager->createGenAction($hero, $now + $time, $enemy_id, true);
                     $enemy_current_life = end($battle_history)['currentHealth'];
+                    $enemy_max_life = end($battle_history)['health'];
                     $enemy_id = end($battle_history)['enemy'];
+                    array_push($arr_time_change_enemy, array(
+                        'time' => $now + $time,
+                        'stats' => $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($em->getRepository('IdleBundle:Enemy')->find($enemy_id)->getCharacteristics())));
                 }
             }
 
@@ -150,10 +173,17 @@ class ServerController extends Controller
 
         // Hero
         $hero_current_life = $hero->getCurrentHealth();
-        $time = $start_time + $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay(); // TODO : If start_time != 0, time = last_hit_hero + attackDelay
+        $enemy_damage_min = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMinimum();
+        $enemy_damage_max = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMaximum();
+//        if ($start_time == 0) // new historic, start at first time attack
+//            $time = $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
+//        else // If start_time != 0, time = [last_hit_hero] + attackDelay
+            $time = $start_time + ($hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay() - ($start_time - $last_time_hit_h));
+        $enemy_attack_delay = $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
 //        echo("starting loop 2 time : " . $time . " : " . ($time + $now) . "\n");
+        $i = 0;
         while ($time <= $until) {
-            $damage = rand($hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMinimum(), $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMaximum());
+            $damage = rand($enemy_damage_min, $enemy_damage_max);
             $hero_current_life -= $damage;
 
             $battle_history[] = array(
@@ -163,7 +193,22 @@ class ServerController extends Controller
                 'currentHealth' => $hero_current_life,
                 'health' => $hero->getCharacteristics()->getHealth());
 
-            $time += $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
+            // TODO : use potion before dying
+            if ($hero_current_life <= 0) {
+                // TODO : set state hero sleep, and stop generate historic
+            }
+            
+            if (($time + $enemy_attack_delay) > $arr_time_change_enemy[$i]['time']) { // enemy dies before next attack
+                $time = $arr_time_change_enemy[$i]['time'] + 1; // Time GEN enemy + 1sec for reload
+
+                $enemy_damage_min = $arr_time_change_enemy[$i]['stats']['damageMinimum'];
+                $enemy_damage_max = $arr_time_change_enemy[$i]['stats']['damageMaximun'];
+                $enemy_attack_delay = $arr_time_change_enemy[$i]['stats']['attackDelay'];
+
+                $i++;
+            }
+
+            $time += $enemy_attack_delay;
         }
 
         usort($battle_history, $this->time_sorter('time'));
@@ -235,9 +280,9 @@ class ServerController extends Controller
 
             $em->flush();
 
-            return $this->redirect('homepage');
+            return $this->redirectToRoute('homepage');
         }
-        return new JsonResponse(array('success' => true, 'html' => $this->renderView('IdleBundle:Modal:create_hero.html.twig', array('form' => $form->createView()))));
+        return $this->render('IdleBundle:Modal:create_hero.html.twig', array('form' => $form->createView()));
     }
 
     /**

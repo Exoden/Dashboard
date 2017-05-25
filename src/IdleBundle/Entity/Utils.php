@@ -5,6 +5,9 @@ namespace IdleBundle\Entity;
 
 class Utils
 {
+    static public $histo_battle_hit_enemy = "HIT_E";
+    static public $histo_battle_hit_hero = "HIT_H";
+
     static public function slugify($text)
     {
         // replace non letter or digits by -

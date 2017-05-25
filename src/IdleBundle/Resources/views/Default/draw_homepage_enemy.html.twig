@@ -1,0 +1,44 @@
+<div class="col-md-4 character">
+    <img src="{{ asset('images/Idle/Enemy/' ~ enemy.image) }}" alt="monster" class="monster">
+    <h2 class="damage"></h2>
+</div>
+<div class="col-md-8">
+    <div class="row top">
+        <div class="row" style="text-align: center">
+            {# TODO : buttons Ajax => change area, regenerate battleHistory #}
+            <div class="btn-group" role="group">
+                {% for zone in hero.zones %}
+                    <a class="btn btn-default btn-xs{% if zone.activated %} active{% endif %}"><img src="{{ asset('images/Idle/Icon/' ~ zone.area.name|lower ~ '.png') }}" title="{{ zone.area.name }}"></a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <p>Field {{ hero.getActivatedZone.currentField }}</p>
+            </div>
+            <div class="col-md-3">
+                <p>Field Max {{ hero.getActivatedZone.maxField }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <p class="name">{{ enemy.name }}</p>
+        </div>
+        <div class="col-md-9 progress progress-hp" title="HP : {{ enemy.characteristics.health }}{#currentHealth#}/{{ enemy.characteristics.health }}">
+            <div class="progress-bar-hp" role="progressbar" data-value="{{ enemy.characteristics.health }}{#currentHealth#}" style="width: {#currentHealth#}{{ ( enemy.characteristics.health * 100) / enemy.characteristics.health }}%"></div>
+        </div>
+    </div>
+    <div class="row bottom">
+        <div class="col-md-3">
+            <img src="{{ asset('images/Idle/Icon/health.png') }}" title="Health"> <span class="current_health">{{ enemy.characteristics.health }}{#currentHealth#}</span> / <span class="max_health">{{ enemy.characteristics.health }}</span>
+        </div>
+        <div class="col-md-3">
+            <img src="{{ asset('images/Idle/Icon/armor.png') }}" title="Armor"> <span class="armor">{{ enemy.characteristics.armor }}</span>
+        </div>
+        <div class="col-md-3">
+            <img src="{{ asset('images/Idle/Icon/dodge.png') }}" title="Dodge"> <span class="dodge">{{ enemy.characteristics.dodge }}</span>%
+        </div>
+        <div class="col-md-3">
+            <img src="{{ asset('images/Idle/Icon/attack_delay.png') }}" title="Attack Delay"> <span class="attack_delay">{{ enemy.characteristics.attackDelay }}</span> sec
+        </div>
+    </div>
+</div>

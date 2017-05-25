@@ -38,10 +38,10 @@
                                         {# TODO : Barre d'hp #}
                                         {# TODO : Icone etat #}
                                         {#{% if hero.isRested %}OK{% else %}KO{% endif %}#}
-                                        <img src="{{ asset('images/Idle/Icon/state_good.png') }}">
-                                        <img src="{{ asset('images/Idle/Icon/state_bad.png') }}">
-                                        <img src="{{ asset('images/Idle/Icon/state_rest.png') }}">
-                                        <img src="{{ asset('images/Idle/Icon/state_poison.png') }}">
+                                        <img src="{{ asset('images/Idle/Icon/state_good.png') }}" title="Healthy">
+                                        <img src="{{ asset('images/Idle/Icon/state_bad.png') }}" title="Sick">
+                                        <img src="{{ asset('images/Idle/Icon/state_rest.png') }}" title="Resting">
+                                        <img src="{{ asset('images/Idle/Icon/state_poison.png') }}" title="Poisoned">
                                         {#Level: {{ hero.level }}#}
                                         {#Experience: {{ hero.experience }}#}
                                         {#State: {% if hero.isRested %}OK{% else %}KO{% endif %}#}
@@ -103,54 +103,9 @@
         <div class="col-md-6 out-menu">
             <div class="col-md-12 menu">
                 {% for key, hero in heroes %}
+                    {% set enemy = hero.target.enemy %}
                     <div id="mob_{{ key }}" class="row details-mob">
-                        <div class="col-md-4 character">
-                            <img src="{{ asset('images/Idle/Enemy/' ~ hero.target.enemy.image) }}" alt="monster" class="monster">
-                            <h2 class="damage"></h2>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="row top">
-                                <div class="row" style="text-align: center">
-                                    {# TODO : buttons Ajax => change area, regenerate battleHistory #}
-                                    <div class="btn-group" role="group">
-                                        {% for zone in hero.zones %}
-                                            <a class="btn btn-default btn-xs{% if zone.activated %} active{% endif %}"><img src="{{ asset('images/Idle/Icon/' ~ zone.area.name|lower ~ '.png') }}" title="{{ zone.area.name }}"></a>
-                                        {% endfor %}
-                                        {#<a href="#" class="btn btn-default btn-xs{% if hero.zone.area.name == "Forest" %} active{% endif %}"><img src="{{ asset('images/Idle/Icon/forest.png') }}" title="Forest"></a>#}
-                                        {#<a href="#" class="btn btn-default btn-xs{% if hero.zone.area.name == "Mountain" %} active{% endif %}"><img src="{{ asset('images/Idle/Icon/mountain.png') }}" title="Mountain"></a>#}
-                                        {#<a href="#" class="btn btn-default btn-xs{% if hero.zone.area.name == "Volcano" %} active{% endif %}"><img src="{{ asset('images/Idle/Icon/volcano.png') }}" title="Volcano"></a>#}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <p>Field {{ hero.getActivatedZone.currentField }}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <p>Field Max {{ hero.getActivatedZone.maxField }}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="name">{{ hero.target.enemy.name }}</p>
-                                </div>
-                                <div class="col-md-9 progress progress-hp" title="HP : {{ hero.target.currentHealth }}/{{ hero.target.enemy.characteristics.health }}">
-                                    <div class="progress-bar-hp" role="progressbar" data-value="{{ hero.target.currentHealth }}" style="width: {{ ( hero.target.currentHealth * 100) / hero.target.enemy.characteristics.health }}%"></div>
-                                </div>
-                            </div>
-                            <div class="row bottom">
-                                <div class="col-md-3">
-                                    <img src="{{ asset('images/Idle/Icon/health.png') }}" title="Health"> <span class="current_health">{{ hero.target.currentHealth }}</span> / <span class="max_health">{{ hero.target.enemy.characteristics.health }}</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <img src="{{ asset('images/Idle/Icon/armor.png') }}" title="Armor"> <span class="armor">{{ hero.target.enemy.characteristics.armor }}</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <img src="{{ asset('images/Idle/Icon/dodge.png') }}" title="Dodge"> <span class="dodge">{{ hero.target.enemy.characteristics.dodge }}</span>%
-                                </div>
-                                <div class="col-md-3">
-                                    <img src="{{ asset('images/Idle/Icon/attack_delay.png') }}" title="Attack Delay"> <span class="attack_delay">{{ hero.target.enemy.characteristics.attackDelay }}</span> sec
-                                </div>
-                            </div>
-                        </div>
+                        {% include 'IdleBundle:Default:draw_homepage_enemy.html.twig' %}
                     </div>
                 {% endfor %}
             </div>
@@ -187,7 +142,8 @@
                 {#.done(function (data) {#}
                     {#$('#my_modal').html(data).modal();#}
 
-                    {#$('#modal_submit').submit(function () {#}
+                    {#var modal_form = $('#modal_form');#}
+                    {#modal_form.submit(function () {#}
                         {#console.log('submit');#}
                         {#$.ajax({#}
                             {#method: "POST",#}
@@ -197,47 +153,73 @@
                 {#});#}
         {#});#}
 
-        $('.skill_tree').click(function () {
-            var url = '{{ path("hero_skill_tree", {'hero_id': 'HERO_ID'}) }}';
-            url = url.replace("HERO_ID", $(this).data('value'));
-            console.log(url);
+        {#$('.skill_tree').click(function () {#}
+            {#var url = '{{ path("hero_skill_tree", {'hero_id': 'HERO_ID'}) }}';#}
+            {#url = url.replace("HERO_ID", $(this).data('value'));#}
+            {#console.log(url);#}
 
-            $.ajax({
-                method: "POST",
-                url: url
-            })
-                .done(function (data) {
-                    $('#my_modal').html(data).modal();
+            {#$.ajax({#}
+                {#method: 'POST',#}
+                {#url: url,#}
+                {#dataType: 'html'#}
+            {#})#}
+                {#.done(function (data) {#}
+                    {#$('#my_modal').html(data).modal();#}
 
-                    $('#modal_submit').submit(function () {
-                        console.log('submit');
-                        $.ajax({
-                            method: "POST",
-                            url: url
-                        })
-                    });
-                });
-        });
+                    {#var modal_form = $('#modal_form');#}
+                    {#modal_form.submit(function () {#}
+                        {#console.log('submit');#}
+                        {#$.ajax({#}
+                            {#method: 'POST',#}
+                            {#url: url,#}
+                            {#dataType: 'json'#}
+                        {#})#}
+                    {#});#}
+                {#});#}
+        {#});#}
 
         $('#create_hero').click(function () {
             var url = '{{ path("create_hero") }}';
             console.log(url);
+            var modal = $('#my_modal');
+            console.log(modal);
+            var form = null;
 
             $.ajax({
-                method: "POST",
-                url: url
-            })
-                .done(function (data) {
-                    $('#my_modal').html(data.html).modal();
+                url: url,
+                type: 'POST',
+                dataType: 'html',
+                success: function (data) {
+                    modal.html(data).modal();
 
-                    $('#modal_submit').submit(function () {
+                    form = $('#modal_form');
+                    console.log(form);
+
+                    form.submit(function (e) {
+                        e.preventDefault();
+
                         console.log('submit');
+
                         $.ajax({
-                            method: "POST",
-                            url: url
-                        })
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
+                            dataType: 'json',
+                            success: function (data) {
+                                console.log('DONE !');
+                                console.log(data);
+                                modal.modal('hide');
+                            },
+                            fail: function (jqXHR, textStatus, errorThrown) {
+                                alert('Une erreur est survenue');
+                            }
+                        });
                     });
-                });
+                },
+                fail: function (jqXHR, textStatus, errorThrown) {
+                    alert('Une erreur est survenue');
+                }
+            });
         });
     });
 
@@ -251,25 +233,25 @@
         url = url.replace("HERO_ID", $('#hero_' + id).children('.character').data('value'));
         console.log(url);
 
-//        $.ajax({
-//            method: "POST",
-//            url: url
-//        })
-//            .done(function (data) {
-//                console.log('done');
-//                var obj = data;
-//                if (obj.success) {
-//                    console.log('success');
-//                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
-//                        animateBattle(obj.battle_history, id);
-//                    }
-//                    else {
-//                        setTimeout(function () {
-//                            animateBattle(obj.battle_history, id);
-//                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
-//                    }
-//                }
-//            })
+        $.ajax({
+            method: "POST",
+            url: url
+        })
+            .done(function (data) {
+                console.log('done');
+                var obj = data;
+                if (obj.success) {
+                    console.log('success');
+                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
+                        animateBattle(obj.battle_history, id);
+                    }
+                    else {
+                        setTimeout(function () {
+                            animateBattle(obj.battle_history, id);
+                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
+                    }
+                }
+            })
     }
 
     function animateBattle(bh, id) {
@@ -313,15 +295,17 @@
         else if (bh[0].type == "GEN") { // Generate Enemy
             console.log('GEN');
 
-            $('#mob_' + id + ' img.monster').attr('src', bh[0].image);
-//            $('#mob_' + id + ' img').css('opacity', 100);
-            progress_bar_mob.data('value', bh[0].currentHealth);
-            progress_bar_mob.animate({width: '100%'}, 200);
-            $('#mob_' + id + ' .current_health').text(bh[0].currentHealth);
-            $('#mob_' + id + ' .max_health').text(bh[0].stats.health);
-            $('#mob_' + id + ' .armor').text(bh[0].stats.armor);
-            $('#mob_' + id + ' .dodge').text(bh[0].stats.dodge);
-            $('#mob_' + id + ' .attack_delay').text(bh[0].stats.attackDelay);
+            $('#mob_' + id).html(bh[0].block_html);
+
+//            $('#mob_' + id + ' img.monster').attr('src', bh[0].image);
+////            $('#mob_' + id + ' img').css('opacity', 100);
+//            progress_bar_mob.data('value', bh[0].currentHealth);
+//            progress_bar_mob.animate({width: '100%'}, 200);
+//            $('#mob_' + id + ' .current_health').text(bh[0].currentHealth);
+//            $('#mob_' + id + ' .max_health').text(bh[0].stats.health);
+//            $('#mob_' + id + ' .armor').text(bh[0].stats.armor);
+//            $('#mob_' + id + ' .dodge').text(bh[0].stats.dodge);
+//            $('#mob_' + id + ' .attack_delay').text(bh[0].stats.attackDelay);
 
             if (typeof (bh[0].loot_msg) !== 'undefined')
                 $('#flash-messages').flashNotification('addSuccess', bh[0].loot_msg);

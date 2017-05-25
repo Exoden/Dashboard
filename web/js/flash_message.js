@@ -21,35 +21,40 @@
          * Listen to AJAX responses and display messages if they contain some
          */
         listenIncomingMessages: function() {
-            $(document).ajaxComplete(function(event, xhr, settings) {
-                var data = $.parseJSON(xhr.responseText);
+            $(document).ajaxComplete(function (event, xhr, settings) {
+                var ct = xhr.getResponseHeader("content-type") || "";
 
-                if (data.messages) {
-                    var messages = data.messages;
+                if (ct.indexOf('json') > -1) {
 
-                    var i;
+                    var data = $.parseJSON(xhr.responseText);
 
-                    if (messages.error) {
-                        for (i = 0; i < messages.error.length; i++) {
-                            methods.addError(messages.error[i]);
+                    if (data.messages) {
+                        var messages = data.messages;
+
+                        var i;
+
+                        if (messages.error) {
+                            for (i = 0; i < messages.error.length; i++) {
+                                methods.addError(messages.error[i]);
+                            }
                         }
-                    }
 
-                    if (messages.warning) {
-                        for (i = 0; i < messages.warning.length; i++) {
-                            methods.addWarning(messages.warning[i]);
+                        if (messages.warning) {
+                            for (i = 0; i < messages.warning.length; i++) {
+                                methods.addWarning(messages.warning[i]);
+                            }
                         }
-                    }
 
-                    if (messages.success) {
-                        for (i = 0; i < messages.success.length; i++) {
-                            methods.addSuccess(messages.success[i]);
+                        if (messages.success) {
+                            for (i = 0; i < messages.success.length; i++) {
+                                methods.addSuccess(messages.success[i]);
+                            }
                         }
-                    }
 
-                    if (messages.info) {
-                        for (i = 0; i < messages.info.length; i++) {
-                            methods.addInfo(messages.info[i]);
+                        if (messages.info) {
+                            for (i = 0; i < messages.info.length; i++) {
+                                methods.addInfo(messages.info[i]);
+                            }
                         }
                     }
                 }

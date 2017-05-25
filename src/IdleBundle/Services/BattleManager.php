@@ -86,7 +86,7 @@ class BattleManager
     public function createGenAction(Hero $hero, $time, $dead_enemy_id = 0, $with_loot = false)
     {
         /** @var Enemy $new_enemy */
-        $new_enemy = $this->generateEnemy($hero); // TODO : Randomise in the service
+        $new_enemy = $this->generateEnemy($hero);
 
         if ($with_loot) {
             /** @var Enemy $old_enemy */
@@ -115,7 +115,8 @@ class BattleManager
                 'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $new_enemy->getImage()),
                 'currentHealth' => $new_enemy->getCharacteristics()->getHealth(),
                 'health' => $new_enemy->getCharacteristics()->getHealth(),
-                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()));
+                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()),
+                'block_html' => $this->container->get('templating')->render('IdleBundle:Default:draw_homepage_enemy.html.twig', array('hero' => $hero, 'enemy' => $new_enemy)));
         }
         else {
             $res = array(
@@ -126,7 +127,8 @@ class BattleManager
                 'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $new_enemy->getImage()),
                 'currentHealth' => $new_enemy->getCharacteristics()->getHealth(),
                 'health' => $new_enemy->getCharacteristics()->getHealth(),
-                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()));
+                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()),
+                'block_html' => $this->container->get('templating')->render('IdleBundle:Default:draw_homepage_enemy.html.twig', array('hero' => $hero, 'enemy' => $new_enemy)));
         }
 
         return $res;

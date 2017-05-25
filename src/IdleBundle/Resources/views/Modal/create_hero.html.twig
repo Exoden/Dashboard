@@ -5,7 +5,7 @@
             <h4 class="modal-title" id="myModalLabel">Create new Hero</h4>
         </div>
         <div class="modal-body">
-            {{ form_start(form, {'attr': {'id': 'modal_submit'}}) }}
+            {{ form_start(form, {'attr': {'id': 'modal_form', 'action': path('create_hero')}}) }}
 
             <div class="bg-danger">
                 {{ form_errors(form) }}
@@ -21,3 +21,10 @@
         {{ form_end(form) }}
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function(){
+
+    });
+</script>
