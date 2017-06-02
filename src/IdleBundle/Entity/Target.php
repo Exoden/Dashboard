@@ -29,7 +29,7 @@ class Target
     private $currentHealth;
 
     /**
-     * @ORM\OneToOne(targetEntity="Enemy")
+     * @ORM\ManyToOne(targetEntity="Enemy")
      * @ORM\JoinColumn(name="enemy_id", referencedColumnName="id")
      */
     private $enemy;

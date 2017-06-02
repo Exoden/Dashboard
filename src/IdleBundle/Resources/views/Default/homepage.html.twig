@@ -223,9 +223,10 @@
         });
     });
 
-    {% for key, hero in heroes %}
-        getBattleHistory({{ key }});
-    {% endfor %}
+    {#{% for key, hero in heroes %}#}
+        {#getBattleHistory({{ key }});#}
+    {#{% endfor %}#}
+    getBattleHistory(0);
 
     function getBattleHistory(id)
     {
@@ -251,21 +252,17 @@
                         }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
                     }
                 }
-            })
+            });
     }
 
     function animateBattle(bh, id) {
-        console.log("length : " + bh.length);
-
-        console.log("- " + bh[0].time * 1000 + ": " + bh[0].damage + ": " + bh[0].currentHealth + "/" + bh[0].health);
+        console.log(id + ". " + bh.length + "] " + bh[0].type + " - " + bh[0].time * 1000 + ": " + bh[0].damage + ": " + bh[0].currentHealth + "/" + bh[0].health);
 
         var t = (new Date()).getTime();
         var progress_bar_mob = $('#mob_' + id + ' .progress-bar-hp');
         var progress_bar_hero = $('#hero_' + id + ' .progress-bar-hp');
 
         if (bh[0].type == "HIT_E") { // Attack Enemy
-            console.log('HIT_E');
-
             progress_bar_mob.data('value', bh[0].currentHealth);
             $('#mob_' + id + ' .current_health').text(bh[0].currentHealth);
 
@@ -281,8 +278,6 @@
             {#}#}
         }
         else if (bh[0].type == "HIT_H") { // Attack Hero
-            console.log('HIT_H');
-
             progress_bar_hero.data('value', bh[0].currentHealth);
 
             progress_bar_hero.animate({width: ((bh[0].currentHealth * 100) / bh[0].health) + '%'}, 200);
@@ -293,8 +288,6 @@
                 .animate({opacity: 0, top: "-=100px"}, 1000);
         }
         else if (bh[0].type == "GEN") { // Generate Enemy
-            console.log('GEN');
-
             $('#mob_' + id).html(bh[0].block_html);
 
 //            $('#mob_' + id + ' img.monster').attr('src', bh[0].image);
@@ -312,14 +305,19 @@
         }
 
 //                console.log('next call : ' + ((bh[1].time * 1000) - (new Date()).getTime()));
-        if ((bh[1].time * 1000) <= (new Date()).getTime()) { // if next time is already passed, play it now
-            animateBattle(bh.slice(1), id);
+        if (bh.length > 1) {
+            if ((bh[1].time * 1000) <= (new Date()).getTime()) { // if next time is already passed, play it now
+                animateBattle(bh.slice(1), id);
+            }
+            else {
+                window.setTimeout(function () {
+                    animateBattle(bh.slice(1), id); // we slice to the next element
+                }, Math.floor(bh[1].time * 1000) - t);
+                return false;
+            }
         }
         else {
-            window.setTimeout(function () {
-                animateBattle(bh.slice(1), id); // we slice to the next elemet
-            }, Math.floor(bh[1].time * 1000) - t);
-            return false;
+            getBattleHistory(id);
         }
     }
 </script>

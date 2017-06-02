@@ -12,13 +12,12 @@
             </div>
 
             {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': form.name} %}
-        </div>
-        <div class="modal-footer">
+
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
             {#<button type="button" class="btn btn-primary">Save changes</button>#}
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
     </div>
 </div>
 

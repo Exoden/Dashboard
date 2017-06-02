@@ -115,7 +115,7 @@ class BattleManager
                 'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $new_enemy->getImage()),
                 'currentHealth' => $new_enemy->getCharacteristics()->getHealth(),
                 'health' => $new_enemy->getCharacteristics()->getHealth(),
-                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()),
+                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics())[0],
                 'block_html' => $this->container->get('templating')->render('IdleBundle:Default:draw_homepage_enemy.html.twig', array('hero' => $hero, 'enemy' => $new_enemy)));
         }
         else {
@@ -127,7 +127,7 @@ class BattleManager
                 'image' => $this->container->get('templating.helper.assets')->getUrl('images/Idle/Enemy/' . $new_enemy->getImage()),
                 'currentHealth' => $new_enemy->getCharacteristics()->getHealth(),
                 'health' => $new_enemy->getCharacteristics()->getHealth(),
-                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics()),
+                'stats' => $this->em->getRepository('IdleBundle:Characteristics')->getStatsInArray($new_enemy->getCharacteristics())[0],
                 'block_html' => $this->container->get('templating')->render('IdleBundle:Default:draw_homepage_enemy.html.twig', array('hero' => $hero, 'enemy' => $new_enemy)));
         }
 
