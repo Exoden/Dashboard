@@ -20,36 +20,36 @@ class CharacteristicsType extends AbstractType
                     'title' => "Damage Minimum")
             ))
             ->add('damageMaximum', NumberType::class, array(
-                    'attr' => array('placeholder' => "Damage Maximum",
-                        'title' => "Damage Maximum")
+                'attr' => array('placeholder' => "Damage Maximum",
+                    'title' => "Damage Maximum")
             ))
             ->add('attackDelay', NumberType::class, array(
-                    'attr' => array('placeholder' => "Attack Delay",
-                        'title' => "Attack Delay")
+                'attr' => array('placeholder' => "Attack Delay",
+                    'title' => "Attack Delay")
             ))
             ->add('hitPrecision', NumberType::class, array(
-                    'attr' => array('placeholder' => "Hit Precision",
-                        'title' => "Hit Precision")
+                'attr' => array('placeholder' => "Hit Precision",
+                    'title' => "Hit Precision")
             ))
             ->add('health', NumberType::class, array(
-                    'attr' => array('placeholder' => "Health",
-                        'title' => "Health")
+                'attr' => array('placeholder' => "Health",
+                    'title' => "Health")
             ))
             ->add('armor', NumberType::class, array(
-                    'attr' => array('placeholder' => "Armor",
-                        'title' => "Armor")
+                'attr' => array('placeholder' => "Armor",
+                    'title' => "Armor")
             ))
             ->add('dodge', NumberType::class, array(
-                    'attr' => array('placeholder' => "Dodge",
-                        'title' => "Dodge")
+                'attr' => array('placeholder' => "Dodge",
+                    'title' => "Dodge")
             ))
             ->add('criticalChance', NumberType::class, array(
-                    'attr' => array('placeholder' => "Critical Chance",
-                        'title' => "Critical Chance")
+                'attr' => array('placeholder' => "Critical Chance",
+                    'title' => "Critical Chance")
             ))
             ->add('blocking', NumberType::class, array(
-                    'attr' => array('placeholder' => "Blocking",
-                        'title' => "Blocking")
+                'attr' => array('placeholder' => "Blocking",
+                    'title' => "Blocking")
             ));
     }
     

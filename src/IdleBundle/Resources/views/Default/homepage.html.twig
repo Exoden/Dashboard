@@ -29,6 +29,7 @@
                             <img src="{{ asset('images/Idle/Character/HumanF.png') }}" alt="hero" class="hero">
                             {#</span>#}
                             <h2 class="damage"></h2>
+                            <h2 class="heal"></h2>
                         </div>
                         <div class="col-md-8">
                             <div class="row top">
@@ -53,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3" style="text-align: right">
-                                    <a class="btn btn-default btn-circle potions" data-value="{{ hero.id }}" title="Potions"><img src="{{ asset('images/Idle/Icon/potion.png') }}"></a>
+                                    <a class="btn btn-default btn-circle manage_food" data-value="{{ hero.id }}" title="Potions"><img src="{{ asset('images/Idle/Icon/potion.png') }}"></a>
                                     <a class="btn btn-default btn-circle skill_tree" data-value="{{ hero.id }}" title="Skills"><img src="{{ asset('images/Idle/Icon/skills.png') }}"></a>
                                 </div>
                             </div>
@@ -130,28 +131,28 @@
 //        });
 
 
-        {#$('.potions').click(function () {#}
-            {#var url = '{{ path("hero_skill_tree", {'hero_id': 'HERO_ID'}) }}';#}
-            {#url = url.replace("HERO_ID", $(this).data('value'));#}
-            {#console.log(url);#}
+        $('.manage_food').click(function () {
+            var url = '{{ path("manage_food", {'hero_id': 'HERO_ID'}) }}';
+            url = url.replace("HERO_ID", $(this).data('value'));
+            console.log(url);
 
-            {#$.ajax({#}
-                {#method: "POST",#}
-                {#url: url#}
-            {#})#}
-                {#.done(function (data) {#}
-                    {#$('#my_modal').html(data).modal();#}
+            $.ajax({
+                method: "POST",
+                url: url
+            })
+                .done(function (data) {
+                    $('#my_modal').html(data).modal();
 
-                    {#var modal_form = $('#modal_form');#}
-                    {#modal_form.submit(function () {#}
-                        {#console.log('submit');#}
-                        {#$.ajax({#}
-                            {#method: "POST",#}
-                            {#url: url#}
-                        {#})#}
-                    {#});#}
-                {#});#}
-        {#});#}
+                    var modal_form = $('#modal_form');
+                    modal_form.submit(function () {
+                        console.log('submit');
+                        $.ajax({
+                            method: "POST",
+                            url: url
+                        })
+                    });
+                });
+        });
 
         {#$('.skill_tree').click(function () {#}
             {#var url = '{{ path("hero_skill_tree", {'hero_id': 'HERO_ID'}) }}';#}
@@ -234,25 +235,25 @@
         url = url.replace("HERO_ID", $('#hero_' + id).children('.character').data('value'));
         console.log(url);
 
-        $.ajax({
-            method: "POST",
-            url: url
-        })
-            .done(function (data) {
-                console.log('done');
-                var obj = data;
-                if (obj.success) {
-                    console.log('success');
-                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
-                        animateBattle(obj.battle_history, id);
-                    }
-                    else {
-                        setTimeout(function () {
-                            animateBattle(obj.battle_history, id);
-                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
-                    }
-                }
-            });
+//        $.ajax({
+//            method: "POST",
+//            url: url
+//        })
+//            .done(function (data) {
+//                console.log('done');
+//                var obj = data;
+//                if (obj.success) {
+//                    console.log('success');
+//                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
+//                        animateBattle(obj.battle_history, id);
+//                    }
+//                    else {
+//                        setTimeout(function () {
+//                            animateBattle(obj.battle_history, id);
+//                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
+//                    }
+//                }
+//            });
     }
 
     function animateBattle(bh, id) {
@@ -286,6 +287,19 @@
                 .html(bh[0].damage)
                 .removeAttr('style')
                 .animate({opacity: 0, top: "-=100px"}, 1000);
+        }
+        else if (bh[0].type == "FOOD") { // Heal Hero
+            progress_bar_hero.data('value', bh[0].currentHealth);
+
+            progress_bar_hero.animate({width: ((bh[0].currentHealth * 100) / bh[0].health) + '%'}, 200);
+            $('#hero_' + id + ' .progress-hp').attr('title', "HP : " + bh[0].currentHealth + "/" + bh[0].health);
+            $('#hero_' + id + ' .heal')
+                .html(bh[0].heal)
+                .removeAttr('style')
+                .animate({opacity: 0, top: "-=100px"}, 1000);
+        }
+        else if (bh[0].type == "STA") { // Change State
+
         }
         else if (bh[0].type == "GEN") { // Generate Enemy
             $('#mob_' + id).html(bh[0].block_html);

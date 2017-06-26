@@ -1,0 +1,66 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+        {{ form_start(form, {'attr': {'id': 'modal_form', 'action': path('manage_food', {'hero_id': hero.id})}}) }}
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Manage Food ({{ hero.name }})</h4>
+        </div>
+        <div class="col-md-12 modal-body">
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="items">
+                {% for elem in form.children.foodStackList.children %}
+                    <input type="hidden" name="food_stack_list[foodStackList][{{ loop.index }}][initial_quantity]" value="{{ elem.vars.data.quantity }}" />
+                    <div class="col-md-4 out-menu">
+                        <div class="menu">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-5 item">
+                                        <img src="{{ asset('images/Idle/Food/' ~ elem.vars.value.item.image) }}" alt="{{ elem.vars.value.item.name }}"/>
+                                </div>
+                                <p>
+                                    {{ elem.vars.value.item.name }}<br/>
+                                    + {{ food_arr[elem.vars.value.item.id]['food'].healthRegen }} Health
+                                </p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 form-group">
+                                    <div class="bg-danger">
+                                        {{ form_errors(elem) }}
+                                    </div>
+                                    <p>
+                                        Quantity (Max {{ elem.vars.data.quantity + food_arr[elem.vars.value.item.id]['quantity'] }}) : <br/>
+                                        {{ form_widget(elem) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+
+    });
+</script>

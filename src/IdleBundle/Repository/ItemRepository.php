@@ -3,6 +3,8 @@
 namespace IdleBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use IdleBundle\Entity\Item;
+use IdleBundle\Entity\TypeItem;
 
 /**
  * ItemRepository
@@ -19,5 +21,54 @@ class ItemRepository extends EntityRepository
             ->addOrderBy('i.name', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    function getItemParentClass(Item $item)
+    {
+        $typeItem = $item->getTypeItem();
+
+        if ($typeItem->getName() == 'Resource') {
+            $q = $this->createQueryBuilder('i')
+                ->select('r')
+                ->innerJoin('IdleBundle:Resource', 'r', 'WITH', 'r.item = i.id')
+                ->where('r.item = :item')
+                ->setParameter('item', $item)
+                ->andWhere('i.typeItem = :typeItem')
+                ->setParameter('typeItem', $typeItem);
+        }
+        else if ($typeItem->getName() == 'Stuff') {
+            $q = $this->createQueryBuilder('i')
+                ->select('s')
+                ->innerJoin('IdleBundle:Stuff', 's', 'WITH', 's.item = i.id')
+                ->where('s.item = :item')
+                ->setParameter('item', $item)
+                ->andWhere('i.typeItem = :typeItem')
+                ->setParameter('typeItem', $typeItem);
+        }
+        else if ($typeItem->getName() == 'Recipe') {
+            $q = $this->createQueryBuilder('i')
+                ->select('r')
+                ->innerJoin('IdleBundle:Recipe', 'r', 'WITH', 'r.item = i.id')
+                ->where('r.item = :item')
+                ->setParameter('item', $item)
+                ->andWhere('i.typeItem = :typeItem')
+                ->setParameter('typeItem', $typeItem);
+        }
+        else if ($typeItem->getName() == 'Food') {
+            $q = $this->createQueryBuilder('i')
+                ->select('f')
+                ->innerJoin('IdleBundle:Food', 'f', 'WITH', 'f.item = i.id')
+                ->where('f.item = :item')
+                ->setParameter('item', $item)
+                ->andWhere('i.typeItem = :typeItem')
+                ->setParameter('typeItem', $typeItem);
+        }
+//        else if ($typeItem->getName() == 'Enhancer') {
+//            $q = $this->createQueryBuilder('i')
+//                ->orderBy('i.typeItem', 'ASC')
+//                ->addOrderBy('i.name', 'ASC');
+//        }
+
+        return $q->getQuery()->getOneOrNullResult();
     }
 }

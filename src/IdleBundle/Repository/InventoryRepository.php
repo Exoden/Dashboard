@@ -24,4 +24,16 @@ class InventoryRepository extends EntityRepository
                     ->getQuery()
                     ->getResult();
     }
+
+    public function getFood(User $user)
+    {
+        return $this->createQueryBuilder('inv')
+            ->innerJoin('inv.item', 'i', 'WITH', 'inv.item = i.id')
+            ->innerJoin('i.typeItem', 'ti', 'WITH', 'i.typeItem = ti.id')
+            ->where('inv.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('ti.name = \'Food\'')
+            ->getQuery()
+            ->getResult();
+    }
 }

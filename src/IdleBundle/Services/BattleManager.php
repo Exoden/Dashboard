@@ -36,6 +36,10 @@ class BattleManager
             $hero->getTarget()->setCurrentHealth($hero->getTarget()->getCurrentHealth() - $histo['damage']);
         } else if ($histo['type'] == "HIT_H") {
             $hero->setCurrentHealth($hero->getCurrentHealth() - $histo['damage']);
+        } else if ($histo['type'] == "FOOD") {
+            $hero->setCurrentHealth($hero->getCurrentHealth() + $histo['heal']);
+        } else if ($histo['type'] == "STA") {
+//            $hero->setRestStartTime($histo['time']); // TODO
         } else if ($histo['type'] == "GEN") {
             /** @var Enemy $enemy */
             $enemy = $this->em->getRepository('IdleBundle:Enemy')->find($histo['enemy']);

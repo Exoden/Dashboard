@@ -22,7 +22,7 @@ class Loot
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Enemy", inversedBy="loot")
+     * @ORM\ManyToOne(targetEntity="Enemy", inversedBy="loots")
      * @ORM\JoinColumn(name="enemy_id", referencedColumnName="id", nullable=false)
      */
     private $enemy;

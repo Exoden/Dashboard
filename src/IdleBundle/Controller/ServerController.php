@@ -7,6 +7,7 @@ use IdleBundle\Entity\BattleHistory;
 use IdleBundle\Entity\Characteristics;
 use IdleBundle\Entity\Craft;
 use IdleBundle\Entity\Enemy;
+use IdleBundle\Entity\FoodStack;
 use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\Item;
@@ -17,6 +18,8 @@ use IdleBundle\Entity\Stuff;
 use IdleBundle\Entity\Target;
 use IdleBundle\Entity\TypeStuff;
 use IdleBundle\Entity\Zone;
+use IdleBundle\Form\FoodStackListType;
+use IdleBundle\Form\FoodStackType;
 use IdleBundle\Form\HeroType;
 use IdleBundle\Services\BattleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,7 +52,7 @@ class ServerController extends Controller
         while (!is_null($key = key($arr))) {
             $val = current($arr);
             if ($val['type'] == $type) {
-                if ($stat != '')
+                if ($type == 'GEN' && $stat != '')
                     return $val['stats'][$stat];
                 else
                     return $val['time'];
@@ -95,6 +98,9 @@ class ServerController extends Controller
         $last_time_hit_e = $this->latest_historic_type($historic, "HIT_E");
         $last_time_hit_h = $this->latest_historic_type($historic, "HIT_H");
         $last_time_gen = $this->latest_historic_type($historic, "GEN");
+        $enemy_attack_delay = $this->latest_historic_type($historic, "GEN", 'attackDelay');
+        if ($enemy_attack_delay == 0)
+            $enemy_attack_delay = $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
         $last_time_histo = end($historic)['time'];
 
         // Get a piece of the previous historic
@@ -141,7 +147,7 @@ class ServerController extends Controller
         if (!$weapon)
             $weapon = $hero->getCharacteristics();
 
-        $time = $start_time + ($weapon->getAttackDelay() - (($last_time_hit_e != 0 || $last_time_gen != 0) ? ($last_time_histo - (($last_time_hit_e < $last_time_gen) ? $last_time_gen : $last_time_hit_e)) : 0));
+        $time = $start_time + ($weapon->getAttackDelay() - (($last_time_hit_e > 0 || $last_time_gen > 0) ? ($last_time_histo - (($last_time_hit_e < $last_time_gen) ? $last_time_gen : $last_time_hit_e)) : 0));
 
         $arr_time_change_enemy = array();
         // If current target is dead, generate a new one
@@ -158,7 +164,8 @@ class ServerController extends Controller
 //        echo("starting loop 1 time : " . $time . " : " . ($time + $now) . "\n");
 //        echo("while : " . $time . " <= " . $until . "\n");
         while ($time <= $until) {
-            $damage = rand($weapon->getDamageMinimum(), $weapon->getDamageMaximum());
+            // TODO : If not dodge
+            $damage = rand($weapon->getDamageMinimum(), $weapon->getDamageMaximum()); // TODO : Minus enemy armor
             $enemy_current_life -= $damage;
             if ($enemy_current_life < 0)
                 $enemy_current_life = 0;
@@ -193,9 +200,7 @@ class ServerController extends Controller
         $hero_current_life = $hero->getCurrentHealth();
         $enemy_damage_min = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMinimum();
         $enemy_damage_max = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMaximum();
-
-        $enemy_attack_delay = $this->latest_historic_type($historic, "GEN", 'attackDelay');
-        $time = $start_time + ($enemy_attack_delay - (($last_time_hit_h != 0 || $last_time_gen != 0) ? ($last_time_histo - (($last_time_hit_h < $last_time_gen) ? $last_time_gen : $last_time_hit_h)) : 0));
+        $time = $start_time + ($enemy_attack_delay - (($last_time_hit_h > 0 || $last_time_gen > 0) ? ($last_time_histo - (($last_time_hit_h < $last_time_gen) ? $last_time_gen : $last_time_hit_h)) : 0));
 //        echo("starting loop 2 time : " . $time . " : " . ($time + $now) . "\n");
         $i = 0;
 //        echo("while : " . $time . " <= " . $until . "\n");
@@ -214,8 +219,27 @@ class ServerController extends Controller
 
 //            echo("hero hit at : " . ($now + $time) . "\n");
             // TODO : use potion before dying
+            if ($hero_current_life < 20) {
+                $time += 1;
+
+                $heal = 10;
+                $hero_current_life += $heal;
+                $battle_history[] = array(
+                    'type' => "FOOD",
+                    'time' => $now + $time,
+                    'heal' => $heal,
+                    'currentHealth' => $hero_current_life,
+                    'health' => $hero->getCharacteristics()->getHealth());
+            }
+
             if ($hero_current_life <= 0) {
-                // TODO : set state hero sleep, and stop generate historic, and cut HIT_E events
+                // TODO : set state hero sleep, and stop generate historic
+                $battle_history[] = array(
+                    'type' => "STA",
+                    'time' => $now + $time,
+                    'state' => 'rest');
+                // TODO : cut HIT_E events
+                break;
             }
 
             if (count($arr_time_change_enemy) > $i && ($now + $time + $enemy_attack_delay) > $arr_time_change_enemy[$i]['time']) { // enemy dies before his next attack
@@ -302,9 +326,77 @@ class ServerController extends Controller
 
             $em->flush();
 
-            return $this->redirectToRoute('homepage'); // TODO : Is it reloading the page ?
+            return $this->redirectToRoute('homepage_idle'); // TODO : Is it reloading the page ?
         }
         return $this->render('IdleBundle:Modal:create_hero.html.twig', array('form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/manage-food/{hero_id}", name="manage_food")
+     */
+    public function ajaxManageFood(Request $request, $hero_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Hero $hero */
+        $hero = $em->getRepository('IdleBundle:Hero')->findOneBy(array('id' => $hero_id, 'user' => $user));
+        if (!$hero)
+            return false;
+
+        // Get all Food items in Inventory
+        $inv_food = $em->getRepository('IdleBundle:Inventory')->getFood($user);
+
+        // Display in form the FoodStack already used and the Food items not used at 0 value
+        /** @var Inventory $elem */
+        foreach ($inv_food as $elem) {
+            if (!$hero->getfoodStackList()->contains($elem)) {
+                $food_stack = new FoodStack();
+                $food_stack->setItem($elem->getItem());
+                $food_stack->setQuantity(0);
+
+                $hero->addfoodStackList($food_stack);
+            }
+        }
+
+        $food_arr = array();
+        /** @var FoodStack $item */
+        foreach ($hero->getfoodStackList() as $foodStack) {
+            $food_arr[$foodStack->getItem()->getId()]['food'] = $em->getRepository('IdleBundle:Item')->getItemParentClass($foodStack->getItem());
+            $inv_item = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user->getId(), 'item' => $foodStack->getItem()));
+            $food_arr[$foodStack->getItem()->getId()]['quantity'] = ($inv_item != null) ? $inv_item->getQuantity() : 0;
+        }
+
+        $form = $this->createForm(FoodStackListType::class, $hero);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Hero $data */
+            $data = $form->getData();
+            dump($data->getfoodStackList());
+            dump($hero->getfoodStackList());
+            dump($request->request);
+            die();
+
+            /** @var FoodStack $foodStack */
+            foreach ($data->getfoodStackList() as $foodStack) {
+                if ($foodStack->getQuantity() <= 0) {
+                    $hero->removefoodStackList($foodStack);
+                }
+                else {
+
+                }
+            }
+
+            $em->persist($hero);
+
+            $em->flush();
+
+            return $this->redirectToRoute('homepage_idle');
+        }
+        return $this->render('IdleBundle:Modal:manage_food.html.twig', array('form' => $form->createView(), 'hero' => $hero, 'food_arr' => $food_arr));
     }
 
     /**
@@ -330,7 +422,7 @@ class ServerController extends Controller
 //
 //            $em->flush();
 //
-//            return $this->redirect('homepage');
+//            return $this->redirect('homepage_idle');
 //        }
 //        return new JsonResponse(array('success' => true, $this->render('IdleBundle:Modal:skill_tree.html.twig', array('form' => $form->createView(), 'hero' => $hero))));
     }

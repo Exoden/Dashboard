@@ -88,6 +88,8 @@ class DefaultController extends Controller
                 $tab_inv[$i]['obj'] = $em->getRepository('IdleBundle:Resource')->findOneBy(array('item' => $inv->getItem()));
             else if ($inv->getItem()->getTypeItem()->getName() == "Recipe")
                 $tab_inv[$i]['obj'] = $em->getRepository('IdleBundle:Recipe')->findOneBy(array('item' => $inv->getItem()));
+            else if ($inv->getItem()->getTypeItem()->getName() == "Food")
+                $tab_inv[$i]['obj'] = $em->getRepository('IdleBundle:Food')->findOneBy(array('item' => $inv->getItem()));
 
             $tab_inv[$i]['quantity'] = $inv->getQuantity();
 

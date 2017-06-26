@@ -2,16 +2,15 @@
 
 namespace IdleBundle\Entity;
 
-use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Inventory
+ * FoodStack
  *
- * @ORM\Table(name="inventory")
- * @ORM\Entity(repositoryClass="IdleBundle\Repository\InventoryRepository")
+ * @ORM\Table(name="food_stack")
+ * @ORM\Entity(repositoryClass="IdleBundle\Repository\FoodStackRepository")
  */
-class Inventory
+class FoodStack
 {
     /**
      * @var int
@@ -23,16 +22,16 @@ class Inventory
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Item")
      * @ORM\JoinColumn(name="item_id", referencedColumnName="id")
      */
     private $item;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Hero")
+     * @ORM\JoinColumn(name="hero_id", referencedColumnName="id")
+     */
+    private $hero;
 
     /**
      * @var int
@@ -53,33 +52,10 @@ class Inventory
     }
 
     /**
-     * Set user
-     *
-     * @param User $user
-     * @return Inventory
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set item
      *
      * @param Item $item
-     * @return Inventory
+     * @return FoodStack
      */
     public function setItem($item)
     {
@@ -99,10 +75,33 @@ class Inventory
     }
 
     /**
+     * Set hero
+     *
+     * @param Hero $hero
+     * @return FoodStack
+     */
+    public function setHero($hero)
+    {
+        $this->hero = $hero;
+
+        return $this;
+    }
+
+    /**
+     * Get hero
+     *
+     * @return Hero
+     */
+    public function getHero()
+    {
+        return $this->hero;
+    }
+
+    /**
      * Set quantity
      *
      * @param integer $quantity
-     * @return Inventory
+     * @return FoodStack
      */
     public function setQuantity($quantity)
     {

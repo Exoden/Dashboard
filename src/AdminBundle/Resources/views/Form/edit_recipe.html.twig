@@ -41,7 +41,7 @@
             </ul>
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
-            {{ form_end(form) }}
+            {{ form_end(form, {'render_rest': false}) }}
 
             <a href="{{ path('edit_item', {'item_id': form.itemCreated.vars.data.id}) }}" class="btn btn-success back-button"><span class="fa fa-edit"></span> {{ "Edit created item"|trans }}</a>
         </div>

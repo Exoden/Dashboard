@@ -161,6 +161,16 @@ a.btn {
     border-radius: 15px;
 }
 
+.modal-dialog {
+    top: 5%;
+    bottom: 5%;
+}
+
+.modal-body {
+    //max-height: 100%;
+    height: 60vh;
+}
+
 /*************/
 /* DASHBOARD */
 /*************/
@@ -508,23 +518,18 @@ $idle_color_img: #c3c3ba;
                 opacity: 1;
             }
 
-            .recipe {
-                cursor: pointer;
+            .heal {
+                color: limegreen;
+                font-weight: bold;
+                position: absolute;
+                left: 110px;
+                top: 70px;
+                font-size: 42px;
+                opacity: 1;
             }
 
-            .item, .draw-item {
-                margin: $small-space;
-                padding: 0;
-                float: left;
+            .recipe {
                 cursor: pointer;
-
-                img {
-                    width: 60px;
-                    height: 60px;
-                    background-color: $idle_color_img;
-                    border: solid 4px;
-                    border-image: url("../images/border.png") 4 fill repeat;
-                }
             }
             //.equipment {
             //    img {
@@ -553,6 +558,21 @@ $idle_color_img: #c3c3ba;
             .btn-craft {
                 margin-left: 5px;
             }
+        }
+    }
+
+    .item, .draw-item {
+        margin: $small-space;
+        padding: 0;
+        float: left;
+        cursor: pointer;
+
+        img {
+            width: 60px;
+            height: 60px;
+            background-color: $idle_color_img;
+            border: solid 4px;
+            border-image: url("../images/border.png") 4 fill repeat;
         }
     }
 }

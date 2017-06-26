@@ -96,6 +96,13 @@ a.btn {
   line-height: 1.42;
   border-radius: 15px; }
 
+.modal-dialog {
+  top: 5%;
+  bottom: 5%; }
+
+.modal-body {
+  height: 60vh; }
+
 /*************/
 /* DASHBOARD */
 /*************/
@@ -320,19 +327,16 @@ a.btn {
         top: 70px;
         font-size: 42px;
         opacity: 1; }
+      .idle .out-menu .menu .heal {
+        color: limegreen;
+        font-weight: bold;
+        position: absolute;
+        left: 110px;
+        top: 70px;
+        font-size: 42px;
+        opacity: 1; }
       .idle .out-menu .menu .recipe {
         cursor: pointer; }
-      .idle .out-menu .menu .item, .idle .out-menu .menu .draw-item {
-        margin: 10px;
-        padding: 0;
-        float: left;
-        cursor: pointer; }
-        .idle .out-menu .menu .item img, .idle .out-menu .menu .draw-item img {
-          width: 60px;
-          height: 60px;
-          background-color: #c3c3ba;
-          border: solid 4px;
-          border-image: url("../images/border.png") 4 fill repeat; }
       .idle .out-menu .menu .can-select {
         box-shadow: 0 0 3px 3px whitesmoke; }
       .idle .out-menu .menu .selected {
@@ -344,6 +348,17 @@ a.btn {
         margin: 5px; }
       .idle .out-menu .menu .btn-craft {
         margin-left: 5px; }
+  .idle .item, .idle .draw-item {
+    margin: 10px;
+    padding: 0;
+    float: left;
+    cursor: pointer; }
+    .idle .item img, .idle .draw-item img {
+      width: 60px;
+      height: 60px;
+      background-color: #c3c3ba;
+      border: solid 4px;
+      border-image: url("../images/border.png") 4 fill repeat; }
 
 /*******************/
 /* STRATEGY STYLE */

@@ -89,6 +89,11 @@ class Hero
     private $zones;
 
     /**
+     * @ORM\OneToMany(targetEntity="FoodStack", mappedBy="hero")
+     */
+    private $foodStackList;
+
+    /**
      * @ORM\ManyToMany(targetEntity="IdleBundle\Entity\Stuff")
      * @ORM\JoinTable(name="link_hero_stuff",
      *      joinColumns={@ORM\JoinColumn(name="hero_id", referencedColumnName="id")},
@@ -100,6 +105,7 @@ class Hero
 
     public function __construct() {
         $this->stuffs = new ArrayCollection();
+        $this->foodStackList = new ArrayCollection();
         $this->zones = new ArrayCollection();
     }
 
@@ -347,6 +353,27 @@ class Hero
             return $stuff;
         }
         return null;
+    }
+
+
+    public function addfoodStackList(foodStack $foodStack)
+    {
+        if (!$this->foodStackList->contains($foodStack)) {
+            $this->foodStackList[] = $foodStack;
+
+            $foodStack->setHero($this);
+        }
+        return $this;
+    }
+
+    public function removefoodStackList(foodStack $foodStack)
+    {
+        $this->foodStackList->removeElement($foodStack);
+    }
+
+    public function getfoodStackList()
+    {
+        return $this->foodStackList;
     }
 
 

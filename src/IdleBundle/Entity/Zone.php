@@ -22,7 +22,7 @@ class Zone
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="IdleBundle\Entity\Hero")
+     * @ORM\ManyToOne(targetEntity="IdleBundle\Entity\Hero", inversedBy="zones")
      * @ORM\JoinColumn(name="hero_id", referencedColumnName="id")
      */
     private $hero;
