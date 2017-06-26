@@ -29,6 +29,8 @@
             </ul>
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+
+            {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
         </div>
         <a href="{{ path('idle_generator') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>

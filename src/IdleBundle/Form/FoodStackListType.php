@@ -22,6 +22,7 @@ class FoodStackListType extends AbstractType
         $builder
             ->add('foodStackList', CollectionType::class, array(
                 'entry_type' => FoodStackType::class,
+                'allow_extra_fields' => true,
 //                'allow_add' => true,
 //                'allow_delete' => true,
 //                'prototype' => true,

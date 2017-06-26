@@ -352,7 +352,8 @@ class ServerController extends Controller
         // Display in form the FoodStack already used and the Food items not used at 0 value
         /** @var Inventory $elem */
         foreach ($inv_food as $elem) {
-            if (!$hero->getfoodStackList()->contains($elem)) {
+            $foodStack = $em->getRepository('IdleBundle:FoodStack')->findOneBy(array('hero' => $hero, 'item' => $elem->getItem()));
+            if (!$hero->getfoodStackList()->contains($foodStack)) {
                 $food_stack = new FoodStack();
                 $food_stack->setItem($elem->getItem());
                 $food_stack->setQuantity(0);
@@ -365,7 +366,7 @@ class ServerController extends Controller
         /** @var FoodStack $item */
         foreach ($hero->getfoodStackList() as $foodStack) {
             $food_arr[$foodStack->getItem()->getId()]['food'] = $em->getRepository('IdleBundle:Item')->getItemParentClass($foodStack->getItem());
-            $inv_item = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user->getId(), 'item' => $foodStack->getItem()));
+            $inv_item = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $foodStack->getItem()));
             $food_arr[$foodStack->getItem()->getId()]['quantity'] = ($inv_item != null) ? $inv_item->getQuantity() : 0;
         }
 
@@ -375,18 +376,30 @@ class ServerController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Hero $data */
             $data = $form->getData();
-            dump($data->getfoodStackList());
-            dump($hero->getfoodStackList());
-            dump($request->request);
-            die();
+//            dump($data->getfoodStackList());
+//            dump($hero->getfoodStackList());
+//            dump($request->request->get('initial_quantity'));
 
             /** @var FoodStack $foodStack */
-            foreach ($data->getfoodStackList() as $foodStack) {
+            foreach ($data->getfoodStackList() as $key => $foodStack) {
                 if ($foodStack->getQuantity() <= 0) {
                     $hero->removefoodStackList($foodStack);
                 }
-                else {
 
+                /** @var Inventory $inv */
+                $inv = $em->getRepository('IdleBundle:Inventory')->findOneBy(array('user' => $user, 'item' => $foodStack->getItem()));
+                if (!$inv) {
+                    $inv = new Inventory();
+                    $inv->setItem($foodStack->getItem());
+                    $inv->setUser($user);
+                    $inv->setQuantity(0);
+                }
+                $inv->setQuantity($inv->getQuantity() + ($request->request->get('initial_quantity')[$key] - $foodStack->getQuantity()));
+                $em->persist($inv);
+
+                if ($inv->getQuantity() == 0) {
+                    $em->remove($inv);
+                    $em->flush();
                 }
             }
 

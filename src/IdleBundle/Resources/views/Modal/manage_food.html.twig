@@ -14,8 +14,11 @@
             </div>
 
             <div class="items">
+                {% if form.children.foodStackList.children |length == 0 %}
+                    <p>There is no food in your inventory !</p>
+                {% endif %}
                 {% for elem in form.children.foodStackList.children %}
-                    <input type="hidden" name="food_stack_list[foodStackList][{{ loop.index }}][initial_quantity]" value="{{ elem.vars.data.quantity }}" />
+                    <input type="hidden" name="initial_quantity[{{ loop.index0 }}]" value="{{ elem.vars.data.quantity }}" />
                     <div class="col-md-4 out-menu">
                         <div class="menu">
                         <div class="col-md-12">
@@ -53,8 +56,9 @@
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
         </div>
-
-        {{ form_end(form) }}
+        
+        {{ form_widget(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
     </div>
 </div>
 
