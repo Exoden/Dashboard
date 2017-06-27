@@ -5,6 +5,7 @@ namespace IdleBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use IdleBundle\Entity\Enemy;
+use IdleBundle\Entity\FoodStack;
 use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
 use IdleBundle\Entity\Item;
@@ -37,7 +38,23 @@ class BattleManager
         } else if ($histo['type'] == "HIT_H") {
             $hero->setCurrentHealth($hero->getCurrentHealth() - $histo['damage']);
         } else if ($histo['type'] == "FOOD") {
-            $hero->setCurrentHealth($hero->getCurrentHealth() + $histo['heal']);
+            /** @var FoodStack $food_stack */
+            $food_stack = $this->em->getRepository('IdleBundle:FoodStack')->findOneBy(array('hero' => $hero, 'item' => $histo['item_id']));
+            if ($food_stack && $food_stack->getQuantity() > 0) {
+                if ($food_stack->getQuantity() == 1) {
+                    $hero->removefoodStackList($food_stack);
+                    $this->em->remove($food_stack);
+                }
+                else {
+                    $food_stack->setQuantity($food_stack->getQuantity() - 1);
+                    $this->em->persist($food_stack);
+                }
+                $this->em->flush();
+            }
+
+            $health = (($hero->getCurrentHealth() + $histo['heal']) > $hero->getCharacteristics()->getHealth()) ? $hero->getCharacteristics()->getHealth() : ($hero->getCurrentHealth() + $histo['heal']);
+            $hero->setCurrentHealth($health);
+            $this->em->flush();
         } else if ($histo['type'] == "STA") {
 //            $hero->setRestStartTime($histo['time']); // TODO
         } else if ($histo['type'] == "GEN") {

@@ -52,13 +52,13 @@
     <script>
         $('.remove-readings').click(function (e) {
             var url = '{{ path("remove_readings", {'story_id': 'STORY_ID'}) }}';
-            url = url.replace("STORY_ID", $(e.target).closest('div').data('id'));
+            url = url.replace("STORY_ID", $(e.target).closest('tr').data('id'));
 //        console.log(url);
             var jhrx = $.ajax(url)
                 .done(function (data) {
                     var obj = data;
                     if (obj.success) {
-                        $(e.target).closest('div').remove();
+                        $(e.target).closest('tr').remove();
                         console.log("Success : " + obj.message);
                     }
                     else if (obj.error) {

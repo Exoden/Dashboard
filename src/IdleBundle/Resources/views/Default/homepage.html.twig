@@ -227,7 +227,7 @@
     {#{% for key, hero in heroes %}#}
         {#getBattleHistory({{ key }});#}
     {#{% endfor %}#}
-    getBattleHistory(0);
+    getBattleHistory(0); {# TODO : first hero only #}
 
     function getBattleHistory(id)
     {
@@ -235,29 +235,29 @@
         url = url.replace("HERO_ID", $('#hero_' + id).children('.character').data('value'));
         console.log(url);
 
-//        $.ajax({
-//            method: "POST",
-//            url: url
-//        })
-//            .done(function (data) {
-//                console.log('done');
-//                var obj = data;
-//                if (obj.success) {
-//                    console.log('success');
-//                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
-//                        animateBattle(obj.battle_history, id);
-//                    }
-//                    else {
-//                        setTimeout(function () {
-//                            animateBattle(obj.battle_history, id);
-//                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
-//                    }
-//                }
-//            });
+        $.ajax({
+            method: "POST",
+            url: url
+        })
+            .done(function (data) {
+                console.log('done');
+                var obj = data;
+                if (obj.success) {
+                    console.log('success');
+                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
+                        animateBattle(obj.battle_history, id);
+                    }
+                    else {
+                        setTimeout(function () {
+                            animateBattle(obj.battle_history, id);
+                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
+                    }
+                }
+            });
     }
 
     function animateBattle(bh, id) {
-        console.log(id + ". " + bh.length + "] " + bh[0].type + " - " + bh[0].time * 1000 + ": " + bh[0].damage + ": " + bh[0].currentHealth + "/" + bh[0].health);
+        console.log(id + ". " + bh.length + "] " + bh[0].type + " - " + bh[0].time * 1000 + ": " + bh[0].damage + ": (" + bh[0].heal + ": " + bh[0].item_id + "): " + bh[0].currentHealth + "/" + bh[0].health);
 
         var t = (new Date()).getTime();
         var progress_bar_mob = $('#mob_' + id + ' .progress-bar-hp');
@@ -299,7 +299,7 @@
                 .animate({opacity: 0, top: "-=100px"}, 1000);
         }
         else if (bh[0].type == "STA") { // Change State
-
+            {# TODO!OOOOOOOO #}
         }
         else if (bh[0].type == "GEN") { // Generate Enemy
             $('#mob_' + id).html(bh[0].block_html);

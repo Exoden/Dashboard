@@ -7,6 +7,7 @@ use IdleBundle\Entity\BattleHistory;
 use IdleBundle\Entity\Characteristics;
 use IdleBundle\Entity\Craft;
 use IdleBundle\Entity\Enemy;
+use IdleBundle\Entity\Food;
 use IdleBundle\Entity\FoodStack;
 use IdleBundle\Entity\Hero;
 use IdleBundle\Entity\Inventory;
@@ -48,6 +49,8 @@ class ServerController extends Controller
 
     public function latest_historic_type($arr, $type, $stat = '')
     {
+        if (!$arr)
+            return 0;
         end($arr);
         while (!is_null($key = key($arr))) {
             $val = current($arr);
@@ -101,7 +104,7 @@ class ServerController extends Controller
         $enemy_attack_delay = $this->latest_historic_type($historic, "GEN", 'attackDelay');
         if ($enemy_attack_delay == 0)
             $enemy_attack_delay = $hero->getTarget()->getEnemy()->getCharacteristics()->getAttackDelay();
-        $last_time_histo = end($historic)['time'];
+        $last_time_histo = ($historic) ? end($historic)['time'] : 0;
 
         // Get a piece of the previous historic
         if ($historic) {
@@ -219,27 +222,37 @@ class ServerController extends Controller
 
 //            echo("hero hit at : " . ($now + $time) . "\n");
             // TODO : use potion before dying
-            if ($hero_current_life < 20) {
+            if ($hero_current_life == 0) {
                 $time += 1;
 
-                $heal = 10;
-                $hero_current_life += $heal;
-                $battle_history[] = array(
-                    'type' => "FOOD",
-                    'time' => $now + $time,
-                    'heal' => $heal,
-                    'currentHealth' => $hero_current_life,
-                    'health' => $hero->getCharacteristics()->getHealth());
-            }
+                $food_stack = $hero->getfoodStackList();
+                if ($food_stack && count($food_stack) > 0) {
+                    /** @var FoodStack $first_food */
+                    $first_food = $food_stack[0];
+                    if ($first_food->getQuantity() > 0) {
+                        /** @var Food $food */
+                        $food = $em->getRepository('IdleBundle:Item')->getItemParentClass($first_food->getItem());
 
-            if ($hero_current_life <= 0) {
-                // TODO : set state hero sleep, and stop generate historic
-                $battle_history[] = array(
-                    'type' => "STA",
-                    'time' => $now + $time,
-                    'state' => 'rest');
-                // TODO : cut HIT_E events
-                break;
+                        $hero_current_life += $food->getHealthRegen();
+                        $battle_history[] = array(
+                            'type' => "FOOD",
+                            'time' => $now + $time,
+                            'item_id' => $first_food->getItem()->getId(),
+                            'heal' => $food->getHealthRegen(),
+                            'currentHealth' => ($hero_current_life > $hero->getCharacteristics()->getHealth()) ? $hero->getCharacteristics()->getHealth() : $hero_current_life,
+                            'health' => $hero->getCharacteristics()->getHealth());
+                    }
+                }
+                else {
+                    // TODO : set state hero sleep, and stop generate historic
+                    $battle_history[] = array(
+                        'type' => "STA",
+                        'time' => $now + $time,
+                        'state' => 'rest');
+                    // TODO : cut HIT_E events
+                    // TODO : when recall this function, controle the state of the hero to not generate anything if he is asleep
+                    break;
+                }
             }
 
             if (count($arr_time_change_enemy) > $i && ($now + $time + $enemy_attack_delay) > $arr_time_change_enemy[$i]['time']) { // enemy dies before his next attack
@@ -407,7 +420,7 @@ class ServerController extends Controller
 
             $em->flush();
 
-            return $this->redirectToRoute('homepage_idle');
+            return $this->redirectToRoute('homepage_idle'); // TODO : Vider le battle_historic et recalculer
         }
         return $this->render('IdleBundle:Modal:manage_food.html.twig', array('form' => $form->createView(), 'hero' => $hero, 'food_arr' => $food_arr));
     }
