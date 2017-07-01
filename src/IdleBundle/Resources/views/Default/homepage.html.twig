@@ -244,13 +244,15 @@
                 var obj = data;
                 if (obj.success) {
                     console.log('success');
-                    if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
-                        animateBattle(obj.battle_history, id);
-                    }
-                    else {
-                        setTimeout(function () {
+                    if (obj.battle_history.length > 0) {
+                        if ((obj.battle_history[0].time * 1000) <= (new Date()).getTime()) {
                             animateBattle(obj.battle_history, id);
-                        }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
+                        }
+                        else {
+                            setTimeout(function () {
+                                animateBattle(obj.battle_history, id);
+                            }, Math.floor(obj.battle_history[0].time * 1000) - (new Date()).getTime());
+                        }
                     }
                 }
             });
@@ -288,7 +290,7 @@
                 .removeAttr('style')
                 .animate({opacity: 0, top: "-=100px"}, 1000);
         }
-        else if (bh[0].type == "FOOD") { // Heal Hero
+        else if (bh[0].type == "FOOD" || bh[0].type == "REGEN") { // Heal Hero
             progress_bar_hero.data('value', bh[0].currentHealth);
 
             progress_bar_hero.animate({width: ((bh[0].currentHealth * 100) / bh[0].health) + '%'}, 200);

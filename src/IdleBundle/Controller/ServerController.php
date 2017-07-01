@@ -63,7 +63,26 @@ class ServerController extends Controller
 
             prev($arr);
         }
+
         return 0;
+    }
+
+    public function erase_from_latest_type_time($arr, $type, $time)
+    {
+        if (!$arr)
+            return $arr;
+
+        end($arr);
+        $i = 0;
+        while ($i < count($arr)) {
+            if ($arr[$i]['type'] == $type && $arr[$i]['time'] == $time) {
+                return array_splice($arr, $i);
+            }
+
+            $i++;
+        }
+
+        return $arr;
     }
 
     /**
@@ -139,18 +158,25 @@ class ServerController extends Controller
         }
 
 
-        ///////////////////////
-        // Fill the historic //
-        ///////////////////////
-        // Enemy
+        ///////////////////////////
+        // Prepare the variables //
+        ///////////////////////////
+
         $enemy_id = $hero->getTarget()->getEnemy()->getId();
         $enemy_current_life = $hero->getTarget()->getCurrentHealth();
         $enemy_max_life = $hero->getTarget()->getEnemy()->getCharacteristics()->getHealth();
         $weapon = $hero->getTypeStuff($em->getRepository('IdleBundle:TypeStuff')->findOneBy(array('name' => "Weapon")))->getCharacteristics();
         if (!$weapon)
             $weapon = $hero->getCharacteristics();
+        $hero_current_life = $hero->getCurrentHealth();
+        $enemy_damage_min = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMinimum();
+        $enemy_damage_max = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMaximum();
 
         $time = $start_time + ($weapon->getAttackDelay() - (($last_time_hit_e > 0 || $last_time_gen > 0) ? ($last_time_histo - (($last_time_hit_e < $last_time_gen) ? $last_time_gen : $last_time_hit_e)) : 0));
+
+        ///////////////////////
+        // Fill the historic //
+        ///////////////////////
 
         $arr_time_change_enemy = array();
         // If current target is dead, generate a new one
@@ -164,8 +190,17 @@ class ServerController extends Controller
                 'stats' => $em->getRepository('IdleBundle:Characteristics')->getStatsInArray($hero->getTarget()->getEnemy()->getCharacteristics())[0]));
         }
 
+        // If hero is still resting, make the regen come up
+        if (!$hero->getIsRested()) {
+            $battle_history = $battle_manager->autoRegenHero($hero, $hero_current_life, $now, $time, $battle_history);
+            $time = end($battle_history)['time'] - $now; // Extract the $time
+            $start_time = $time;
+//            echo("after regen time : " . end($battle_history)['time'] . "\n");
+        }
+
 //        echo("starting loop 1 time : " . $time . " : " . ($time + $now) . "\n");
 //        echo("while : " . $time . " <= " . $until . "\n");
+        // Hero attacks Enemy
         while ($time <= $until) {
             // TODO : If not dodge
             $damage = rand($weapon->getDamageMinimum(), $weapon->getDamageMaximum()); // TODO : Minus enemy armor
@@ -199,10 +234,7 @@ class ServerController extends Controller
             $time += $weapon->getAttackDelay();
         }
 
-        // Hero
-        $hero_current_life = $hero->getCurrentHealth();
-        $enemy_damage_min = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMinimum();
-        $enemy_damage_max = $hero->getTarget()->getEnemy()->getCharacteristics()->getDamageMaximum();
+        // Enemy attacks Hero
         $time = $start_time + ($enemy_attack_delay - (($last_time_hit_h > 0 || $last_time_gen > 0) ? ($last_time_histo - (($last_time_hit_h < $last_time_gen) ? $last_time_gen : $last_time_hit_h)) : 0));
 //        echo("starting loop 2 time : " . $time . " : " . ($time + $now) . "\n");
         $i = 0;
@@ -219,9 +251,8 @@ class ServerController extends Controller
                 'damage' => $damage,
                 'currentHealth' => $hero_current_life,
                 'health' => $hero->getCharacteristics()->getHealth());
-
 //            echo("hero hit at : " . ($now + $time) . "\n");
-            // TODO : use potion before dying
+
             if ($hero_current_life == 0) {
                 $time += 1;
 
@@ -244,18 +275,26 @@ class ServerController extends Controller
                     }
                 }
                 else {
-                    // TODO : set state hero sleep, and stop generate historic
                     $battle_history[] = array(
                         'type' => "STA",
                         'time' => $now + $time,
                         'state' => 'rest');
-                    // TODO : cut HIT_E events
-                    // TODO : when recall this function, controle the state of the hero to not generate anything if he is asleep
-                    break;
+
+                    usort($battle_history, $this->time_sorter('time'));
+
+                    $last_time_hit_e = $this->latest_historic_type($historic, "HIT_E");
+                    $last_time_gen = $this->latest_historic_type($historic, "GEN");
+                    if ($last_time_hit_e > $last_time_gen)
+                        $battle_history = $this->erase_from_latest_type_time($battle_history, "HIT_E", $last_time_hit_e);
+                    else
+                        $battle_history = $this->erase_from_latest_type_time($battle_history, "GEN", $last_time_gen);
+
+                    $battle_history = $battle_manager->autoRegenHero($hero, $hero_current_life, $now, $time, $battle_history);
+                    $time = end($battle_history)['time'] - $now; // Extract the $time
                 }
             }
 
-            if (count($arr_time_change_enemy) > $i && ($now + $time + $enemy_attack_delay) > $arr_time_change_enemy[$i]['time']) { // enemy dies before his next attack
+            if ((count($arr_time_change_enemy) > $i) && (($now + $time + $enemy_attack_delay) > $arr_time_change_enemy[$i]['time'])) { // enemy dies before his next attack
 //                echo("enemy dies at : " . $arr_time_change_enemy[$i]['time'] . "\n");
                 $time = $arr_time_change_enemy[$i]['time']; // Time GEN enemy
 //                echo("enemy gen at : " . $time . "\n");

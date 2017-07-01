@@ -55,8 +55,21 @@ class BattleManager
             $health = (($hero->getCurrentHealth() + $histo['heal']) > $hero->getCharacteristics()->getHealth()) ? $hero->getCharacteristics()->getHealth() : ($hero->getCurrentHealth() + $histo['heal']);
             $hero->setCurrentHealth($health);
             $this->em->flush();
-        } else if ($histo['type'] == "STA") {
-//            $hero->setRestStartTime($histo['time']); // TODO
+        } else if ($histo['type'] == "REGEN") {
+            $health = (($hero->getCurrentHealth() + $histo['heal']) > $hero->getCharacteristics()->getHealth()) ? $hero->getCharacteristics()->getHealth() : ($hero->getCurrentHealth() + $histo['heal']);
+            $hero->setCurrentHealth($health);
+
+            if ($hero->getCurrentHealth() == $hero->getCharacteristics()->getHealth()) {
+                $hero->setIsRested(true);
+                // TODO : Reset the RestTime to NULL ??
+            }
+
+            $this->em->flush();
+        }
+        else if ($histo['type'] == "STA") {
+            $hero->setIsRested(false);
+            $hero->setRestStartTime(new \DateTime(date("Y-m-d", $histo['time'])));
+            // TODO : Calc the RestEndTime from the Charac->Health and the Charac->Regen (regen to create)
         } else if ($histo['type'] == "GEN") {
             /** @var Enemy $enemy */
             $enemy = $this->em->getRepository('IdleBundle:Enemy')->find($histo['enemy']);
@@ -153,5 +166,23 @@ class BattleManager
         }
 
         return $res;
+    }
+
+    public function autoRegenHero(Hero $hero, $hero_current_life, $now, $time, $battle_history)
+    {
+        $regen = 5; // TODO : Make it a charac
+        while ($hero_current_life < $hero->getCharacteristics()->getHealth()) {
+            $time += 2;
+            $hero_current_life += $regen;
+
+            $battle_history[] = array(
+                'type' => "REGEN",
+                'time' => $now + $time,
+                'heal' => $regen,
+                'currentHealth' => ($hero_current_life > $hero->getCharacteristics()->getHealth()) ? $hero->getCharacteristics()->getHealth() : $hero_current_life,
+                'health' => $hero->getCharacteristics()->getHealth());
+        }
+
+        return $battle_history;
     }
 }
