@@ -28,7 +28,7 @@ class FoodStack
     private $item;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Hero")
+     * @ORM\ManyToOne(targetEntity="Hero", inversedBy="foodStackList")
      * @ORM\JoinColumn(name="hero_id", referencedColumnName="id")
      */
     private $hero;
