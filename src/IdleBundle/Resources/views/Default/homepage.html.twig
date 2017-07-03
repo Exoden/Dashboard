@@ -103,7 +103,7 @@
 
         <div class="col-md-6 out-menu">
             <div class="col-md-12 menu">
-                {% for key, hero in heroes if hero.target is defined %}
+                {% for key, hero in heroes if hero is defined and hero.target is defined %}
                     {% set enemy = hero.target.enemy %}
                     <div id="mob_{{ key }}" class="row details-mob">
                         {% include 'IdleBundle:Default:draw_homepage_enemy.html.twig' %}
