@@ -44,7 +44,7 @@ class DefaultController extends Controller
         }
 
         $canCreateHero = false;
-        if (count($heroes) >= 0) {
+        if (count($heroes) == 0) {
             $canCreateHero = true;
         }
         else {
