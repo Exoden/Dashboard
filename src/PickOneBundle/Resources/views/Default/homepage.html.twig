@@ -1,0 +1,15 @@
+{% extends "PickOneBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Homepage"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>PickOne {{ "Homepage"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <p>{{ "Create your own poll and share it ! Or simply answer others polls !"|trans }}</p>
+    </div>
+{% endblock %}

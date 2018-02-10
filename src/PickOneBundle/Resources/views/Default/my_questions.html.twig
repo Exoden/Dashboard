@@ -1,0 +1,23 @@
+{% extends "PickOneBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "My Questions"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12 text-center">
+        <h1>{{ "My Questions"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        {% for question in questions %}
+            {{ render(url('render_template_question', {'question_id': question.id})) }}
+        {% endfor %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(questions) }}
+        </div>
+    </div>
+{% endblock %}

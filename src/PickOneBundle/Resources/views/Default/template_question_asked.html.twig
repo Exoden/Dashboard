@@ -1,0 +1,36 @@
+<div class="table-responsive question-table" data-id="{{ question.id }}">
+    <form id="question{{ question.id }}" action="" onSubmit="return submitQuestion($(this))">
+        <table id="question-table" class="table">
+            <thead>
+            <tr>
+                <th colspan="3">{{ question.title }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for answer in question.answers %}
+                <tr>
+                    <td colspan="3">
+                        <input type="radio" id="answer{{ loop.index }}" name="question{{ question.id }}" value="{{ answer.id }}" onclick="submitQuestion(this)"/>
+                        <label for="answer{{ loop.index }}">{{ answer.content }}</label>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr class="signature">
+                <td style="text-align: left; width: 20%">
+                    <a href="{{ path('detail_profile', {'user_id': question.author.id}) }}">{{ question.author.username }}</a>
+                </td>
+                <td style="text-align: center; width: 50%">
+                    {#<button type="submit" class="btn btn-xs btn-primary submit-answer">Submit</button>#}
+                    Votes : {{ question.nbVotes|number_format() }}
+                </td>
+                <td style="width: 30%">
+                    {% for genre in question.genres %}
+                        {% if loop.index0 > 0 %}, {% endif %}
+                        <a href="{{ path('questions_genre', {'genre_name': genre.name}) }}">{{ genre.name|trans }}</a>
+                    {% endfor %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

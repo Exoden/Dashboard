@@ -1,0 +1,119 @@
+{% extends "PickOneBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Questions"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12 text-center">
+        <h1>{{ title|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <span class="navbar-brand">{{ "Genres"|trans }}</span>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    {% for genre in genres %}
+                        <li {% if path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) == path('questions_genre', {'genre_name': genre.name}) %}class="active"{% endif %}>
+                            <a href="{{ path('questions_genre', {'genre_name': genre.name}) }}">{{ genre.name|trans }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <span class="navbar-brand">{{ "Sort by"|trans }}</span>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        {{ knp_pagination_sortable(questions, 'Votes', 'q.nbVotes') }}
+                    </li>
+                    <li>
+                        {{ knp_pagination_sortable(questions, 'Date', 'q.createdAt') }}
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        {% for question in questions %}
+            {{ render(url('render_template_question', {'question_id': question.id, 'title': title})) }}
+        {% endfor %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(questions) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        //    $(document).ready(function() {
+        //        $('#questions-table').DataTable();
+        //    } );
+
+        function submitQuestion(e) {
+            console.log(e);
+            console.log($(e).closest('form').data('id'));
+
+            var url_submit = '{{ path("submit_question", {'question_id': 'QUESTION_ID', 'answer_id': 'ANSWER_ID'}) }}';
+            url_submit = url_submit.replace("QUESTION_ID", $(e).closest('.question-table').data('id'));
+            url_submit = url_submit.replace("ANSWER_ID", $(e).val());
+            console.log(url_submit);
+
+            var jhrx = $.ajax(url_submit)
+                .done(function (data) {
+                    var obj = data;
+                    if (obj.success) {
+                        console.log("Success : " + obj.message);
+                        $(e).closest('div').html(obj.view);
+                    }
+                    else if (obj.error) {
+                        console.log("Error : " + obj.message);
+                    }
+                });
+        }
+
+        $('.add_fav').click(function (e) {
+            var url = '{{ path("add_favorite", {'question_id': 'QUESTION_ID'}) }}';
+            url = url.replace("QUESTION_ID", $(e.target).closest('.question-table').data('id'));
+//        console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    var obj = data;
+                    if (obj.success) {
+                        console.log("Success : " + obj.message);
+                    }
+                    else if (obj.error) {
+                        console.log("Error : " + obj.message);
+                    }
+                })
+        });
+
+        $('.remove_fav').click(function (e) {
+            var url = '{{ path("remove_favorite", {'question_id': 'QUESTION_ID'}) }}';
+            url = url.replace("QUESTION_ID", $(e.target).closest('.question-table').data('id'));
+//        console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    var obj = data;
+                    if (obj.success) {
+                        $(e.target).closest('.question-table').remove();
+                        console.log("Success : " + obj.message);
+                    }
+                    else if (obj.error) {
+                        console.log("Error : " + obj.message);
+                    }
+                })
+        });
+
+    </script>
+{% endblock %}

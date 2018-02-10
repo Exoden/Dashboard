@@ -1,0 +1,133 @@
+{% extends "PickOneBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Edit Question"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12">
+        <h1>{{ "Edit Question"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        <h2>{{ "Question"|trans }} : {{ question.title }}</h2>
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <div class="block-form border-menu">
+            <div class="form-heading"><h2>{{ "Edit Question"|trans }}</h2></div>
+
+            {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="bg-danger">
+                {{ form_errors(form.title) }}
+            </div>
+            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+
+            {{ form_label(form.answers) }}
+            <div class="bg-danger">
+                {{ form_errors(form.answers) }}
+            </div>
+            <ul class="answers" data-prototype="{{ form_widget(form.answers.vars.prototype)|e('html_attr') }}">
+                {% for answer in form.answers %}
+                    <li>
+                        <div class="bg-danger">
+                            {{ form_errors(answer) }}
+                        </div>
+                        {% include 'AppBundle:Form:draw_form_item.html.twig' with {'item': answer.content} %}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </div>
+        <a href="{{ path('my_stories') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var collectionHolder;
+
+        // setup an "add a answer" link
+        var addAnswerLink = $('<a href="#" class="btn btn-success add_answer_link"><span class="fa fa-plus"></span> Add a answer</a>');
+        var newLinkLi = $('<li></li>').prepend(addAnswerLink);
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of answers
+            collectionHolder = $('ul.answers');
+
+            // add a delete link to all of the existing tag form li elements
+            collectionHolder.find('li').each(function() {
+                addAnswerFormDeleteLink($(this));
+            });
+
+            // add the "add a answer" anchor and li to the answers ul
+            collectionHolder.append(newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            collectionHolder.data('index', collectionHolder.find(':input').length);
+
+            addAnswerLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new answer form (see next code block)
+                addAnswerForm(collectionHolder, newLinkLi);
+            });
+        });
+
+        function addAnswerForm(collectionHolder, newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = collectionHolder.data('prototype');
+
+            // get the new index
+            var index = collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a answer" link li
+            var newFormLi = $('<li></li>').append(newForm);
+
+            // also add a remove button, just for this example
+            newFormLi.append('<a href="#" class="btn btn-danger btn-block input-button remove-answer"><span class="fa fa-remove"></span> Remove from answers</a>');
+
+            newLinkLi.before(newFormLi);
+
+            // handle the removal, just for this example
+            $('.remove-answer').click(function (e) {
+                e.preventDefault();
+
+                $(this).parent().remove();
+
+                return false;
+            });
+        }
+
+        function addAnswerFormDeleteLink(answerFormLi) {
+            var removeFormA = $('<a href="#" class="btn btn-danger btn-block input-button remove-answer"><span class="fa fa-remove"></span> Remove from answers</a>');
+            answerFormLi.append(removeFormA);
+
+            removeFormA.click(function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the answer form
+                answerFormLi.remove();
+            });
+        }
+    </script>
+{% endblock %}

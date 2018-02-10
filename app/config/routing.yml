@@ -1,3 +1,8 @@
+pick_one:
+    resource: "@PickOneBundle/Controller/"
+    type:     annotation
+    prefix:   /pickone
+
 admin:
     resource: "@AdminBundle/Controller/"
     type:     annotation

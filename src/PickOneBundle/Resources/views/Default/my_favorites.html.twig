@@ -1,0 +1,45 @@
+{% extends "PickOneBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "My Favorites"|trans }}{% endblock %}
+
+{% block header %}
+    <div class="col-md-12 text-center">
+        <h1>{{ "My Favorites"|trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        {% for question in questions %}
+            {{ render(url('render_template_question', {'question_id': question.id})) }}
+        {% endfor %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(questions) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('.remove_fav').click(function (e) {
+            var url = '{{ path("remove_favorite", {'question_id': 'QUESTION_ID'}) }}';
+            url = url.replace("QUESTION_ID", $(e.target).closest('.question-table').data('id'));
+//        console.log(url);
+            var jhrx = $.ajax(url)
+                .done(function (data) {
+                    var obj = data;
+                    if (obj.success) {
+                        $(e.target).closest('.question-table').remove();
+                        console.log("Success : " + obj.message);
+                    }
+                    else if (obj.error) {
+                        console.log("Error : " + obj.message);
+                    }
+                })
+        });
+    </script>
+{% endblock %}

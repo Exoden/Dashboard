@@ -1,0 +1,148 @@
+{% extends "PickOneBundle:Default:index.html.twig" %}
+
+{% block title %}{{ parent() }}{{ "Create Question"|trans }}{% endblock %}
+
+{% block header %}
+    {#<div class="col-md-12 text-center">#}
+        {#<h1>{{ "Create Question"|trans }}</h1>#}
+    {#</div>#}
+{% endblock %}
+
+{% block page %}
+    <div class="col-md-12">
+
+        {{ include('AppBundle::flash_messages.html.twig') }}
+
+        <div class="block-form border-menu">
+            <div class="form-heading"><h2>{{ "Create Question"|trans }}</h2></div>
+
+            {{ form_start(form, {'method': 'POST', 'attr': {'class': 'form-style'} }) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="bg-danger">
+                {{ form_errors(form.title) }}
+            </div>
+            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form.genres) }}
+            </div>
+            {{ "Genres"|trans }} :
+            <ul class="form-list">
+                {% for genre in form.genres %}
+                    <li>
+                        <div class="bg-danger">
+                            {{ form_errors(genre) }}
+                        </div>
+                        {{ form_widget(genre) }}
+                        {{ form_label(genre) }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="bg-danger">
+                {{ form_errors(form.language) }}
+            </div>
+            {{ "Language"|trans }} : {{ form_widget(form.language, {'attr': {'class': 'form-control'}}) }}
+
+            <div class="bg-danger">
+                {{ form_errors(form.answers) }}
+            </div>
+            {{ form_label(form.answers) }}
+            <ul class="answers" style="list-style-type: none" data-prototype="{{ form_widget(form.answers.vars.prototype)|e('html_attr') }}">
+            </ul>
+            
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-lg btn-primary btn-block input-button'}}) }}
+
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </div>
+        <a href="{{ path('homepage_pickone') }}" class="btn btn-primary back-button">< {{ "Back"|trans }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var collectionHolder;
+
+        // setup an "add a answer" link
+        var addAnswerLink = $('<a href="#" class="btn btn-success add_answer_link"><span class="fa fa-plus"></span> Add an answer</a>');
+        var newLinkLi = $('<li></li>').prepend(addAnswerLink);
+
+        var nb_answer = 0;
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of answers
+            collectionHolder = $('ul.answers');
+
+            // add the "add a answer" anchor and li to the answers ul
+            collectionHolder.append(newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            collectionHolder.data('index', collectionHolder.find(':input').length);
+
+            addAnswerForm(collectionHolder, newLinkLi);
+            addAnswerForm(collectionHolder, newLinkLi);
+            addAnswerLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new answer form (see next code block)
+                addAnswerForm(collectionHolder, newLinkLi);
+            });
+
+            // handle the removal, just for this example
+            $('.remove-answer').click(function (e) {
+                e.preventDefault();
+
+                if (nb_answer <= 2) {
+                    $('#flash-messages').flashNotification('addWarning', "{{ "Minimum 2 answers"|trans }}");
+                    return false;
+                }
+
+                $(this).closest('li').remove();
+                nb_answer--;
+
+                return false;
+            });
+        });
+
+        function addAnswerForm(collectionHolder, newLinkLi) {
+            if (nb_answer >= 10) {
+                $('#flash-messages').flashNotification('addWarning', "{{ "Maximum 10 answers"|trans }}");
+                return false;
+            }
+
+            // Get the data-prototype explained earlier
+            var prototype = collectionHolder.data('prototype');
+
+            // get the new index
+            var index = collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a answer" link li
+            var newFormLi = $('<li></li>').append(newForm);
+            $(newFormLi).find('label').css('display', 'none'); // remove label text "Content"
+            var input = $(newFormLi).find('input');
+            input.addClass('form-control'); // style to input
+            input.parent('div').addClass('col-md-10');
+
+            // also add a remove button, just for this example
+            newFormLi.append('<div class="col-md-2"><a href="#" class="btn btn-danger btn-block input-button form-control remove-answer"><span class="fa fa-remove"></span></a></div>');
+
+            nb_answer++;
+
+            newLinkLi.before(newFormLi);
+        }
+    </script>
+{% endblock %}

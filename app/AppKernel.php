@@ -18,12 +18,14 @@ class AppKernel extends Kernel
 
             new FOS\UserBundle\FOSUserBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
 
             new AppBundle\AppBundle(),
             new IdleBundle\IdleBundle(),
             new StrategyBundle\StrategyBundle(),
             new StoryTellBundle\StoryTellBundle(),
             new AdminBundle\AdminBundle(),
+            new PickOneBundle\PickOneBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

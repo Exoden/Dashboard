@@ -1,0 +1,17 @@
+{% extends "PickOneBundle::base.html.twig" %}
+
+{% block content %}
+    <div class="container pick-one">
+        <div class="row">
+            {% include 'PickOneBundle:Default:menu.html.twig' %}
+        </div>
+        <div class="row body">
+            <div class="row">
+                {% block header %}{% endblock %}
+            </div>
+            <div class="row">
+                {% block page %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

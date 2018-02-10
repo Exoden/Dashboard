@@ -100,6 +100,7 @@
 
             // Display the form in the page in an li, before the "Add a craft" link li
             var newFormLi = $('<li></li>').append(newForm);
+            $(newFormLi).find('input').addClass('form-control'); // style to input
 
             // also add a remove button, just for this example
             newFormLi.append('<a href="#" class="btn btn-danger btn-block input-button remove-craft"><span class="fa fa-remove"></span> Remove from crafts</a>');

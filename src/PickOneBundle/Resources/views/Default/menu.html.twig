@@ -1,0 +1,13 @@
+<nav class="navbar navbar-default main-menu">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {#<li><a href="{{ path('homepage_pickone') }}">{{ "Home"|trans }}</a></li>#}
+                <li><a href="{{ path('questions') }}">{{ "Questions"|trans }}</a></li>
+                <li><a href="{{ path('my_favorites') }}" title="{{ "My Favorites"|trans }}">{{ "My Favorites"|trans }}</a></li>
+                <li><a href="{{ path('my_questions') }}" title="{{ "My Questions"|trans }}">{{ "My Questions"|trans }}</a></li>
+                <li><a href="{{ path('create_question') }}" title="{{ "Create a Question"|trans }}">{{ "Create a Question"|trans }}</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

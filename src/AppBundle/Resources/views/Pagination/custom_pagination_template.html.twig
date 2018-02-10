@@ -1,0 +1,47 @@
+{% if pageCount > 1 %}
+    <nav>
+        <div role="group" class="btn-group pagination{{ (align is not defined) ? '' : align=='center' ? ' justify-content-center' : (align=='right' ? ' justify-content-end' : '') }}">
+
+            {% if previous is defined %}
+                <a class="btn btn-primary" rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>
+            {% else %}
+                <span class="btn btn-primary disabled">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</span>
+            {% endif %}
+
+            {% if startPage > 1 %}
+                <a class="btn btn-primary" href="{{ path(route, query|merge({(pageParameterName): 1})) }}">1</a>
+                {% if startPage == 3 %}
+                    <a class="btn btn-primary" href="{{ path(route, query|merge({(pageParameterName): 2})) }}">2</a>
+                {% elseif startPage != 2 %}
+                    <span class="btn btn-primary disabled">&hellip;</span>
+                {% endif %}
+            {% endif %}
+
+            {% for page in pagesInRange %}
+                {% if page != current %}
+                    <a class="btn btn-primary" href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+                {% else %}
+                    <span class="btn btn-primary active">{{ page }}</span>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if pageCount > endPage %}
+                {% if pageCount > (endPage + 1) %}
+                    {% if pageCount > (endPage + 2) %}
+                        <span class="btn btn-primary disabled">&hellip;</span>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ path(route, query|merge({(pageParameterName): (pageCount - 1)})) }}">{{ pageCount -1 }}</a>
+                    {% endif %}
+                {% endif %}
+                <a class="btn btn-primary" href="{{ path(route, query|merge({(pageParameterName): pageCount})) }}">{{ pageCount }}</a>
+            {% endif %}
+
+            {% if next is defined %}
+                <a class="btn btn-primary" rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</a>
+            {% else %}
+                <span class="btn btn-primary disabled">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</span>
+            {% endif %}
+        </div>
+    </nav>
+{% endif %}
