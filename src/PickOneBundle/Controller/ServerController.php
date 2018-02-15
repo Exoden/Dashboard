@@ -54,7 +54,7 @@ class ServerController extends Controller
             $answer->setNbVotes($answer->getNbVotes() + 1);
             $em->persist($answer);
             $em->flush();
-            $this->addFlash('success', "Answer added");
+//            $this->addFlash('success', "Answer added");
         }
 
         return new JsonResponse(array(

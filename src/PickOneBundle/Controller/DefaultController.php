@@ -32,9 +32,12 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        
+
+        $user = $this->getUser();
+
         /** @var Question $questions */
-        $questions = $em->getRepository('PickOneBundle:Question')->getQuestionsWithGenre(null, true);
+        $questions = $em->getRepository('PickOneBundle:Question')->getQuestionsWithGenre(null, true, ($request->query->get('new_only')) ? $user : null);
+
         $pagination = $paginator->paginate(
             $questions, /* query NOT result */
             $request->query->getInt('page', 1), /* page number */
@@ -54,12 +57,14 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
 
+        $user = $this->getUser();
+
         $genre_selected = $em->getRepository('PickOneBundle:QuestionGenre')->findOneBy(array('name' => $genre_name));
         if (!$genre_selected) {
             throw $this->createNotFoundException();
         }
 
-        $questions = $em->getRepository('PickOneBundle:Question')->getQuestionsWithGenre($genre_selected, true);
+        $questions = $em->getRepository('PickOneBundle:Question')->getQuestionsWithGenre($genre_selected, true, ($request->query->get('new_only')) ? $user : null);
         $pagination = $paginator->paginate(
             $questions, /* query NOT result */
             $request->query->getInt('page', 1), /* page number */

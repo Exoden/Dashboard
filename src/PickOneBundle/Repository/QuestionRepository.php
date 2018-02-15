@@ -14,13 +14,30 @@ use PickOneBundle\Entity\QuestionGenre;
  */
 class QuestionRepository extends EntityRepository
 {
-    function getQuestionsWithGenre(QuestionGenre $genre = null, $paginate = false)
+    function getQuestionsWithGenre(QuestionGenre $genre = null, $paginate = false, $user = null)
     {
         $q = $this->createQueryBuilder('q');
 
-        if ($genre != null)
-            $q->where(':genre MEMBER OF s.genres')
+        if ($user != null) {
+            $sub_query = $this->getEntityManager()
+                ->getRepository('PickOneBundle:UserAnswers')
+                ->createQueryBuilder('ua')
+                ->select('identity(ua.question)')
+                ->where('ua.user = :user');
+
+            $q->where($q->expr()->notIn('q.id', $sub_query->getDQL()))
+                ->setParameter('user', $user);
+
+            if ($genre != null) {
+                $q->andWhere(':genre MEMBER OF q.genres')
+                    ->setParameter('genre', $genre);
+            }
+        }
+
+        if ($user == null && $genre != null) {
+            $q->where(':genre MEMBER OF q.genres')
                 ->setParameter('genre', $genre);
+        }
 
         $q->getQuery();
 

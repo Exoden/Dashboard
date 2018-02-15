@@ -40,6 +40,23 @@
                         {{ knp_pagination_sortable(questions, 'Date', 'q.createdAt') }}
                     </li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if app.request.attributes.get('_route') == 'questions' %}
+                        <li>
+                            <a href="{{ path(path(app.request.get('_route')), {'new_only': true}) }}">See new</a>
+                        </li>
+                        <li>
+                            <a href="{{ path(path(app.request.get('_route')), {'new_only': false}) }}">See all</a>
+                        </li>
+                    {% elseif app.request.attributes.get('_route') == 'questions_genre' %}
+                        <li>
+                            <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'new_only': true})) }}">See new</a>
+                        </li>
+                        <li>
+                            <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'new_only': false})) }}">See all</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </nav>
 
