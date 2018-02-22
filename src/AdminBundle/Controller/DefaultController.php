@@ -43,7 +43,7 @@ class DefaultController extends Controller
      */
     public function createNewsAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $news = new News();
         $form = $this->createForm(NewsType::class, $news);
@@ -67,7 +67,7 @@ class DefaultController extends Controller
      */
     public function editNewsAction(Request $request, $news_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $news = $em->getRepository('AppBundle:News')->find($news_id);
 
@@ -92,7 +92,7 @@ class DefaultController extends Controller
      */
     public function listNewsAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $news_list = $em->getRepository('AppBundle:News')->getOrderedNews();
 
@@ -107,7 +107,7 @@ class DefaultController extends Controller
      */
     public function idleGeneratorAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $items = $em->getRepository('IdleBundle:Item')->getAllSortedItems();
 
@@ -122,7 +122,7 @@ class DefaultController extends Controller
      */
     public function editItemAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         /** @var Item $item */
         $item = $em->getRepository('IdleBundle:Item')->find($item_id);
@@ -147,7 +147,7 @@ class DefaultController extends Controller
      */
     public function createStuffAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $stuff = new Stuff();
         $form = $this->createForm(StuffType::class, $stuff);
@@ -178,7 +178,7 @@ class DefaultController extends Controller
      */
     public function editStuffAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         /** @var Stuff $stuff */
         $stuff = $em->getRepository('IdleBundle:Stuff')->findOneBy(array('item' => $item_id));
@@ -218,7 +218,7 @@ class DefaultController extends Controller
      */
     public function removeStuffAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $stuff = $em->getRepository('IdleBundle:Stuff')->findOneBy(array('item' => $item_id));
 
@@ -241,7 +241,7 @@ class DefaultController extends Controller
      */
     public function createResourceAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $resource = new Resource();
         $form = $this->createForm(ResourceType::class, $resource);
@@ -272,7 +272,7 @@ class DefaultController extends Controller
      */
     public function editResourceAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $resource = $em->getRepository('IdleBundle:Resource')->findOneBy(array('item' => $item_id));
 
@@ -311,7 +311,7 @@ class DefaultController extends Controller
      */
     public function removeResourceAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $resource = $em->getRepository('IdleBundle:Resource')->findOneBy(array('item' => $item_id));
 
@@ -334,7 +334,7 @@ class DefaultController extends Controller
      */
     public function createRecipeAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
@@ -365,7 +365,7 @@ class DefaultController extends Controller
      */
     public function makeRecipeItemAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $recipe = new Recipe();
         $item = $em->getRepository('IdleBundle:Item')->find($item_id);
@@ -404,7 +404,7 @@ class DefaultController extends Controller
      */
     public function editRecipeAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $recipe = $em->getRepository('IdleBundle:Recipe')->findOneBy(array('item' => $item_id));
         
@@ -448,7 +448,7 @@ class DefaultController extends Controller
      */
     public function removeRecipeAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $recipe = $em->getRepository('IdleBundle:Recipe')->findOneBy(array('item' => $item_id));
 
@@ -466,7 +466,7 @@ class DefaultController extends Controller
      */
     public function createEnemyAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $enemy = new Enemy();
         $form = $this->createForm(EnemyType::class, $enemy);
@@ -495,7 +495,7 @@ class DefaultController extends Controller
      */
     public function editEnemyAction(Request $request, $enemy_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $enemy = $em->getRepository('IdleBundle:Enemy')->find($enemy_id);
 
@@ -550,7 +550,7 @@ class DefaultController extends Controller
      */
     public function removeEnemyAction(Request $request, $enemy_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $enemy = $em->getRepository('IdleBundle:Enemy')->find($enemy_id);
 
@@ -573,7 +573,7 @@ class DefaultController extends Controller
      */
     public function createFoodAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $food = new Food();
         $form = $this->createForm(FoodType::class, $food);
@@ -604,7 +604,7 @@ class DefaultController extends Controller
      */
     public function editFoodAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $food = $em->getRepository('IdleBundle:Food')->findOneBy(array('item' => $item_id));
 
@@ -643,7 +643,7 @@ class DefaultController extends Controller
      */
     public function removeFoodAction(Request $request, $item_id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $food = $em->getRepository('IdleBundle:Food')->findOneBy(array('item' => $item_id));
 
