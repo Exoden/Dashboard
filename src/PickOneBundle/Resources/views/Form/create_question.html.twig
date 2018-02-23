@@ -96,7 +96,7 @@
             });
 
             // handle the removal, just for this example
-            $('.remove-answer').click(function (e) {
+            $('.answers').on('click', '.remove-answer', function (e) {
                 e.preventDefault();
 
                 if (nb_answer <= 2) {
