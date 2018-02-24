@@ -11,3 +11,9 @@ services:
         arguments: ["@session"]
         tags:
             - { name: kernel.event_listener, event: kernel.response}
+
+#    my.oauth_aware.user_provider.service:
+#        class: HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider
+#        arguments:
+#            - '@fos_user.user_manager'
+#            - ['pass properties as array']

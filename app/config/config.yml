@@ -143,3 +143,33 @@ knp_paginator:
         pagination: 'AppBundle:Pagination:custom_pagination_template.html.twig'     # sliding pagination controls template
         sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
         filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
+
+hwi_oauth:
+    connect:
+        confirmation: true
+        registration_form: fos_user.registration.form.factory
+    firewall_name: [main]
+    fosub:
+        username_iterations: 30
+        properties:
+            facebook: facebook_id
+            google: google_id
+    resource_owners:
+        # Facebook Access
+        facebook:
+            type:                facebook
+            client_id:           159768068157630
+            client_secret:       30f065af251121eb8fb8eb3915fc9795
+            scope:               "email"
+            options:
+                display: popup
+                csrf: true
+        # Google Access
+        google:
+            type:                google
+            client_id:            530610380515-n01obn2eofu51skno5d1tlv8eegfhars.apps.googleusercontent.com
+            client_secret:        mc15kKpx15xqt2z0rOV3ZDuH
+            scope:               "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+            options:
+                display: popup
+                csrf: true
