@@ -36,9 +36,9 @@ security:
                 resource_owners:
                     facebook:           "/connect/check-facebook"
                     google:             "/connect/check-google"
-                login_path:        /login
+                login_path:        fos_user_security_login
 #                use_forward:       false
-                failure_path:      /login
+                failure_path:      fos_user_security_login
 
                 oauth_user_provider:
                     service: hwi_oauth.user.provider.fosub_bridge
