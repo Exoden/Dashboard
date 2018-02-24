@@ -4,6 +4,7 @@ namespace PickOneBundle\Controller;
 
 use AppBundle\Entity\User;
 use Knp\Component\Pager\Paginator;
+use PickOneBundle\Entity\Answer;
 use PickOneBundle\Entity\Question;
 use PickOneBundle\Entity\UserAnswers;
 use PickOneBundle\Form\QuestionCreateType;
@@ -13,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use \Statickidz\GoogleTranslate;
 
 class DefaultController extends Controller
 {
@@ -32,7 +34,9 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $translator = new GoogleTranslate();
 
+        /** @var User $user */
         $user = $this->getUser();
 
         /** @var Question $questions */
@@ -44,8 +48,19 @@ class DefaultController extends Controller
             5 /* limit per page */
         );
 
+        /** @var Question $item */
+        foreach ($pagination as $item) {
+            if ($item->getLanguage()->getCode() != $user->getLocale()) {
+                $item->setTitle($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $item->getTitle()));
+                /** @var Answer $answer */
+                foreach ($item->getAnswers() as $answer) {
+                    $answer->setContent($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $answer->getContent()));
+                }
+            }
+        }
+
         $genres = $em->getRepository('PickOneBundle:QuestionGenre')->getAllGenresSortedBy('ASC');
-        
+
         return $this->render('PickOneBundle:Default:questions.html.twig', array('questions' => $pagination, 'genres' => $genres, 'title' => "Questions"));
     }
 
@@ -56,7 +71,9 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $translator = new GoogleTranslate();
 
+        /** @var User $user */
         $user = $this->getUser();
 
         $genre_selected = $em->getRepository('PickOneBundle:QuestionGenre')->findOneBy(array('name' => $genre_name));
@@ -71,6 +88,28 @@ class DefaultController extends Controller
             5 /* limit per page */
         );
 
+        /** @var Question $item */
+        foreach ($pagination as $item) {
+            if ($item->getLanguage()->getCode() != $user->getLocale()) {
+                $item->setTitle($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $item->getTitle()));
+                /** @var Answer $answer */
+                foreach ($item->getAnswers() as $answer) {
+                    $answer->setContent($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $answer->getContent()));
+                }
+            }
+        }
+
+        /** @var Question $item */
+        foreach ($pagination as $item) {
+            if ($item->getLanguage()->getCode() != $user->getLocale()) {
+                $item->setTitle($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $item->getTitle()));
+                /** @var Answer $answer */
+                foreach ($item->getAnswers() as $answer) {
+                    $answer->setContent($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $answer->getContent()));
+                }
+            }
+        }
+
         $genres = $em->getRepository('PickOneBundle:QuestionGenre')->getAllGenresSortedBy('ASC');
 
         return $this->render('PickOneBundle:Default:questions.html.twig', array('questions' => $pagination, 'genres' => $genres, 'title' => "Question"));
@@ -83,8 +122,10 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $translator = new GoogleTranslate();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
         /** @var Question $questions */
         $questions = $em->getRepository('PickOneBundle:FavoriteQuestion')->getFavoritesFromUser($user);
@@ -93,6 +134,17 @@ class DefaultController extends Controller
             $request->query->getInt('page', 1), /* page number */
             5 /* limit per page */
         );
+
+        /** @var Question $item */
+        foreach ($pagination as $item) {
+            if ($item->getLanguage()->getCode() != $user->getLocale()) {
+                $item->setTitle($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $item->getTitle()));
+                /** @var Answer $answer */
+                foreach ($item->getAnswers() as $answer) {
+                    $answer->setContent($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $answer->getContent()));
+                }
+            }
+        }
 
         $genres = $em->getRepository('PickOneBundle:QuestionGenre')->getAllGenresSortedBy('ASC');
 
@@ -106,8 +158,10 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
+        $translator = new GoogleTranslate();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
         /** @var Question $questions */
         $questions = $em->getRepository('PickOneBundle:Question')->getQuestionsFromAuthor($user);
@@ -116,6 +170,17 @@ class DefaultController extends Controller
             $request->query->getInt('page', 1), /* page number */
             5 /* limit per page */
         );
+
+        /** @var Question $item */
+        foreach ($pagination as $item) {
+            if ($item->getLanguage()->getCode() != $user->getLocale()) {
+                $item->setTitle($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $item->getTitle()));
+                /** @var Answer $answer */
+                foreach ($item->getAnswers() as $answer) {
+                    $answer->setContent($translator->translate($item->getLanguage()->getCode(), $user->getLocale(), $answer->getContent()));
+                }
+            }
+        }
 
         $genres = $em->getRepository('PickOneBundle:QuestionGenre')->getAllGenresSortedBy('ASC');
 
@@ -132,7 +197,8 @@ class DefaultController extends Controller
         /** @var Session $session */
         $session = $request->getSession();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
         $question = new Question();
         $form = $this->createForm(QuestionCreateType::class, $question);
@@ -174,7 +240,8 @@ class DefaultController extends Controller
         /** @var Session $session */
         $session = $request->getSession();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
         /** @var Question $question */
         $question = $em->getRepository('PickOneBundle:Question')->find($question_id);
@@ -207,7 +274,8 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
         /** @var Question $question */
         $question = $em->getRepository('PickOneBundle:Question')->find($question_id);

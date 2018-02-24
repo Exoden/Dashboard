@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f75ad211f6576fd28a411a02b14f5fa7",
+    "content-hash": "a5ee62d366334e596249752633cd07c5",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -2848,6 +2848,65 @@
             ],
             "description": "A security checker for your composer.lock",
             "time": "2018-01-11T05:54:03+00:00"
+        },
+        {
+            "name": "statickidz/php-google-translate-free",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/statickidz/php-google-translate-free.git",
+                "reference": "de913247bdcd0942593ffd2cd48e809549c0abd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/statickidz/php-google-translate-free/zipball/de913247bdcd0942593ffd2cd48e809549c0abd8",
+                "reference": "de913247bdcd0942593ffd2cd48e809549c0abd8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": ">=4.8",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Statickidz\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Paris Niarfe Baltazar Salguero",
+                    "email": "sieg.sb@gmail.com",
+                    "homepage": "http://www.pbaltazar.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Adrián Barrio Andrés",
+                    "email": "statickidz@gmail.com",
+                    "homepage": "https://statickidz.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Google Translate Free library for PHP",
+            "homepage": "https://github.com/statickidz/php-google-translate-free/",
+            "keywords": [
+                "api",
+                "free",
+                "google",
+                "siegsb",
+                "statickidz",
+                "translate",
+                "translator"
+            ],
+            "time": "2017-02-07T08:52:25+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

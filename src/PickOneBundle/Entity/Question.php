@@ -2,6 +2,7 @@
 
 namespace PickOneBundle\Entity;
 
+use AppBundle\Entity\Language;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -168,7 +169,7 @@ class Question
     /**
      * Set language
      *
-     * @param User $language
+     * @param Language $language
      * @return Question
      */
     public function setLanguage($language)
@@ -181,7 +182,7 @@ class Question
     /**
      * Get language
      *
-     * @return User
+     * @return Language
      */
     public function getLanguage()
     {
